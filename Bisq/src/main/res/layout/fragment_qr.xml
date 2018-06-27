@@ -3,14 +3,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-tools:context="com.joachimneumann.bisq.TransferCodeActivity">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    tools:context="com.joachimneumann.bisq.TransferCodeActivity">
 
     <ImageView
         android:id="@+id/imageView_qr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:background="@color/backgroundColor"
+        android:layout_width="311dp"
+        android:layout_height="463dp"
         android:layout_centerInParent="true"
+        android:layout_margin="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:padding="0dp"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
         app:srcCompat="@drawable/missing_qr" />
 </RelativeLayout>
