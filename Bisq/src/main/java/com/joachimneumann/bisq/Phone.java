@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,18 +35,14 @@ public class Phone {
         if (phoneString != null) {
             fromString(phoneString);
         } else {
-            key = "";
-            apsToken = "";
-            isInitialized = false;
+            apsToken = FirebaseInstanceId.getInstance().getToken();
+            key = UUID.randomUUID().toString().replace("-",  "");
+            isInitialized = true;
+            save();
         }
     }
 
-    public void create(String token) {
-        apsToken = token;
-        // create key and store to Userdefaults
-        key = UUID.randomUUID().toString().replace("-",  "");
-        isInitialized = true;
-        save();
+    public void createNew() {
     }
 
 

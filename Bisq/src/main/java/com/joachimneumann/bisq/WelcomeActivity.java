@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 public class WelcomeActivity extends AppCompatActivity implements View.OnClickListener {
     private Context mContext;
     private Activity mActivity;
@@ -30,6 +32,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_welcome);
         Toolbar bisqToolbar = findViewById(R.id.bisq_toolbar);
         bisqToolbar.setTitle("");

@@ -25,7 +25,6 @@ public class TransferCodeActivity extends AppCompatActivity implements View.OnCl
         setSupportActionBar(bisqToolbar);
 
         Phone phone = new Phone(this);
-        phone.create("andoid not tok");
         Log.i("bisq", "phone: "+phone.description());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("QR"));
@@ -34,7 +33,7 @@ public class TransferCodeActivity extends AppCompatActivity implements View.OnCl
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final TransferPageAdapter adapter = new TransferPageAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
+                (getSupportFragmentManager(), tabLayout.getTabCount(), phone.description());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

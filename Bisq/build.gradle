@@ -3,8 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.joachimneumann.bisq"
-        minSdkVersion 14
+        applicationId "com.joachimneumann.bisqremotetest"
+        minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -28,5 +28,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.google.zxing:core:3.3.3'
-
+    implementation 'com.google.firebase:firebase-core:16.0.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
