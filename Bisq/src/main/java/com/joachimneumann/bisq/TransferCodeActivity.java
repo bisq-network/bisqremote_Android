@@ -1,5 +1,6 @@
 package com.joachimneumann.bisq;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -22,7 +24,9 @@ public class TransferCodeActivity extends AppCompatActivity implements View.OnCl
         bisqToolbar.setTitle("");
         setSupportActionBar(bisqToolbar);
 
-
+        Phone phone = new Phone(this);
+        phone.create("andoid not tok");
+        Log.i("bisq", "phone: "+phone.description());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("QR"));
         tabLayout.addTab(tabLayout.newTab().setText("Email"));
@@ -33,7 +37,7 @@ public class TransferCodeActivity extends AppCompatActivity implements View.OnCl
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
