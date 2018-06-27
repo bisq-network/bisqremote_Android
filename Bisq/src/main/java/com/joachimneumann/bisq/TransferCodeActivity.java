@@ -15,7 +15,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransferCodeActivity extends AppCompatActivity implements View.OnClickListener {
+public class TransferCodeActivity extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +27,7 @@ public class TransferCodeActivity extends AppCompatActivity implements View.OnCl
         Phone phone = new Phone(this);
         Log.i("bisq", "phone: "+phone.description());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("QR"));
+        tabLayout.addTab(tabLayout.newTab().setText("QR Code"));
         tabLayout.addTab(tabLayout.newTab().setText("Email"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
@@ -53,21 +53,8 @@ public class TransferCodeActivity extends AppCompatActivity implements View.OnCl
             }
         });
 
-//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-//        ViewPager viewPager;
-//        viewPager = (ViewPager) findViewById(R.id.viewpager);
-//        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-//        adapter.addFragment(new TransferCodeQR(), "QR");
-//        adapter.addFragment(new TransferCodeEmail(), "Email");
-//        viewPager.setAdapter(adapter);
-//        tabLayout.setupWithViewPager(viewPager);
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.welcomeNextButton) {
-        }
-    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

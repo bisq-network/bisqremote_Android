@@ -5,12 +5,11 @@
     android:layout_height="match_parent"
     tools:context="com.joachimneumann.bisq.TransferCodeActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/email_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="40dp"
-        android:textStyle="bold"
+        android:text="@string/email_button_text"
         android:layout_centerInParent="true"/>
 
 </RelativeLayout>
