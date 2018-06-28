@@ -18,7 +18,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Phone {
     private static final String PHONE_MAGIC_ANDROID = "BisqPhoneAndroid";
-    static final String PHONE_SEPARATOR = "_";
+    static final String PHONE_SEPARATOR = "|";
     private static final String BISQ_SHARED_PREFERENCES = "BisqPreferences";
     private static final String BISQ_SHARED_PREFERENCE_PHONE = "BisqPhone";
 
