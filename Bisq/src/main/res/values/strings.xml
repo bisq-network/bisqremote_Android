@@ -3,5 +3,8 @@
     <string name="email_button_text">Send email with Bisq Phone ID</string>
     <string name="email_subject">Register your phone with Bisq</string>
     <string name="email_content1">Please copy this Bisq Phone ID string into the field \"Bisq Phone ID\" in the Bisq App:\n\n</string>
-    <string name="email_content2">\n\nThe Bisq Phone ID contains (1) a token from Apple that identifies this instance of the Bisq remote app and (2) your excryption key (AES/CBC/NOPadding with initialization vector) which is used by Bisq to encrypt the notifications for you.</string>
+    <string name="email_content2">\n\nThe Bisq Phone ID contains
+        (1) your excryption key (AES/CBC/NOPadding with initialization vector) which is used by
+        Bisq to encrypt the notifications for you and
+        (2) a token from Apple that identifies this instance of the Bisq remote app.</string>
 </resources>
