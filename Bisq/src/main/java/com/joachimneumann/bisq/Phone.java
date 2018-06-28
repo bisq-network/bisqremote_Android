@@ -1,17 +1,11 @@
 package com.joachimneumann.bisq;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.UUID;
 
 import static android.content.Context.MODE_PRIVATE;

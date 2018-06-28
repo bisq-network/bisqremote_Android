@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.google.firebase.messaging.RemoteMessage;
+
 
 public class BisqFirebaseInstanceIdService extends FirebaseInstanceIdService {
     private static final String TAG = "Bisq";
@@ -19,4 +21,5 @@ public class BisqFirebaseInstanceIdService extends FirebaseInstanceIdService {
         // Instance ID token to your app server.
         Phone phone = new Phone(this);
     }
+
 }
