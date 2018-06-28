@@ -2,3 +2,5 @@ Bisq/build
 .gradle
 .idea
 Bisq/google-services.json
+
+Bisq/serviceAccountKey
