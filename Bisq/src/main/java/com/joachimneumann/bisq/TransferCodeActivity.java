@@ -24,7 +24,7 @@ public class TransferCodeActivity extends AppCompatActivity {
         bisqToolbar.setTitle("");
         setSupportActionBar(bisqToolbar);
 
-        Phone phone = Phone.getInstance();
+        Phone phone = Phone.getInstance(this);
         Log.i("bisq", "phone: "+phone.description());
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("QR Code"));

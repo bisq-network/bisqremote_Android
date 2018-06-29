@@ -1,5 +1,6 @@
 package com.joachimneumann.bisq;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -14,8 +15,9 @@ import static android.content.Context.MODE_PRIVATE;
 public class Phone {
     private static final String PHONE_MAGIC_ANDROID = "BisqPhoneAndroid";
     static final String PHONE_SEPARATOR = "|";
-    private static final String BISQ_SHARED_PREFERENCES = "BisqPreferences";
-    private static final String BISQ_SHARED_PREFERENCE_PHONE = "BisqPhone";
+    static final String PHONE_SEPARATOR_ESCAPED = "\\|";
+    private static final String BISQ_SHARED_PREFERENCE_FILE = "Bisq.txt";
+    private static final String BISQ_SHARED_PREFERENCE_PHONEID = "BisqPhone";
 
     public String key;
     public String apsToken;
@@ -33,27 +35,15 @@ public class Phone {
         }
     }
 
-    public static Phone getInstance() {
+    public static Phone getInstance(Context context) {
+
         //Double check locking pattern
         if (sSoleInstance == null) { //Check for the first time
             synchronized (Phone.class) {   //Check for the second time.
-                //if there is no instance available... create new one
+                // if there is no instance available... create new one
                 if (sSoleInstance == null) {
                     // Do not create a new instance, the instance needs to be created with getInstance(Context c)
-                    // sSoleInstance = new Phone();
-                    Log.e("BISQ", "Phone needs the context. Cannot create the Instance");
-                }
-            }
-        }
-        return sSoleInstance;
-    }
-    public static Phone getInstance(Context c) {
-        //Double check locking pattern
-        if (sSoleInstance == null) { //Check for the first time
-            synchronized (Phone.class) {   //Check for the second time.
-                //if there is no instance available... create new one
-                if (sSoleInstance == null) {
-                    sSoleInstance = new Phone(c);
+                    sSoleInstance = new Phone(context);
                 }
             }
         }
@@ -63,8 +53,8 @@ public class Phone {
 
     private Phone(Context c) {
         context = c;
-        SharedPreferences prefs = context.getSharedPreferences(BISQ_SHARED_PREFERENCES, MODE_PRIVATE);
-        String phoneString = prefs.getString(BISQ_SHARED_PREFERENCE_PHONE, null);
+        SharedPreferences prefs = context.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE);
+        String phoneString = prefs.getString(BISQ_SHARED_PREFERENCE_PHONEID, null);
         if (phoneString != null) {
             fromString(phoneString);
         } else {
@@ -80,19 +70,19 @@ public class Phone {
 
 
     public void fromString(String s) {
-        String[] a = s.split(PHONE_SEPARATOR);
+        String[] a = s.split(PHONE_SEPARATOR_ESCAPED);
         try {
             if (a.length != 3) {
-                throw new IOException("invalid " + BISQ_SHARED_PREFERENCE_PHONE + " format");
+                throw new IOException("invalid " + BISQ_SHARED_PREFERENCE_PHONEID + " format");
             }
             if (a[1].length() != 32) {
-                throw new IOException("invalid " + BISQ_SHARED_PREFERENCE_PHONE + " format");
+                throw new IOException("invalid " + BISQ_SHARED_PREFERENCE_PHONEID + " format");
             }
-            if (a[2].length() != 64) {
-                throw new IOException("invalid " + BISQ_SHARED_PREFERENCE_PHONE + " format");
+            if (a[2].length() < 32) {
+                throw new IOException("invalid " + BISQ_SHARED_PREFERENCE_PHONEID + " format");
             }
             if (!a[0].equals(PHONE_MAGIC_ANDROID)) {
-                throw new IOException("invalid " + BISQ_SHARED_PREFERENCE_PHONE + " format");
+                throw new IOException("invalid " + BISQ_SHARED_PREFERENCE_PHONEID + " format");
             }
             key = a[1];
             apsToken = a[2];
@@ -110,8 +100,8 @@ public class Phone {
     }
 
     public void save() {
-        SharedPreferences.Editor editor = context.getSharedPreferences(BISQ_SHARED_PREFERENCES, MODE_PRIVATE).edit();
-        editor.putString("BISQ_SHARED_PREFERENCE_PHONE", description());
+        SharedPreferences.Editor editor = context.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE).edit();
+        editor.putString(BISQ_SHARED_PREFERENCE_PHONEID, description());
         editor.apply();
     }
 }

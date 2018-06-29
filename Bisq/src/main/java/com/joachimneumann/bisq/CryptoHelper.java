@@ -64,8 +64,8 @@ public class CryptoHelper {
         return encrypted;
     }
 
-    private byte[] decryptInternal(String code, IvParameterSpec ivspec) throws Exception {
-        if (code == null || code.length() == 0) {
+    private byte[] decryptInternal(String codeBase64, IvParameterSpec ivspec) throws Exception {
+        if (codeBase64 == null || codeBase64.length() == 0) {
             throw new Exception("Empty string");
         }
 
@@ -74,7 +74,8 @@ public class CryptoHelper {
         byte[] decrypted = null;
         try {
             cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
-            decrypted = cipher.doFinal(Base64.decode(code, Base64.DEFAULT));
+            byte[] code = Base64.decode(codeBase64, Base64.DEFAULT);
+            decrypted = cipher.doFinal(code);
         } catch (Exception e) {
             throw new Exception("[decrypt] " + e.getMessage());
         }
