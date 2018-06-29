@@ -2,6 +2,7 @@ package com.joachimneumann.bisq;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -22,7 +23,45 @@ public class Phone {
     private Context context;
 
 
-    public Phone(Context c) {
+    private static volatile Phone sSoleInstance;
+
+    //private constructor.
+    private Phone() {
+        //Prevent form the reflection api.
+        if (sSoleInstance != null){
+            throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
+        }
+    }
+
+    public static Phone getInstance() {
+        //Double check locking pattern
+        if (sSoleInstance == null) { //Check for the first time
+            synchronized (Phone.class) {   //Check for the second time.
+                //if there is no instance available... create new one
+                if (sSoleInstance == null) {
+                    // Do not create a new instance, the instance needs to be created with getInstance(Context c)
+                    // sSoleInstance = new Phone();
+                    Log.e("BISQ", "Phone needs the context. Cannot create the Instance");
+                }
+            }
+        }
+        return sSoleInstance;
+    }
+    public static Phone getInstance(Context c) {
+        //Double check locking pattern
+        if (sSoleInstance == null) { //Check for the first time
+            synchronized (Phone.class) {   //Check for the second time.
+                //if there is no instance available... create new one
+                if (sSoleInstance == null) {
+                    sSoleInstance = new Phone(c);
+                }
+            }
+        }
+        return sSoleInstance;
+    }
+
+
+    private Phone(Context c) {
         context = c;
         SharedPreferences prefs = context.getSharedPreferences(BISQ_SHARED_PREFERENCES, MODE_PRIVATE);
         String phoneString = prefs.getString(BISQ_SHARED_PREFERENCE_PHONE, null);

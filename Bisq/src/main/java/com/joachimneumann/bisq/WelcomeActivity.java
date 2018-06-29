@@ -31,6 +31,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Important: The Phone needs to be called with the Context first.
+        // Only afterwards, Phone.getInstance() is allowed
+        Phone phone = Phone.getInstance(this);
+
         setContentView(R.layout.activity_welcome);
         Toolbar bisqToolbar = findViewById(R.id.bisq_toolbar);
         bisqToolbar.setTitle("");
