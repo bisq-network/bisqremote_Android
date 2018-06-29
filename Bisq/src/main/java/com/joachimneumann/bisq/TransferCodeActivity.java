@@ -1,28 +1,55 @@
 package com.joachimneumann.bisq;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransferCodeActivity extends AppCompatActivity {
+public class TransferCodeActivity extends AppCompatActivity implements View.OnClickListener {
+    private NotificationManager notificationManager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_transfer_code);
         Toolbar bisqToolbar = findViewById(R.id.toolbar);
         bisqToolbar.setTitle("");
         setSupportActionBar(bisqToolbar);
+
+        Button nextButton = findViewById(R.id.registerDoneButton);
+        nextButton.setOnClickListener(this);
+
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel notificationChannel;
+
+            notificationChannel = new NotificationChannel("Bisq", "Bisq", importance);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+
+
 
         Phone phone = Phone.getInstance(this);
         Log.i("bisq", "phone: "+phone.description());
@@ -55,8 +82,20 @@ public class TransferCodeActivity extends AppCompatActivity {
 
     }
 
+    public void donePressed() {
+        NotificationCompat.Builder testNotification = new NotificationCompat.Builder(this, "Bisq")
+                .setContentTitle("XXX")
+                .setSmallIcon(R.drawable.help);
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+        notificationManager.notify((int)(System.currentTimeMillis()/1000), testNotification.build());
+    }
+
+    @Override
+    public void onClick(View v) {
+        donePressed();
+    }
+
+class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 

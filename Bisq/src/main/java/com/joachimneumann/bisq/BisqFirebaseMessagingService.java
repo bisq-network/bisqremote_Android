@@ -53,7 +53,7 @@ public class BisqFirebaseMessagingService extends FirebaseMessagingService {
                                     PendingIntent.FLAG_ONE_SHOT);
 
 
-                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "bisq")
+                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "Bisq")
                                     .setSmallIcon(R.drawable.help)
                                     .setContentTitle("bisq")
                                     .setContentText(success)
@@ -63,7 +63,7 @@ public class BisqFirebaseMessagingService extends FirebaseMessagingService {
                             NotificationManager notificationManager =
                                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-                            notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+                            notificationManager.notify((int)System.currentTimeMillis(), notificationBuilder.build());
 
                             Log.i("Bisq", "decrypted json: "+success);
                         }
