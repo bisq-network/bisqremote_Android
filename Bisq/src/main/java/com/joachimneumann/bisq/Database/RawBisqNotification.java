@@ -6,6 +6,7 @@ package com.joachimneumann.bisq.Database;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import java.util.Date;
 
@@ -76,6 +77,7 @@ public class RawBisqNotification {
     }
 
     @PrimaryKey
+    @NonNull
     private int uid;
 
     @ColumnInfo(name = "version")

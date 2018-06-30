@@ -2,6 +2,7 @@ package com.joachimneumann.bisq;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
@@ -9,6 +10,13 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.joachimneumann.bisq.Database.NotificationDatabase;
+import com.joachimneumann.bisq.Database.NotificationRepository;
+import com.joachimneumann.bisq.Database.RawBisqNotification;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class BisqFirebaseMessagingService extends FirebaseMessagingService {
     public static final String BISQ_MESSAGE_ANDROID_MAGIC = "BisqMessageAndroid";
@@ -45,6 +53,19 @@ public class BisqFirebaseMessagingService extends FirebaseMessagingService {
                             e.printStackTrace();
                         }
                         if (success != null) {
+
+                            // TODO add to database
+                            JSONObject obj = null;
+                            try {
+                                obj = new JSONObject(success);
+                                String pageName = obj.getJSONObject("pageInfo").getString("pageName");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            RawBisqNotification newNotification = new RawBisqNotification();
+                            NotificationRepository notificationRepository = new NotificationRepository(this);
+                            notificationRepository.insert(newNotification);
 
                             Intent intent = new Intent(this, TransferCodeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

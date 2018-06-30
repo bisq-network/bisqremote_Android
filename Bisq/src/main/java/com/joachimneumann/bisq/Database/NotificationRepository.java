@@ -2,6 +2,7 @@ package com.joachimneumann.bisq.Database;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.os.AsyncTask;
 
 import java.util.List;
@@ -10,8 +11,8 @@ public class NotificationRepository {
     private RawBisqNotificationDao rawBisqNotificationDao;
     private LiveData<List<RawBisqNotification>> allRawBisqNotifications;
 
-    public NotificationRepository(Application application) {
-        NotificationDatabase db = NotificationDatabase.getDatabase(application);
+    public NotificationRepository(Context context) {
+        NotificationDatabase db = NotificationDatabase.getDatabase(context);
         rawBisqNotificationDao = db.rawBisqNotificationDao();
         allRawBisqNotifications = rawBisqNotificationDao.getAll();
     }

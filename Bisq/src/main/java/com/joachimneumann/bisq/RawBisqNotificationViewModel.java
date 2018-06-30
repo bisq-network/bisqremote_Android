@@ -13,12 +13,12 @@ import java.util.List;
 public class RawBisqNotificationViewModel extends AndroidViewModel {
 
     private NotificationRepository mRepository;
-    private LiveData<List<RawBisqNotification>> allRawBisqNotifications;
+    public LiveData<List<RawBisqNotification>> rawBisqNotifications;
 
     public RawBisqNotificationViewModel (Application application) {
         super(application);
         mRepository = new NotificationRepository(application);
-        allRawBisqNotifications = mRepository.getAllRawBisqNotifications();
+        rawBisqNotifications = mRepository.getAllRawBisqNotifications();
     }
 
     public void insert(RawBisqNotification rawBisqNotification) {

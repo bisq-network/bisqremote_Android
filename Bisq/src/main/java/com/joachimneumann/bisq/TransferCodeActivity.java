@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -88,11 +89,15 @@ public class TransferCodeActivity extends AppCompatActivity implements View.OnCl
                 .setSmallIcon(R.drawable.help);
 
         notificationManager.notify((int)(System.currentTimeMillis()/1000), testNotification.build());
+        Intent myIntent = new Intent(TransferCodeActivity.this, NotificationTable.class);
+        startActivity(myIntent);
     }
 
     @Override
-    public void onClick(View v) {
-        donePressed();
+    public void onClick(View view) {
+        if (view.getId() == R.id.registerDoneButton) {
+            donePressed();
+        }
     }
 
 class ViewPagerAdapter extends FragmentPagerAdapter {
