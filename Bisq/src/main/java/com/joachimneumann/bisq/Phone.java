@@ -59,9 +59,13 @@ public class Phone {
             fromString(phoneString);
         } else {
             apsToken = FirebaseInstanceId.getInstance().getToken();
-            key = UUID.randomUUID().toString().replace("-",  "");
-            isInitialized = true;
-            save();
+            if (apsToken != null) {
+                key = UUID.randomUUID().toString().replace("-",  "");
+                isInitialized = true;
+                save();
+            } else {
+                Log.e("Bisq", "Token is null)");
+            }
         }
     }
 
