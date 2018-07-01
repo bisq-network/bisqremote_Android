@@ -64,6 +64,8 @@ public class BisqFirebaseMessagingService extends FirebaseMessagingService {
                             }
 
                             RawBisqNotification newNotification = new RawBisqNotification();
+                            newNotification.setUid(1);
+                            newNotification.setTitle("t");
                             NotificationRepository notificationRepository = new NotificationRepository(this);
                             notificationRepository.insert(newNotification);
 
