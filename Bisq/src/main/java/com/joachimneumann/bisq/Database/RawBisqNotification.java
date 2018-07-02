@@ -76,7 +76,7 @@ public class RawBisqNotification {
         this.timestampEvent = timestampEvent;
     }
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
     private int uid;
 

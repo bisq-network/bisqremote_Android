@@ -10,13 +10,16 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.joachimneumann.bisq.Database.BisqNotification;
+import com.joachimneumann.bisq.Database.DateDeserializer;
 import com.joachimneumann.bisq.Database.NotificationDatabase;
 import com.joachimneumann.bisq.Database.NotificationRepository;
 import com.joachimneumann.bisq.Database.RawBisqNotification;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.Date;
+
 
 public class BisqFirebaseMessagingService extends FirebaseMessagingService {
     public static final String BISQ_MESSAGE_ANDROID_MAGIC = "BisqMessageAndroid";
@@ -55,17 +58,10 @@ public class BisqFirebaseMessagingService extends FirebaseMessagingService {
                         if (success != null) {
 
                             // TODO add to database
-                            JSONObject obj = null;
-                            try {
-                                obj = new JSONObject(success);
-                                String pageName = obj.getJSONObject("pageInfo").getString("pageName");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            RawBisqNotification newNotification = new RawBisqNotification();
-                            newNotification.setUid(1);
-                            newNotification.setTitle("t");
+                            GsonBuilder gsonBuilder = new GsonBuilder();
+                            gsonBuilder.registerTypeAdapter(Date.class, new DateDeserializer());
+                            Gson gson = gsonBuilder.create();
+                            RawBisqNotification newNotification = gson.fromJson(success, RawBisqNotification.class);
                             NotificationRepository notificationRepository = new NotificationRepository(this);
                             notificationRepository.insert(newNotification);
 

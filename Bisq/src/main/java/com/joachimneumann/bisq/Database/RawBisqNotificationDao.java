@@ -21,4 +21,7 @@ public interface RawBisqNotificationDao {
 
     @Delete
     void delete(RawBisqNotification rawBisqNotification);
+
+    @Query("DELETE FROM rawBisqNotification")
+    public void nukeTableRawBisqNotification();
 }
