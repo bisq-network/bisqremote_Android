@@ -41,7 +41,7 @@ class NotificationTable : AppCompatActivity() {
         tabletext!!.text = "list"
 
         mViewModel = ViewModelProviders.of(this).get(RawBisqNotificationViewModel::class.java)
-        mViewModel!!.rawBisqNotifications.observe(this, Observer { rawBisqNotifications -> updateGUI(rawBisqNotifications!!) })
+        mViewModel!!.bisqNotifications.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
     }
 
     private fun updateGUI(rawBisqNotifications: List<RawBisqNotification>) {

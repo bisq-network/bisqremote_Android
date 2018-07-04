@@ -60,7 +60,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                                 val gsonBuilder = GsonBuilder()
                                 gsonBuilder.registerTypeAdapter(Date::class.java, DateDeserializer())
                                 val gson = gsonBuilder.create()
-                                val newNotification = gson.fromJson<RawBisqNotification>(success, RawBisqNotification::class.java)
+                                val newNotification = gson.fromJson<BisqNotification>(success, BisqNotification::class.java)
                                 val notificationRepository = NotificationRepository(this)
                                 notificationRepository.insert(newNotification)
 

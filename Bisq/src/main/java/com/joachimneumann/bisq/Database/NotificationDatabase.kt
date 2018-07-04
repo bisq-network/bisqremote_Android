@@ -7,11 +7,11 @@ import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
 
-@Database(entities = arrayOf(RawBisqNotification::class), version = 1, exportSchema = false)
+@Database(entities = arrayOf(BisqNotification::class), version = 1, exportSchema = false)
 @TypeConverters(DateTypeConverter::class)
 abstract class NotificationDatabase : RoomDatabase() {
 
-    abstract fun rawBisqNotificationDao(): RawBisqNotificationDao
+    abstract fun bisqNotificationDao(): BisqNotificationDao
 
     companion object {
 
