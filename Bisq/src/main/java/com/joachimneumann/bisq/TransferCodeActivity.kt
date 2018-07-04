@@ -51,7 +51,7 @@ class TransferCodeActivity : AppCompatActivity(), View.OnClickListener {
 
 
         val phone = Phone.getInstance(this)
-        Log.i("bisq", "phone: " + phone!!.description())
+        Log.i("bisq", "phone: " + phone.description())
         val tabLayout = findViewById<View>(R.id.tab_layout) as TabLayout
         tabLayout.addTab(tabLayout.newTab().setText("QR Code"))
         tabLayout.addTab(tabLayout.newTab().setText("Email"))

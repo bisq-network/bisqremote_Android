@@ -20,7 +20,7 @@
         android:id="@+id/registerNextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Next"
+        android:text="@string/button_next"
         android:layout_gravity="right"/>
     </android.support.v7.widget.Toolbar>
 
@@ -34,7 +34,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="80dp"
-        android:text="Register your phone with Bisq"
+        android:text="@string/register_instruction"
         android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"

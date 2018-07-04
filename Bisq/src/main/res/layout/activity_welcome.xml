@@ -17,7 +17,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:gravity="center"
-        android:text="You can now receive notifications from Bisq running on your computer, but first you need to register your phone."
+        android:text="@string/welcome2"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -63,7 +63,7 @@
         android:id="@+id/welcomeNextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="@string/button_register"
         android:layout_gravity="right"/>
     </android.support.v7.widget.Toolbar>
 

@@ -19,6 +19,8 @@
         </activity>
         <activity android:name=".TransferCodeActivity">
         </activity>
+        <activity android:name=".SettingsActivity">
+        </activity>
         <activity android:name=".NotificationTable">
         </activity>
 

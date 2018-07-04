@@ -4,6 +4,10 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 28
     defaultConfig {
+        // from http://www.codexpedia.com/android/using-git-commit-count-for-version-code-for-android/
+        versionCode project.getVersionCode()
+        versionName '0.' + project.getVersionCode()
+
         applicationId "com.joachimneumann.bisqremotetest"
         minSdkVersion 15
         targetSdkVersion 28
@@ -55,3 +59,4 @@ apply plugin: 'kotlin-kapt'
 repositories {
     mavenCentral()
 }
+

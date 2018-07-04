@@ -42,49 +42,46 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                     initializationVector = array[1]
                     encryptedJson = array[2]
                     val phone = Phone.getInstance(this)
-                    if (phone != null) {
-                        val cryptoHelper = CryptoHelper(phone.key!!)
-                        Log.i("Bisq", "key = " + phone.key)
-                        Log.i("Bisq", "iv = $initializationVector")
-                        Log.i("Bisq", "encryptedJson = $encryptedJson")
-                        var success: String? = null
-                        try {
-                            success = cryptoHelper.decrypt(encryptedJson, initializationVector)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+                    Log.i("Bisq", "key = " + phone.key)
+                    Log.i("Bisq", "iv = $initializationVector")
+                    Log.i("Bisq", "encryptedJson = $encryptedJson")
+                    var success: String? = null
+                    try {
+                        success = phone.decrypt(encryptedJson, initializationVector)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
 
-                        if (success != null) {
-                            if (success.startsWith("{\"times")) {
-                                // TODO add to database
-                                val gsonBuilder = GsonBuilder()
-                                gsonBuilder.registerTypeAdapter(Date::class.java, DateDeserializer())
-                                val gson = gsonBuilder.create()
-                                val newNotification = gson.fromJson<BisqNotification>(success, BisqNotification::class.java)
-                                val notificationRepository = NotificationRepository(this)
-                                notificationRepository.insert(newNotification)
+                    if (success != null) {
+                        if (success.startsWith("{\"times")) {
+                            // TODO add to database
+                            val gsonBuilder = GsonBuilder()
+                            gsonBuilder.registerTypeAdapter(Date::class.java, DateDeserializer())
+                            val gson = gsonBuilder.create()
+                            val newNotification = gson.fromJson<BisqNotification>(success, BisqNotification::class.java)
+                            val notificationRepository = NotificationRepository(this)
+                            notificationRepository.insert(newNotification)
 
-                                val intent = Intent(this, TransferCodeActivity::class.java)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                // Create the pending intent to launch the activity
-                                val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                                        PendingIntent.FLAG_ONE_SHOT)
+                            val intent = Intent(this, TransferCodeActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            // Create the pending intent to launch the activity
+                            val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+                                    PendingIntent.FLAG_ONE_SHOT)
 
 
-                                val notificationBuilder = NotificationCompat.Builder(this, "Bisq")
-                                        .setSmallIcon(R.drawable.help)
-                                        .setContentTitle("bisq")
-                                        .setContentText(success)
-                                        .setAutoCancel(true)
-                                        .setContentIntent(pendingIntent)
+                            val notificationBuilder = NotificationCompat.Builder(this, "Bisq")
+                                    .setSmallIcon(R.drawable.help)
+                                    .setContentTitle("bisq")
+                                    .setContentText(success)
+                                    .setAutoCancel(true)
+                                    .setContentIntent(pendingIntent)
 
-                                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-                                notificationManager.notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
-                                Log.i("Bisq", "added to database: $success")
-                            } else {
-                                Log.i("Bisq", "ERROR decrypting json: $success")
-                            }
+                            notificationManager.notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
+                            Log.i("Bisq", "added to database: $success")
+                        } else {
+                            Log.i("Bisq", "ERROR decrypting json: $success")
                         }
                     }
                 }

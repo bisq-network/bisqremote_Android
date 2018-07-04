@@ -16,7 +16,7 @@
             android:textSize="20sp"
             android:textColor="#2e2b2b"
             android:layout_marginBottom="10dp"
-            android:text="Bisq is an open-source desktop application that allows you to buy and sell bitcoins in exchange for national currencies, or alternative crypto currencies."/>
+            android:text="@string/welcome"/>
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:textSize="20sp"
             android:textColor="#2e2b2b"
             android:layout_marginBottom="10dp"
-            android:text="Ok"
+            android:text="@string/button_ok"
             android:onClick="okPressed"/>
     </LinearLayout>
 

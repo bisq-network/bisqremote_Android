@@ -23,7 +23,7 @@
             android:id="@+id/registerDoneButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Done"
+            android:text="@string/button_done"
             android:layout_gravity="right"/>
         </android.support.v7.widget.Toolbar>
 

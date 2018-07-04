@@ -9,7 +9,7 @@
         android:id="@+id/email_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/email_button_text"
+        android:text="@string/button_email"
         android:layout_centerInParent="true"/>
 
 </RelativeLayout>

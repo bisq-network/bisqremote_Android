@@ -18,7 +18,7 @@ class BisqFirebaseInstanceIdService : FirebaseInstanceIdService() {
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
         val phone = Phone.getInstance(this)
-        phone!!.apsToken = refreshedToken
+        phone.apsToken = refreshedToken
     }
 
     companion object {

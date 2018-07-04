@@ -18,6 +18,7 @@ class Phone {
     var apsToken: String? = null
     var isInitialized: Boolean? = null
     private var context: Context? = null
+    var cryptoHelper: CryptoHelper? = null
 
     //private constructor.
     private constructor() {
@@ -27,6 +28,13 @@ class Phone {
         }
     }
 
+    public fun decrypt(cipher: String, iv: String): String? {
+        if (cryptoHelper != null) {
+            return cryptoHelper!!.decrypt(cipher, iv)
+        } else {
+            return null
+        }
+    }
 
     private constructor(c: Context) {
         context = c
@@ -39,6 +47,7 @@ class Phone {
             if (apsToken != null) {
                 key = UUID.randomUUID().toString().replace("-", "")
                 isInitialized = true
+                cryptoHelper = CryptoHelper(key!!)
                 save()
             } else {
                 Log.e("Bisq", "Token is null)")
@@ -67,10 +76,12 @@ class Phone {
             key = a[1]
             apsToken = a[2]
             isInitialized = true
+            cryptoHelper = CryptoHelper(key!!)
         } catch (e: IOException) {
             key = ""
             apsToken = ""
             isInitialized = false
+            cryptoHelper = null
         }
 
     }
@@ -96,7 +107,7 @@ class Phone {
         @Volatile
         private var sSoleInstance: Phone? = null
 
-        fun getInstance(context: Context): Phone? {
+        fun getInstance(context: Context): Phone {
 
             //Double check locking pattern
             if (sSoleInstance == null) { //Check for the first time
@@ -109,7 +120,7 @@ class Phone {
                     }
                 }
             }
-            return sSoleInstance
+            return sSoleInstance!!
         }
     }
 }
