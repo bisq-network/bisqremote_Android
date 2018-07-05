@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.50'
+    ext.kotlin_version = '1.2.51'
 
     repositories {
         google()
@@ -39,6 +39,6 @@ ext.getVersionCode = { ->
         return Integer.parseInt(stdout.toString().trim())
     }
     catch (ignored) {
-        return -1;
+        return -1
     }
 }
