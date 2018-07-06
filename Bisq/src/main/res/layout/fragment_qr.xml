@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
+    android:background="@color/background"
     tools:context="com.joachimneumann.bisq.TransferCodeActivity">
 
     <ImageView
         android:id="@+id/imageView_qr"
-        android:background="@color/backgroundColor"
+        android:background="@color/background"
         android:layout_width="311dp"
         android:layout_height="463dp"
         android:layout_centerInParent="true"

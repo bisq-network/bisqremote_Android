@@ -31,16 +31,13 @@ class WelcomeActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_welcome)
-        val bisqToolbar = findViewById<Toolbar>(R.id.bisq_toolbar)
-        bisqToolbar.title = ""
-        setSupportActionBar(bisqToolbar)
         mContext = applicationContext
         mActivity = this@WelcomeActivity
         mConstraintLayout = findViewById<View>(R.id.main) as ConstraintLayout
-        mButton = findViewById<View>(R.id.helpButton) as ImageButton
-        mButton!!.setOnClickListener(this)
-        nextButton = findViewById(R.id.welcomeNextButton)
-        nextButton!!.setOnClickListener(this)
+//        mButton = findViewById<View>(R.id.helpButton) as ImageButton
+//        mButton!!.setOnClickListener(this)
+//        nextButton = findViewById(R.id.welcomeNextButton)
+//        nextButton!!.setOnClickListener(this)
     }
 
     fun bisqWebpagePressed() {
@@ -59,12 +56,12 @@ class WelcomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        if (view.id == R.id.helpButton) {
-            helpActivity = WelcomeHelp(this)
-        }
-        if (view.id == R.id.welcomeNextButton) {
-            val myIntent = Intent(this@WelcomeActivity, RegisterActivity::class.java)
-            startActivity(myIntent)
-        }
+//        if (view.id == R.id.helpButton) {
+//            helpActivity = WelcomeHelp(this)
+//        }
+//        if (view.id == R.id.welcomeNextButton) {
+//            val myIntent = Intent(this@WelcomeActivity, RegisterActivity::class.java)
+//            startActivity(myIntent)
+//        }
     }
 }
