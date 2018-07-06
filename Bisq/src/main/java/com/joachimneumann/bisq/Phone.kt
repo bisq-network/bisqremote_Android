@@ -36,9 +36,9 @@ class Phone {
         }
     }
 
-    private constructor(c: Context) {
-        context = c
-        val prefs = context!!.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE)
+    private constructor(condext: Context) {
+        context = condext
+        val prefs = condext!!.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE)
         val phoneString = prefs.getString(BISQ_SHARED_PREFERENCE_PHONEID, null)
         if (phoneString != null) {
             fromString(phoneString)
@@ -86,13 +86,13 @@ class Phone {
 
     }
 
-    fun description(): String {
+    fun phoneID(): String {
         return PHONE_MAGIC_ANDROID + PHONE_SEPARATOR + key + PHONE_SEPARATOR + apsToken
     }
 
     fun save() {
         val editor = context!!.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE).edit()
-        editor.putString(BISQ_SHARED_PREFERENCE_PHONEID, description())
+        editor.putString(BISQ_SHARED_PREFERENCE_PHONEID, phoneID())
         editor.apply()
     }
 

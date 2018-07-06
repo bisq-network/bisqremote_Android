@@ -19,6 +19,10 @@
         </activity>
         <activity android:name=".ActivityRegister">
         </activity>
+        <activity android:name=".ActivityEmail">
+        </activity>
+        <activity android:name=".ActivityQR">
+        </activity>
         <activity android:name=".ActivitySettings">
         </activity>
         <activity android:name=".NotificationTable">

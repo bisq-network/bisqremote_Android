@@ -50,14 +50,14 @@ class ActivityRegister : AppCompatActivity(), View.OnClickListener {
 
 
         val phone = Phone.getInstance(this)
-        Log.i("bisq", "phone: " + phone.description())
+        Log.i("bisq", "phone: " + phone.phoneID())
         val tabLayout = findViewById<View>(R.id.tab_layout) as TabLayout
         tabLayout.addTab(tabLayout.newTab().setText("QR Code"))
         tabLayout.addTab(tabLayout.newTab().setText("Email"))
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
 
         val viewPager = findViewById<View>(R.id.pager) as ViewPager
-        val adapter = TransferPageAdapter(supportFragmentManager, tabLayout.tabCount, phone.description())
+        val adapter = TransferPageAdapter(supportFragmentManager, tabLayout.tabCount, phone.phoneID())
         viewPager.adapter = adapter
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

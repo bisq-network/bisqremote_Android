@@ -7,29 +7,36 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.app.Activity
 
-class ActivityRegisterInstructions : AppCompatActivity(), View.OnClickListener {
+
+
+class ActivityRegisterInstructions : AppCompatActivity() {
+    private lateinit var webcamButton: Button
+    private lateinit var emailButton: Button
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
-        val bisqToolbar = findViewById<Toolbar>(R.id.bisq_toolbar)
-        bisqToolbar.title = ""
-        setSupportActionBar(bisqToolbar)
-        val tv = findViewById<TextView>(R.id.textView2)
-        tv.text = "1. Go to your computer \n" +
-                "2. Start the Bisq App \n" +
-                "3. Open \"Bisq Remote\" \n" +
-                "4. Press next \n" +
-                "5. Scan the QR code"
-        val nextButton = findViewById<Button>(R.id.registerNextButton)
-        nextButton.setOnClickListener(this)
+        setContentView(R.layout.activity_register_instructions)
+        webcamButton = bind(R.id.register_webcam_button)
+        webcamButton.setOnClickListener { startActivity(Intent(this,ActivityQR::class.java)) }
+        emailButton = bind(R.id.register_email_button)
+        emailButton.setOnClickListener { createEmail() }
     }
 
-    override fun onClick(view: View) {
-        if (view.id == R.id.registerNextButton) {
-            val myIntent = Intent(this@ActivityRegisterInstructions, ActivityRegister::class.java)
-            startActivity(myIntent)
-        }
+    public fun createEmail() {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/html"
+        var phone = Phone.getInstance(this)
+        val x = phone.apsToken
+        intent.putExtra(Intent.EXTRA_EMAIL, "your_email_address")
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
+        val emailBody = getString(R.string.email_content1) + phone.phoneID() + getString(R.string.email_content2)
+        intent.putExtra(Intent.EXTRA_TEXT, emailBody)
+        startActivityForResult(Intent.createChooser(intent, "Send Email"), 1)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        startActivity(Intent(this,ActivityEmail::class.java))
     }
 }

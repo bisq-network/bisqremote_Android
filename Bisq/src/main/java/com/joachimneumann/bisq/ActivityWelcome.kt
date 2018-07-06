@@ -10,16 +10,10 @@ import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.PopupWindow
 import android.widget.Toast
 
-class ActivityWelcome : AppCompatActivity(), View.OnClickListener {
-    private var mContext: Context? = null
-    private var mActivity: Activity? = null
-    private var helpActivity: WelcomeHelp? = null
-
-    private var mConstraintLayout: ConstraintLayout? = null
+class ActivityWelcome : AppCompatActivity() {
     private lateinit var learn_more_button: Button
     private lateinit var register_button: Button
 
@@ -30,13 +24,15 @@ class ActivityWelcome : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_welcome)
-        mContext = applicationContext
-        mActivity = this@ActivityWelcome
-        mConstraintLayout = findViewById<View>(R.id.main) as ConstraintLayout
         learn_more_button = bind(R.id.learn_more_button)
-        learn_more_button.setOnClickListener(this)
+        learn_more_button.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                bisqWebpagePressed()
+            }
+        })
+
         register_button = bind(R.id.register_button)
-        register_button.setOnClickListener(this)
+        register_button.setOnClickListener { startActivity(Intent(this,ActivityRegisterInstructions::class.java)) }
     }
 
     fun bisqWebpagePressed() {
@@ -47,20 +43,6 @@ class ActivityWelcome : AppCompatActivity(), View.OnClickListener {
             Toast.makeText(this, "No application can handle this request." + " Please install a webbrowser", Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
-
     }
 
-    fun okPressed() {
-        helpActivity!!.dismiss()
-    }
-
-    override fun onClick(view: View) {
-        if (view.id == R.id.learn_more_button) {
-            bisqWebpagePressed()
-        }
-        if (view.id == R.id.register_button) {
-            val intent = Intent(this, ActivityRegisterInstructions::class.java)
-            startActivity(intent)
-        }
-    }
 }
