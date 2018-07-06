@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context="com.joachimneumann.bisq.TransferCodeActivity">
+    tools:context="com.joachimneumann.bisq.ActivityRegister">
 
     <ImageView
         android:id="@+id/imageView_qr"

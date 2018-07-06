@@ -2,7 +2,6 @@ package com.joachimneumann.bisq
 
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.NotificationCompat
@@ -10,13 +9,10 @@ import android.util.Log
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.joachimneumann.bisq.Database.BisqNotification
 import com.joachimneumann.bisq.Database.DateDeserializer
-import com.joachimneumann.bisq.Database.NotificationDatabase
 import com.joachimneumann.bisq.Database.NotificationRepository
-import com.joachimneumann.bisq.Database.RawBisqNotification
 
 import java.util.Date
 
@@ -62,7 +58,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                             val notificationRepository = NotificationRepository(this)
                             notificationRepository.insert(newNotification)
 
-                            val intent = Intent(this, TransferCodeActivity::class.java)
+                            val intent = Intent(this, ActivityRegister::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             // Create the pending intent to launch the activity
                             val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

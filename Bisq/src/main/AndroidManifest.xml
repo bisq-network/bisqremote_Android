@@ -9,17 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/BisqMaterialTheme">
-        <activity android:name=".WelcomeActivity">
+        <activity android:name=".ActivityWelcome">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity">
+        <activity android:name=".ActivityRegisterInstructions">
         </activity>
-        <activity android:name=".TransferCodeActivity">
+        <activity android:name=".ActivityRegister">
         </activity>
-        <activity android:name=".SettingsActivity">
+        <activity android:name=".ActivitySettings">
         </activity>
         <activity android:name=".NotificationTable">
         </activity>

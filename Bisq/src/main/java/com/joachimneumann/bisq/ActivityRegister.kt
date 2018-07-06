@@ -1,6 +1,5 @@
 package com.joachimneumann.bisq
 
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -21,7 +20,7 @@ import android.widget.Button
 
 import java.util.ArrayList
 
-class TransferCodeActivity : AppCompatActivity(), View.OnClickListener {
+class ActivityRegister : AppCompatActivity(), View.OnClickListener {
     private var notificationManager: NotificationManager? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +82,7 @@ class TransferCodeActivity : AppCompatActivity(), View.OnClickListener {
                 .setSmallIcon(R.drawable.help)
 
         notificationManager!!.notify((System.currentTimeMillis() / 1000).toInt(), testNotification.build())
-        val myIntent = Intent(this@TransferCodeActivity, NotificationTable::class.java)
+        val myIntent = Intent(this@ActivityRegister, NotificationTable::class.java)
         startActivity(myIntent)
     }
 

@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".WelcomeActivity">
+    tools:context=".ActivityWelcome">
 
     <ImageView
         android:id="@+id/welcomeImageView"
@@ -53,7 +53,7 @@
 
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/learn_more_button"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -69,6 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/welcomeImageView" />
 
     <Button
+        android:id="@+id/register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

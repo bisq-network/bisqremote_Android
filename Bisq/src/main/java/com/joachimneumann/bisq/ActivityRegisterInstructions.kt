@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 
-class RegisterActivity : AppCompatActivity(), View.OnClickListener {
+class ActivityRegisterInstructions : AppCompatActivity(), View.OnClickListener {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View) {
         if (view.id == R.id.registerNextButton) {
-            val myIntent = Intent(this@RegisterActivity, TransferCodeActivity::class.java)
+            val myIntent = Intent(this@ActivityRegisterInstructions, ActivityRegister::class.java)
             startActivity(myIntent)
         }
     }

@@ -9,7 +9,7 @@ import android.widget.TextView
 
 
 
-class SettingsActivity : AppCompatActivity() {
+class ActivitySettings : AppCompatActivity() {
 
     private lateinit var settingsRegisterAgainButton:         Button
     private lateinit var settingsAddExampleButton:            Button

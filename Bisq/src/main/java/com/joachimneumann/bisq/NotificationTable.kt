@@ -60,7 +60,7 @@ class NotificationTable : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View) {
         if (view.id == R.id.settingsButton) {
-            val intent = Intent(this, SettingsActivity::class.java)
+            val intent = Intent(this, ActivitySettings::class.java)
             startActivity(intent)
         }
     }

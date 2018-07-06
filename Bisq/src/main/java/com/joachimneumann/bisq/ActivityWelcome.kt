@@ -8,21 +8,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.PopupWindow
 import android.widget.Toast
 
-class WelcomeActivity : AppCompatActivity(), View.OnClickListener {
+class ActivityWelcome : AppCompatActivity(), View.OnClickListener {
     private var mContext: Context? = null
     private var mActivity: Activity? = null
     private var helpActivity: WelcomeHelp? = null
 
     private var mConstraintLayout: ConstraintLayout? = null
-    private var mButton: ImageButton? = null
-    private var nextButton: Button? = null
+    private lateinit var learn_more_button: Button
+    private lateinit var register_button: Button
 
     private val mPopupWindow: PopupWindow? = null
 
@@ -32,12 +31,12 @@ class WelcomeActivity : AppCompatActivity(), View.OnClickListener {
 
         setContentView(R.layout.activity_welcome)
         mContext = applicationContext
-        mActivity = this@WelcomeActivity
+        mActivity = this@ActivityWelcome
         mConstraintLayout = findViewById<View>(R.id.main) as ConstraintLayout
-//        mButton = findViewById<View>(R.id.helpButton) as ImageButton
-//        mButton!!.setOnClickListener(this)
-//        nextButton = findViewById(R.id.welcomeNextButton)
-//        nextButton!!.setOnClickListener(this)
+        learn_more_button = bind(R.id.learn_more_button)
+        learn_more_button.setOnClickListener(this)
+        register_button = bind(R.id.register_button)
+        register_button.setOnClickListener(this)
     }
 
     fun bisqWebpagePressed() {
@@ -56,12 +55,12 @@ class WelcomeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-//        if (view.id == R.id.helpButton) {
-//            helpActivity = WelcomeHelp(this)
-//        }
-//        if (view.id == R.id.welcomeNextButton) {
-//            val myIntent = Intent(this@WelcomeActivity, RegisterActivity::class.java)
-//            startActivity(myIntent)
-//        }
+        if (view.id == R.id.learn_more_button) {
+            bisqWebpagePressed()
+        }
+        if (view.id == R.id.register_button) {
+            val intent = Intent(this, ActivityRegisterInstructions::class.java)
+            startActivity(intent)
+        }
     }
 }
