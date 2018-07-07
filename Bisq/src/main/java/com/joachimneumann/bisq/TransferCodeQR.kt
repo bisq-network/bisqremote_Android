@@ -23,11 +23,11 @@ class TransferCodeQR : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_qr, container, false)
+//        val view = inflater.inflate(R.layout.fragment_qr, container, false)
         val messageForBisq = arguments!!.getString("bisqPhoneID")
         val writer = QRCodeWriter()
         try {
-            val bitMatrix = writer.encode(messageForBisq!!, BarcodeFormat.QR_CODE, 512, 512)
+            val bitMatrix = writer.encode(messageForBisq!!, BarcodeFormat.QR_CODE, 1024, 1024)
             val width = bitMatrix.width
             val height = bitMatrix.height
             val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
@@ -36,7 +36,7 @@ class TransferCodeQR : Fragment() {
                     bmp.setPixel(x, y, if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE)
                 }
             }
-            (view.findViewById<View>(R.id.imageView_qr) as ImageView).setImageBitmap(bmp)
+//            (view.findViewById<View>(R.id.imageView_qr) as ImageView).setImageBitmap(bmp)
 
         } catch (e: WriterException) {
             e.printStackTrace()

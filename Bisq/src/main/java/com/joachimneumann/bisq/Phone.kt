@@ -36,9 +36,9 @@ class Phone {
         }
     }
 
-    private constructor(condext: Context) {
-        context = condext
-        val prefs = condext!!.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE)
+    private constructor(context_: Context) {
+        context = context_
+        val prefs = context!!.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE)
         val phoneString = prefs.getString(BISQ_SHARED_PREFERENCE_PHONEID, null)
         if (phoneString != null) {
             fromString(phoneString)

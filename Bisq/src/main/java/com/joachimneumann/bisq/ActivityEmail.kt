@@ -15,7 +15,7 @@ class ActivityEmail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_email)
         status = bind(R.id.register_email_status_textview)
-        status.setText(getString(R.string.register_email_status)+": not yet registered")
+        status.setText("...waiting for confirmation")
         resend_email_button = bind(R.id.resend_email_button)
         resend_email_button.setOnClickListener { createEmail() }
         createEmail()

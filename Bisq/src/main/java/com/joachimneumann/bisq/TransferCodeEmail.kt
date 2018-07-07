@@ -17,14 +17,14 @@ class TransferCodeEmail : Fragment(), View.OnClickListener {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        val myView = inflater.inflate(R.layout.fragment_email, container, false)
-        bisqPhoneID = arguments!!.getString("bisqPhoneID")
-        val b = myView.findViewById<View>(R.id.email_button) as Button
-        b.setOnClickListener(this)
-        return myView
-    }
+//    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+//                              savedInstanceState: Bundle?): View? {
+//        val myView = inflater.inflate(R.layout.fragment_email, container, false)
+//        bisqPhoneID = arguments!!.getString("bisqPhoneID")
+//        val b = myView.findViewById<View>(R.id.email_button) as Button
+//        b.setOnClickListener(this)
+//        return myView
+//    }
 
     override fun onClick(view: View) {
         val intent = Intent(Intent.ACTION_SEND)
