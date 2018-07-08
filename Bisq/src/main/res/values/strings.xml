@@ -18,5 +18,6 @@
         (2) a token from Apple that identifies this instance of the Bisq remote app.</string>
     <string name="welcome_title">Bisq mobile</string>
     <string name="register_email_instructions">Please open your email on your computer and paste the Phone ID into Bisq \n(Settings -> Bisq Mobile)</string>
-    <string name="register_qr_instructions">Go to your computer and open the Bisq App.\n\nSettings -> Bisq Mobile\n\nThen press "Webcam" and scan the QR code</string>
+    <string name="register_qr_instructions">Go to your computer and open the Bisq App.\n\nSettings -> Bisq Mobile\n\nThen press \"Webcam\" and scan this QR code.\n\nYour phone will receive a confiormation notification.</string>
+    <string name="waiting">...waiting</string>
 </resources>

@@ -16,7 +16,7 @@ class Phone {
 
     var key: String? = null
     var apsToken: String? = null
-    var isInitialized: Boolean? = null
+    var confirmed: Boolean? = null
     private var context: Context? = null
     var cryptoHelper: CryptoHelper? = null
 
@@ -46,17 +46,13 @@ class Phone {
             apsToken = FirebaseInstanceId.getInstance().token
             if (apsToken != null) {
                 key = UUID.randomUUID().toString().replace("-", "")
-                isInitialized = true
+                confirmed = false
                 cryptoHelper = CryptoHelper(key!!)
-                save()
             } else {
                 Log.e("Bisq", "Token is null)")
             }
         }
     }
-
-    fun createNew() {}
-
 
     fun fromString(s: String) {
         val a = s.split(PHONE_SEPARATOR_ESCAPED.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
@@ -75,12 +71,12 @@ class Phone {
             }
             key = a[1]
             apsToken = a[2]
-            isInitialized = true
+            confirmed = false
             cryptoHelper = CryptoHelper(key!!)
         } catch (e: IOException) {
-            key = ""
-            apsToken = ""
-            isInitialized = false
+            key = null
+            apsToken = null
+            confirmed = false
             cryptoHelper = null
         }
 
@@ -90,7 +86,7 @@ class Phone {
         return PHONE_MAGIC_ANDROID + PHONE_SEPARATOR + key + PHONE_SEPARATOR + apsToken
     }
 
-    fun save() {
+    fun saveToPreferences() {
         val editor = context!!.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE).edit()
         editor.putString(BISQ_SHARED_PREFERENCE_PHONEID, phoneID())
         editor.apply()

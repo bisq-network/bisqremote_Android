@@ -13,7 +13,7 @@ import android.widget.Button
 import android.widget.PopupWindow
 import android.widget.Toast
 
-class ActivityWelcome : AppCompatActivity() {
+class ActivityWelcome: AppCompatActivity() {
     private lateinit var learn_more_button: Button
     private lateinit var register_button: Button
 

@@ -26,11 +26,19 @@ class ActivityQR: AppCompatActivity() {
         setContentView(R.layout.activity_register_qr)
         qrImage = bind(R.id.qrImageView)
         statusTextView = bind(R.id.register_qr_status_textview)
-        statusTextView.setText("...waiting for confirmation")
+        statusTextView.setText(getString(R.string.waiting))
         register_qr_instructions_textview = bind(R.id.register_qr_instructions_textview)
         instruction_button = bind(R.id.register_qr_instructions_button)
         instruction_button.setOnClickListener { instructionPressed() }
         createQR()
+    }
+
+    fun confirmed() {
+        this.runOnUiThread(java.lang.Runnable {
+            statusTextView.setText("ok")
+        })
+
+
     }
 
     private fun createQR() {
