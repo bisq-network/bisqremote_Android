@@ -34,7 +34,7 @@ class ActivitySettings : AppCompatActivity() {
         settingsTokenTextView               = bind(R.id.settingsTokenTextView)
         settingsVersionTextView             = bind(R.id.settingsVersionTextView)
 
-        val phone = Phone.getInstance(this)
+        val phone = Phone.instance
         if (phone.key != null)      {   settingsKeyTextView.text = "key   "+phone.key!!.substring(0, 8)+"..." }
         if (phone.apsToken != null) { settingsTokenTextView.text = "token "+phone.apsToken!!.substring(0, 8)+"..." }
         settingsVersionTextView.text = this.packageManager.getPackageInfo(this.packageName, 0).versionName

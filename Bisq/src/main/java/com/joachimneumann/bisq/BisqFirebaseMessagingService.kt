@@ -32,7 +32,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun processNotification(notificationMessage: String) {
-        val phone = Phone.getInstance(this)
+        val phone = Phone.instance
 
         val array = notificationMessage.split("\\|".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
         if (array.size != 3) return
@@ -41,7 +41,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             phone.confirmed = true
             phone.saveToPreferences() // only confirmed phones are saved to the preferences
             val currentActivity = getCurrentActivity()
-            if (currentActivity is ActivityQR) {
+            if (currentActivity is ActivityRegisterQR) {
                     currentActivity.confirmed()
             }
         } else {
@@ -69,7 +69,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                         val notificationRepository = NotificationRepository(this)
                         notificationRepository.insert(newNotification)
 
-                        val intent = Intent(this, ActivityRegister::class.java)
+                        val intent = Intent(this, NotificationTable::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         // Create the pending intent to launch the activity
                         val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

@@ -19,9 +19,9 @@
         </activity>
         <activity android:name=".ActivityRegister">
         </activity>
-        <activity android:name=".ActivityEmail">
+        <activity android:name=".ActivityRegisterEmail">
         </activity>
-        <activity android:name=".ActivityQR">
+        <activity android:name=".ActivityRegisterQR">
         </activity>
         <activity android:name=".ActivitySettings">
         </activity>

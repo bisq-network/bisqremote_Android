@@ -2,30 +2,39 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/register_qr_instructions_textview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:text="@string/register_qr_instructions"
-        android:textSize="18sp" />
+
 
     <ImageView
         android:id="@+id/qrImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:contentDescription="QR @android:string/fingerprint_icon_content_description"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/missing_qr" />
+
+
+    <TextView
+        android:id="@+id/register_qr_instructions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginStart="40dp"
+        android:paddingTop="20pt"
+        android:gravity="center_vertical"
+        android:text="@string/register_qr_instructions"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/qrImageView" />
 
     <Button
         android:id="@+id/register_qr_instructions_button"
@@ -33,27 +42,57 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="INSTRUCTIONS"
-        android:textColor="@color/design_default_color_primary"
+        android:text="@string/button_instructions"
+        android:textColor="@color/primary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/register_qr_status_textview"
+        android:id="@+id/register_qr_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginLeft="93dp"
-        android:layout_marginRight="92dp"
-        android:layout_marginStart="93dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/waiting"
         android:textColor="@android:color/black"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/register_qr_instructions_button"
+        app:layout_constraintBottom_toTopOf="@+id/registerQRProgressBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:text="Status: not yet registered" />
+        app:layout_constraintTop_toBottomOf="@+id/qrImageView" />
+
+
+
+    <ImageView
+        android:id="@+id/registerQROK"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/primary"
+        app:layout_constraintStart_toEndOf="@+id/register_qr_status"
+        app:layout_constraintTop_toTopOf="@id/register_qr_status"
+        app:layout_constraintBottom_toBottomOf="@id/register_qr_status"
+        app:srcCompat="@drawable/ok" />
+
+    <ProgressBar
+        android:id="@+id/registerQRProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/register_qr_instructions_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

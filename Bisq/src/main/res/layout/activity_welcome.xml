@@ -58,6 +58,7 @@
         android:layout_marginTop="30dp"
         android:enabled="true"
         android:textColor="@color/primary"
+        android:backgroundTint="@android:color/transparent"
         android:text="@string/button_learn_more"
         android:textAllCaps="false"
         android:textSize="18sp"
