@@ -101,19 +101,20 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         val activitiesField = activityThreadClass.getDeclaredField("mActivities")
         activitiesField.isAccessible = true
 
-        val activities = activitiesField.get(activityThread) as Map<Any, Any> ?: return null
-
-        for (activityRecord in activities.values) {
-            val activityRecordClass = activityRecord.javaClass
-            val pausedField = activityRecordClass.getDeclaredField("paused")
-            pausedField.isAccessible = true
-            if (!pausedField.getBoolean(activityRecord)) {
-                val activityField = activityRecordClass.getDeclaredField("activity")
-                activityField.isAccessible = true
-                return activityField.get(activityRecord) as Activity
+        @Suppress("UNCHECKED_CAST")
+        val activities = activitiesField.get(activityThread) as? Map<Any, Any>
+        if (activities != null) {
+            for (activityRecord in activities.values) {
+                val activityRecordClass = activityRecord.javaClass
+                val pausedField = activityRecordClass.getDeclaredField("paused")
+                pausedField.isAccessible = true
+                if (!pausedField.getBoolean(activityRecord)) {
+                    val activityField = activityRecordClass.getDeclaredField("activity")
+                    activityField.isAccessible = true
+                    return activityField.get(activityRecord) as Activity
+                }
             }
         }
-
         return null
     }
 }

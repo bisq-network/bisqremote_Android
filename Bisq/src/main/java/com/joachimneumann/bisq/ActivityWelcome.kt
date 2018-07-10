@@ -19,7 +19,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
 import com.google.firebase.messaging.FirebaseMessagingService
 
-class ActivityWelcome: AppCompatActivity(), FirebaseMessagingService() {
+class ActivityWelcome: AppCompatActivity() {
     private lateinit var learn_more_button: Button
     private lateinit var register_button: Button
 
