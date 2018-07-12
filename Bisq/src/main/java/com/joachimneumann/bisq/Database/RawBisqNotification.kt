@@ -9,6 +9,12 @@ import android.arch.persistence.room.PrimaryKey
 
 import java.util.Date
 
+enum class NotificationType {
+    SETUP_CONFIRMATION, ERASE, // setup
+    TRADE, DISPUTE, FINANCIAL, // from Bisq
+    ERROR, PLACEHOLDER         // internal
+}
+
 @Entity
 open class RawBisqNotification {
 

@@ -4,43 +4,38 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
 import android.media.RingtoneManager
+import android.support.constraint.ConstraintLayout
+import android.view.Gravity
 
 
 class ActivityRegisterQR: AppCompatActivity() {
 
     private lateinit var qrImage: ImageView
-    private lateinit var status: TextView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var register_qr_instructions: TextView
-    private lateinit var registerQROK: ImageView
-    private lateinit var instruction_button: Button
+    private lateinit var instructionsLabel: TextView
+    private lateinit var instructionButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_qr)
+
         qrImage = bind(R.id.qrImageView)
-        status = bind(R.id.register_qr_status)
-        status.setText(getString(R.string.waiting))
-        register_qr_instructions = bind(R.id.register_qr_instructions)
-        register_qr_instructions.visibility = View.INVISIBLE
-        progressBar = bind(R.id.registerQRProgressBar)
-        progressBar.visibility = View.INVISIBLE
-        registerQROK = bind(R.id.registerQROK)
-        registerQROK.visibility = View.INVISIBLE
-        instruction_button = bind(R.id.register_qr_instructions_button)
-        instruction_button.setOnClickListener { instructionPressed() }
+        instructionsLabel = bind(R.id.register_qr_instructions)
+        instructionsLabel.visibility = View.INVISIBLE
+        instructionButton = bind(R.id.register_qr_instructions_button)
+        instructionButton.setOnClickListener { instructionPressed() }
         createQR()
+        val layout = findViewById<ConstraintLayout>(R.id.layout_register_qr)
+        layout.setOnClickListener({ _ -> toggleInstructions() })
+
     }
 
     fun confirmed() {
@@ -51,13 +46,12 @@ class ActivityRegisterQR: AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            status.setText(getString(R.string.register_qr_confirmation_received))
-            progressBar.visibility = View.VISIBLE
-            registerQROK.visibility = View.VISIBLE
-            Handler().postDelayed(java.lang.Runnable {
-                val i = Intent(Intent(this,NotificationTable::class.java))
-                startActivity(i)
-            }, 2500)
+            instructionsLabel.text = getString(R.string.register_qr_confirmation_received)
+            instructionsLabel.textSize = 20f
+            instructionsLabel.gravity = Gravity.CENTER
+            qrImage.visibility = View.INVISIBLE
+            instructionsLabel.visibility = View.VISIBLE
+            instructionButton.text = "SHOW NOTIFICATIONS"
         })
     }
 
@@ -80,13 +74,23 @@ class ActivityRegisterQR: AppCompatActivity() {
         }
     }
 
-    private fun instructionPressed() {
+    private fun toggleInstructions() {
         if (qrImage.visibility == View.VISIBLE) {
             qrImage.visibility = View.INVISIBLE
-            register_qr_instructions.visibility = View.VISIBLE
+            instructionsLabel.visibility = View.VISIBLE
         } else {
             qrImage.visibility = View.VISIBLE
-            register_qr_instructions.visibility = View.INVISIBLE
+            instructionsLabel.visibility = View.INVISIBLE
+        }
+    }
+
+
+    private fun instructionPressed() {
+        if (Phone.instance.confirmed) {
+            val i = Intent(Intent(this,ActivityNotificationTable::class.java))
+            startActivity(i)
+        } else {
+            toggleInstructions()
         }
     }
 

@@ -17,15 +17,13 @@
         </activity>
         <activity android:name=".ActivityRegisterInstructions">
         </activity>
-        <activity android:name=".ActivityRegister">
-        </activity>
         <activity android:name=".ActivityRegisterEmail">
         </activity>
         <activity android:name=".ActivityRegisterQR">
         </activity>
         <activity android:name=".ActivitySettings">
         </activity>
-        <activity android:name=".NotificationTable">
+        <activity android:name=".ActivityNotificationTable">
         </activity>
 
         <service

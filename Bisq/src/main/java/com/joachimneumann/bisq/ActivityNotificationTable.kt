@@ -12,16 +12,19 @@ import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ListView
 import android.widget.TextView
+import com.joachimneumann.bisq.Database.NotificationAdapter
 
 import com.joachimneumann.bisq.Database.RawBisqNotification
 
-class NotificationTable : AppCompatActivity(), View.OnClickListener {
-    private lateinit var tabletext: TextView
+class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
     private var mViewModel: RawBisqNotificationViewModel? = null
     private var notificationManager: NotificationManager? = null
     private lateinit var settingsButton: Button
+    private lateinit var listView: ListView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,8 +45,6 @@ class NotificationTable : AppCompatActivity(), View.OnClickListener {
         }
 
         setContentView(R.layout.activity_notificationtable)
-        tabletext = bind(R.id.tableText)
-        tabletext.text = "..."
 
         mViewModel = ViewModelProviders.of(this).get(RawBisqNotificationViewModel::class.java)
         mViewModel!!.bisqNotifications.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
@@ -51,10 +52,18 @@ class NotificationTable : AppCompatActivity(), View.OnClickListener {
         settingsButton = bind(R.id.settingsButton)
         settingsButton.setOnClickListener(this)
 
+        listView = bind(R.id.notificationListView)
+
+//        val authors = arrayOf("Conan Doyle, Arthur", "Christie, Agatha", "Collins, Wilkie");
+//        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, authors);
+//        listView.adapter = adapter
+
+
     }
 
     private fun updateGUI(rawBisqNotifications: List<RawBisqNotification>) {
-        tabletext.text = "n = " + rawBisqNotifications.size
+        val adapter = NotificationAdapter(this, rawBisqNotifications)
+        listView.adapter = adapter
 
     }
 
