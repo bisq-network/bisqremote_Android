@@ -8,7 +8,7 @@ import com.joachimneumann.bisq.Database.BisqNotification
 
 import com.joachimneumann.bisq.Database.NotificationRepository
 
-class RawBisqNotificationViewModel(application: Application) : AndroidViewModel(application) {
+class BisqNotificationViewModel(application: Application) : AndroidViewModel(application) {
 
     private val mRepository: NotificationRepository
     var bisqNotifications: LiveData<List<BisqNotification>>
@@ -22,4 +22,11 @@ class RawBisqNotificationViewModel(application: Application) : AndroidViewModel(
         mRepository.insert(bisqNotification)
     }
 
+    fun erase() {
+        mRepository.erase()
+    }
+
+    fun markAllAsRead() {
+        mRepository.markAllAsRead()
+    }
 }

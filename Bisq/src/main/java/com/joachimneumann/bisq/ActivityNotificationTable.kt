@@ -11,20 +11,23 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
-import android.widget.TextView
+import com.joachimneumann.bisq.Database.BisqNotification
 import com.joachimneumann.bisq.Database.NotificationAdapter
 
-import com.joachimneumann.bisq.Database.RawBisqNotification
-
-class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
-    private var mViewModel: RawBisqNotificationViewModel? = null
+class ActivityNotificationTable : AppCompatActivity, View.OnClickListener {
+    private var mViewModel: BisqNotificationViewModel? = null
     private var notificationManager: NotificationManager? = null
     private lateinit var settingsButton: Button
     private lateinit var listView: ListView
+    private lateinit var toolbar: Toolbar
+
+    constructor() : super()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,11 +49,14 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
 
         setContentView(R.layout.activity_notificationtable)
 
-        mViewModel = ViewModelProviders.of(this).get(RawBisqNotificationViewModel::class.java)
+        toolbar = bind(R.id.bisq_toolbar)
+        setSupportActionBar(toolbar)
+
+        mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
         mViewModel!!.bisqNotifications.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
 
-        settingsButton = bind(R.id.settingsButton)
-        settingsButton.setOnClickListener(this)
+//        settingsButton = bind(R.id.settingsButton)
+//        settingsButton.setOnClickListener(this)
 
         listView = bind(R.id.notificationListView)
 
@@ -61,17 +67,31 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
 
     }
 
-    private fun updateGUI(rawBisqNotifications: List<RawBisqNotification>) {
-        val adapter = NotificationAdapter(this, rawBisqNotifications)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.getItemId()
+        if (id == R.id.action_settings) {
+            startActivity(Intent(this,ActivitySettings::class.java))
+        }
+        return true
+    }
+
+    private fun updateGUI(bisqNotifications: List<BisqNotification>) {
+        val adapter = NotificationAdapter(this, bisqNotifications)
         listView.adapter = adapter
 
     }
 
     override fun onClick(view: View) {
-        if (view.id == R.id.settingsButton) {
-            val intent = Intent(this, ActivitySettings::class.java)
-            startActivity(intent)
-        }
+//        if (view.id == R.id.settingsButton) {
+//            val intent = Intent(this, ActivitySettings::class.java)
+//            startActivity(intent)
+//        }
     }
 }
 

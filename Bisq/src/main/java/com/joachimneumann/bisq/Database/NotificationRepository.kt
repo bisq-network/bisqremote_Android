@@ -25,6 +25,11 @@ class NotificationRepository(context: Context) {
         eraseAsyncTask(bisqNotificationDao).execute()
     }
 
+    fun markAllAsRead() {
+        markAllAsReadAsyncTask(bisqNotificationDao).execute()
+    }
+
+
     private class insertAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao) : AsyncTask<BisqNotification, Void, Void>() {
         override fun doInBackground(vararg params: BisqNotification): Void? {
             mAsyncTaskDao.insert(params[0])
@@ -35,6 +40,13 @@ class NotificationRepository(context: Context) {
     private class eraseAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao) : AsyncTask<BisqNotification, Void, Void>() {
         override fun doInBackground(vararg params: BisqNotification): Void? {
             mAsyncTaskDao.nukeTableBisqNotification()
+            return null
+        }
+    }
+
+    private class markAllAsReadAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao) : AsyncTask<BisqNotification, Void, Void>() {
+        override fun doInBackground(vararg params: BisqNotification): Void? {
+            mAsyncTaskDao.markAllAsRead(true)
             return null
         }
     }

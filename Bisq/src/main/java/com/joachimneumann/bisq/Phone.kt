@@ -59,6 +59,12 @@ public class Phone private constructor() {
         editor.apply()
     }
 
+    fun clearPreferences(context: Context) {
+        val editor = context.getSharedPreferences(Phone.BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE).edit()
+        editor.clear()
+        editor.commit()
+    }
+
     fun newToken(token_: String) {
         token = token_
         key = UUID.randomUUID().toString().replace("-", "")

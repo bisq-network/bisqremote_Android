@@ -1,13 +1,13 @@
 package com.joachimneumann.bisq
 
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.TextView
-
-
-
+import com.joachimneumann.bisq.Database.BisqNotification
+import java.util.Date
 
 
 class ActivitySettings : AppCompatActivity() {
@@ -35,13 +35,34 @@ class ActivitySettings : AppCompatActivity() {
 
         settingsRegisterAgainButton.setOnClickListener {
             Phone.instance.reset()
+            Phone.instance.clearPreferences(this)
             startActivity(Intent(this, ActivityWelcome::class.java))
+        }
+
+        settingsAddExampleButton.setOnClickListener {
+            val mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
+            val new = BisqNotification()
+            new.title = "Added from Settings"
+            new.timestampEvent = Date()
+            mViewModel.insert(new)
+        }
+
+        settingsDeleteAllNotifcationsButton.setOnClickListener {
+            val mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
+            mViewModel.erase()
+            finish()
+        }
+
+        settingsMarkAsReadButton.setOnClickListener {
+            val mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
+            mViewModel.markAllAsRead()
+            finish()
         }
 
         val phone = Phone.instance
         if (phone.key != null)      {   settingsKeyTextView.text = "key   "+phone.key!!.substring(0, 8)+"..." }
         if (phone.token != null) { settingsTokenTextView.text = "token "+phone.token!!.substring(0, 8)+"..." }
-        settingsVersionTextView.text = this.packageManager.getPackageInfo(this.packageName, 0).versionName
+        settingsVersionTextView.text = "Version 0.4"
     }
 
 }

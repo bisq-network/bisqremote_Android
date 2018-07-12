@@ -26,7 +26,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
-        android:contentDescription="TODO"
+        android:contentDescription="normal"
         app:srcCompat="@drawable/info" />
 
     <LinearLayout
@@ -42,13 +42,13 @@
             android:gravity="center_vertical"
             android:minHeight="?android:attr/listPreferredItemHeightSmall"
             android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+            android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
             android:paddingRight="?android:attr/listPreferredItemPaddingRight"
             android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-            android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-            android:text="xxx"
+            android:paddingTop="10dp"
+            android:text="Title"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:textSize="24sp"
-            />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/notification_cell_time"
@@ -59,10 +59,10 @@
             android:gravity="bottom"
             android:minHeight="?android:attr/listPreferredItemHeightSmall"
             android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+            android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
             android:paddingRight="?android:attr/listPreferredItemPaddingRight"
             android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-            android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-            android:text="xxx"
+            android:text="time of event"
             android:textAppearance="?android:attr/textAppearanceListItemSmall" />
     </LinearLayout>
 

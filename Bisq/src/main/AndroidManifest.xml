@@ -24,6 +24,7 @@
         <activity android:name=".ActivitySettings">
         </activity>
         <activity android:name=".ActivityNotificationTable">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         </activity>
 
         <service

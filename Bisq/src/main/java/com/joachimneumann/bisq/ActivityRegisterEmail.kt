@@ -5,32 +5,26 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
 
 class ActivityRegisterEmail : AppCompatActivity() {
 
-    private lateinit var status: TextView
     private lateinit var resendEmailButton: Button
-    private lateinit var progressBar: ProgressBar
+    private lateinit var register_email_instructions: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_email)
-        status = bind(R.id.register_email_status_textview)
-        status.setText(getString(R.string.waiting))
         resendEmailButton = bind(R.id.resend_email_button)
         resendEmailButton.setOnClickListener { createEmail() }
-        progressBar = bind(R.id.registerEmailProgressBar)
-        progressBar.visibility = View.INVISIBLE
+        register_email_instructions = bind(R.id.register_email_instructions)
         createEmail()
     }
 
     fun confirmed() {
         this.runOnUiThread(java.lang.Runnable {
-            status.setText(getString(R.string.register_qr_confirmation_received))
-            progressBar.visibility = View.VISIBLE
+            register_email_instructions.setText(getString(R.string.register_qr_confirmation_received))
         })
     }
 
