@@ -55,7 +55,7 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
         listView = bind(R.id.notificationListView)
 
 //        val authors = arrayOf("Conan Doyle, Arthur", "Christie, Agatha", "Collins, Wilkie");
-//        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, authors);
+//        val adapter = ArrayAdapter<String>(this, android.R.layout.notification_cell, authors);
 //        listView.adapter = adapter
 
 
