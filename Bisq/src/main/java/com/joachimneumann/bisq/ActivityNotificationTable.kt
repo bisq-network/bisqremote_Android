@@ -7,28 +7,31 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.ListView
 import com.joachimneumann.bisq.Database.BisqNotification
 import com.joachimneumann.bisq.Database.NotificationAdapter
+import android.support.v7.widget.helper.ItemTouchHelper
+import android.arch.lifecycle.LiveData
 
-class ActivityNotificationTable : AppCompatActivity, View.OnClickListener {
+
+
+class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
     private var mViewModel: BisqNotificationViewModel? = null
     private var notificationManager: NotificationManager? = null
     private lateinit var settingsButton: Button
-    private lateinit var listView: ListView
+    private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
-
-    constructor() : super()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,23 +50,27 @@ class ActivityNotificationTable : AppCompatActivity, View.OnClickListener {
             notificationManager!!.createNotificationChannel(notificationChannel)
         }
 
+        mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
+        val x = mViewModel!!.bisqNotifications
+        x.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
+
         setContentView(R.layout.activity_notificationtable)
 
         toolbar = bind(R.id.bisq_toolbar)
         setSupportActionBar(toolbar)
 
-        mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
-        mViewModel!!.bisqNotifications.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
+        recyclerView = bind(R.id.notification_recycler_view)
+        var mLayoutManager = LinearLayoutManager (this);
+        recyclerView.setLayoutManager(mLayoutManager);
 
-//        settingsButton = bind(R.id.settingsButton)
-//        settingsButton.setOnClickListener(this)
-
-        listView = bind(R.id.notificationListView)
-
-//        val authors = arrayOf("Conan Doyle, Arthur", "Christie, Agatha", "Collins, Wilkie");
-//        val adapter = ArrayAdapter<String>(this, android.R.layout.notification_cell, authors);
-//        listView.adapter = adapter
-
+        val swipeHandler = object : SwipeToDeleteCallback(this) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = recyclerView.adapter as NotificationAdapter
+                adapter.removeItem(viewHolder.adapterPosition)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
     }
 
@@ -82,10 +89,9 @@ class ActivityNotificationTable : AppCompatActivity, View.OnClickListener {
     }
 
     private fun updateGUI(bisqNotifications: List<BisqNotification>) {
-        val adapter = NotificationAdapter(this, bisqNotifications)
-        listView.adapter = adapter
-
+        recyclerView.adapter = NotificationAdapter(bisqNotifications)
     }
+
 
     override fun onClick(view: View) {
 //        if (view.id == R.id.settingsButton) {
