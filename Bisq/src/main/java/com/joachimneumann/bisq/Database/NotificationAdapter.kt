@@ -24,7 +24,11 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
             holder.title.setTextColor(Color.BLACK)
         }
         holder.title.text = n.title
-        holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent)
+        if (n.timestampEvent != null) {
+            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent)
+        } else {
+            holder.time.text = "time: ??"
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
