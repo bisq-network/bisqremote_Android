@@ -11,6 +11,9 @@ import java.util.Date
 
 
 class ActivitySettings : AppCompatActivity() {
+    companion object {
+        private var counter = 1
+    }
 
     private lateinit var settingsRegisterAgainButton:         Button
     private lateinit var settingsAddExampleButton:            Button
@@ -42,7 +45,8 @@ class ActivitySettings : AppCompatActivity() {
         settingsAddExampleButton.setOnClickListener {
             val mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
             val new = BisqNotification()
-            new.title = "Added from Settings"
+            new.title = "Added from Settings "+counter
+            counter += 1
             new.timestampEvent = Date()
             mViewModel.insert(new)
         }
