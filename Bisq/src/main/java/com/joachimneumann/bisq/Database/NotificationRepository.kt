@@ -20,6 +20,9 @@ class NotificationRepository(context: Context) {
         insertAsyncTask(bisqNotificationDao).execute(bisqNotification)
     }
 
+    fun getFromID(id: Int): BisqNotification {
+        return bisqNotificationDao.getFromID(id)
+    }
 
     fun erase() {
         eraseAsyncTask(bisqNotificationDao).execute()
@@ -30,6 +33,12 @@ class NotificationRepository(context: Context) {
     }
 
 
+    private class getFromIDAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao): AsyncTask<BisqNotification, Void, Void>() {
+        override fun doInBackground(vararg params: BisqNotification?): Void {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+    }
     private class insertAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao) : AsyncTask<BisqNotification, Void, Void>() {
         override fun doInBackground(vararg params: BisqNotification): Void? {
             mAsyncTaskDao.insert(params[0])

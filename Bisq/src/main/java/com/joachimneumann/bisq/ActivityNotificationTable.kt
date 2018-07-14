@@ -23,7 +23,7 @@ import com.joachimneumann.bisq.Database.BisqNotification
 import com.joachimneumann.bisq.Database.NotificationAdapter
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.arch.lifecycle.LiveData
-
+import kotlin.concurrent.thread
 
 
 class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
@@ -51,8 +51,13 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
         }
 
         mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
-        val x = mViewModel!!.bisqNotifications
-        x.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
+        val liveData = mViewModel!!.bisqNotifications
+        liveData.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
+
+        thread(start = true) {
+            var x = mViewModel!!.getFromID(6)
+            x = BisqNotification()
+        }
 
         setContentView(R.layout.activity_notificationtable)
 

@@ -25,7 +25,7 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         }
         holder.title.text = n.title
         if (n.timestampEvent != null) {
-            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent)
+            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent)+" "+n.uid
         } else {
             holder.time.text = "time: ??"
         }
