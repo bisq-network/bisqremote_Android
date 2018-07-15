@@ -23,7 +23,7 @@ abstract class NotificationDatabase : RoomDatabase() {
                 synchronized(NotificationDatabase::class.java) {
                     if (INSTANCE == null) {
                         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                NotificationDatabase::class.java, "weather.db")
+                                NotificationDatabase::class.java, "bisq.db")
                                 .build()
                     }
                 }
