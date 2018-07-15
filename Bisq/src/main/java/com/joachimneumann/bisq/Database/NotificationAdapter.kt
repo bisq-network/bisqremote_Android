@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.joachimneumann.bisq.R
 import android.view.LayoutInflater
+import com.joachimneumann.bisq.BisqNotificationViewModel
 import java.text.SimpleDateFormat
 
 
@@ -40,10 +41,10 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         return nList.size
     }
 
-    fun removeItem(position: Int) {
-        var mList: MutableList<BisqNotification> = nList.toMutableList()
-        mList.removeAt(position)
-        nList = mList
+    fun removeItem(vm: BisqNotificationViewModel?, position: Int) {
+        val id = nList[position].uid
+        val toBeDeleted = vm!!.getFromID(id)
+        vm!!.delete(toBeDeleted!!)
     }
 
     inner class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {

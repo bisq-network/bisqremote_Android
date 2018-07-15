@@ -24,18 +24,16 @@ class BisqNotificationViewModel(application: Application) : AndroidViewModel(app
         mRepository.insert(bisqNotification)
     }
 
-    fun erase() {
-        mRepository.erase()
+    fun delete(bisqNotification: BisqNotification) {
+        mRepository.delete(bisqNotification)
     }
 
-    fun getFromID(id: Int): BisqNotification {
-        var x: BisqNotification? = null
-        runBlocking {
-            async {
-                x = mRepository.getFromID(id)
-            }.await()
-        }
-        return x!!
+    fun nukeTable() {
+        mRepository.nukeTable()
+    }
+
+    fun getFromID(id: Int): BisqNotification? {
+        return mRepository.getFromID(id)
     }
 
     fun markAllAsRead() {

@@ -18,19 +18,14 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import com.joachimneumann.bisq.Database.BisqNotification
 import com.joachimneumann.bisq.Database.NotificationAdapter
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.arch.lifecycle.LiveData
 import android.util.Log
-import kotlin.concurrent.thread
 
-
-class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
+class ActivityNotificationTable : AppCompatActivity() {
     private var mViewModel: BisqNotificationViewModel? = null
     private var notificationManager: NotificationManager? = null
-    private lateinit var settingsButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
 
@@ -58,7 +53,7 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
 
         Log.i("Bisq", "--- START ---")
 
-        var x = mViewModel!!.getFromID(8)
+        var x = mViewModel!!.getFromID(14)
         if (x == null) {
             Log.i("Bisq", "id 8: NULL")
         } else {
@@ -77,7 +72,7 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
         val swipeHandler = object : SwipeToDeleteCallback(this) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = recyclerView.adapter as NotificationAdapter
-                adapter.removeItem(viewHolder.adapterPosition)
+                adapter.removeItem(mViewModel, viewHolder.adapterPosition)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
@@ -103,13 +98,6 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
         recyclerView.adapter = NotificationAdapter(bisqNotifications)
     }
 
-
-    override fun onClick(view: View) {
-//        if (view.id == R.id.settingsButton) {
-//            val intent = Intent(this, ActivitySettings::class.java)
-//            startActivity(intent)
-//        }
-    }
 }
 
 // copied from https://medium.com/@quiro91/improving-findviewbyid-with-kotlin-4cf2f8f779bb

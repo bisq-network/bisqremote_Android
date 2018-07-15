@@ -53,7 +53,7 @@ class ActivitySettings : AppCompatActivity() {
 
         settingsDeleteAllNotifcationsButton.setOnClickListener {
             val mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
-            mViewModel.erase()
+            mViewModel.nukeTable()
             finish()
         }
 
