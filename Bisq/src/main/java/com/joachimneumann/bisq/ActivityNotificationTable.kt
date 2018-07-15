@@ -18,23 +18,23 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import com.joachimneumann.bisq.Database.BisqNotification
 import com.joachimneumann.bisq.Database.NotificationAdapter
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.arch.lifecycle.LiveData
-import kotlin.concurrent.thread
+import android.util.Log
 
-
-class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
-    private var mViewModel: BisqNotificationViewModel? = null
+class ActivityNotificationTable : AppCompatActivity() {
+    private lateinit var mViewModel: BisqNotificationViewModel
     private var notificationManager: NotificationManager? = null
-    private lateinit var settingsButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
 
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -50,14 +50,8 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
             notificationManager!!.createNotificationChannel(notificationChannel)
         }
 
-        mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
-        val liveData = mViewModel!!.bisqNotifications
+        val liveData = mViewModel.bisqNotifications
         liveData.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
-
-        thread(start = true) {
-            var x = mViewModel!!.getFromID(6)
-            x = BisqNotification()
-        }
 
         setContentView(R.layout.activity_notificationtable)
 
@@ -71,7 +65,7 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
         val swipeHandler = object : SwipeToDeleteCallback(this) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = recyclerView.adapter as NotificationAdapter
-                adapter.removeItem(viewHolder.adapterPosition)
+                mViewModel.delete(mViewModel.getFromUid(adapter.uid(viewHolder.adapterPosition))!!)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
@@ -80,7 +74,6 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu, menu)
         return true
     }
@@ -97,13 +90,6 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
         recyclerView.adapter = NotificationAdapter(bisqNotifications)
     }
 
-
-    override fun onClick(view: View) {
-//        if (view.id == R.id.settingsButton) {
-//            val intent = Intent(this, ActivitySettings::class.java)
-//            startActivity(intent)
-//        }
-    }
 }
 
 // copied from https://medium.com/@quiro91/improving-findviewbyid-with-kotlin-4cf2f8f779bb

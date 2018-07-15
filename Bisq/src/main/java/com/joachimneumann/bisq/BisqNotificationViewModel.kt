@@ -7,6 +7,8 @@ import android.arch.lifecycle.LiveData
 import com.joachimneumann.bisq.Database.BisqNotification
 
 import com.joachimneumann.bisq.Database.NotificationRepository
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 
 class BisqNotificationViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,12 +24,16 @@ class BisqNotificationViewModel(application: Application) : AndroidViewModel(app
         mRepository.insert(bisqNotification)
     }
 
-    fun erase() {
-        mRepository.erase()
+    fun delete(bisqNotification: BisqNotification) {
+        mRepository.delete(bisqNotification)
     }
 
-    fun getFromID(id: Int): BisqNotification {
-        return mRepository.getFromID(id)
+    fun nukeTable() {
+        mRepository.nukeTable()
+    }
+
+    fun getFromUid(uid: Int): BisqNotification? {
+        return mRepository.getFromUid(uid)
     }
 
     fun markAllAsRead() {

@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.joachimneumann.bisq.R
 import android.view.LayoutInflater
+import com.joachimneumann.bisq.BisqNotificationViewModel
 import java.text.SimpleDateFormat
 
 
@@ -25,7 +26,7 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         }
         holder.title.text = n.title
         if (n.timestampEvent != null) {
-            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent)+" "+n.uid
+            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent) // for debugging database access add:  +" "+n.uid
         } else {
             holder.time.text = "time: ??"
         }
@@ -40,10 +41,9 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         return nList.size
     }
 
-    fun removeItem(position: Int) {
-        var mList: MutableList<BisqNotification> = nList.toMutableList()
-        mList.removeAt(position)
-        nList = mList
+
+    fun uid(postition: Int): Int {
+        return nList[postition].uid
     }
 
     inner class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {

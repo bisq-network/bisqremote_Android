@@ -8,8 +8,8 @@ interface BisqNotificationDao {
     @get:Query("SELECT * FROM BisqNotification")
     val all: LiveData<List<BisqNotification>>
 
-    @Query("SELECT * FROM BisqNotification WHERE uid=:id")
-    fun getFromID(id: Int): BisqNotification
+    @Query("SELECT * FROM BisqNotification WHERE uid=:uid")
+    fun getFromUid(uid: Int): BisqNotification
 
     @Insert
     fun insert(bisqNotification: BisqNotification)

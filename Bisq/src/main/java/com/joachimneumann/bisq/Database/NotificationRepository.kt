@@ -3,11 +3,17 @@ package com.joachimneumann.bisq.Database
 import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.os.AsyncTask
+import android.arch.lifecycle.MutableLiveData
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 
-class NotificationRepository(context: Context) {
 
+class NotificationRepository(context: Context){
 
     private val bisqNotificationDao: BisqNotificationDao
+
+    private val delegate: NotificationRepository? = null
+
     val allBisqNotifications: LiveData<List<BisqNotification>>
 
     init {
@@ -17,46 +23,29 @@ class NotificationRepository(context: Context) {
     }
 
     fun insert(bisqNotification: BisqNotification) {
-        insertAsyncTask(bisqNotificationDao).execute(bisqNotification)
+        async { bisqNotificationDao.insert(bisqNotification) }
     }
 
-    fun getFromID(id: Int): BisqNotification {
-        return bisqNotificationDao.getFromID(id)
+    fun delete(bisqNotification: BisqNotification) {
+        async { bisqNotificationDao.delete(bisqNotification) }
     }
 
-    fun erase() {
-        eraseAsyncTask(bisqNotificationDao).execute()
+    fun getFromUid(uid: Int): BisqNotification? {
+        var x: BisqNotification? = null
+        runBlocking {
+            async {
+                x = bisqNotificationDao.getFromUid(uid)
+            }.await()
+        }
+        return x
+    }
+
+    fun nukeTable() {
+        async { bisqNotificationDao.nukeTableBisqNotification() }
     }
 
     fun markAllAsRead() {
-        markAllAsReadAsyncTask(bisqNotificationDao).execute()
+        async { bisqNotificationDao.markAllAsRead(true) }
     }
 
-
-    private class getFromIDAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao): AsyncTask<BisqNotification, Void, Void>() {
-        override fun doInBackground(vararg params: BisqNotification?): Void {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-    }
-    private class insertAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao) : AsyncTask<BisqNotification, Void, Void>() {
-        override fun doInBackground(vararg params: BisqNotification): Void? {
-            mAsyncTaskDao.insert(params[0])
-            return null
-        }
-    }
-
-    private class eraseAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao) : AsyncTask<BisqNotification, Void, Void>() {
-        override fun doInBackground(vararg params: BisqNotification): Void? {
-            mAsyncTaskDao.nukeTableBisqNotification()
-            return null
-        }
-    }
-
-    private class markAllAsReadAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao) : AsyncTask<BisqNotification, Void, Void>() {
-        override fun doInBackground(vararg params: BisqNotification): Void? {
-            mAsyncTaskDao.markAllAsRead(true)
-            return null
-        }
-    }
 }
