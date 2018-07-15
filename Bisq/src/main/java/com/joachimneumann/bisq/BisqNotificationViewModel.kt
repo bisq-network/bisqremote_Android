@@ -7,6 +7,8 @@ import android.arch.lifecycle.LiveData
 import com.joachimneumann.bisq.Database.BisqNotification
 
 import com.joachimneumann.bisq.Database.NotificationRepository
+import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 
 class BisqNotificationViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -27,7 +29,13 @@ class BisqNotificationViewModel(application: Application) : AndroidViewModel(app
     }
 
     fun getFromID(id: Int): BisqNotification {
-        return mRepository.getFromID(id)
+        var x: BisqNotification? = null
+        runBlocking {
+            async {
+                x = mRepository.getFromID(id)
+            }.await()
+        }
+        return x!!
     }
 
     fun markAllAsRead() {

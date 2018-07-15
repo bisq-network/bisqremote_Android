@@ -23,6 +23,7 @@ import com.joachimneumann.bisq.Database.BisqNotification
 import com.joachimneumann.bisq.Database.NotificationAdapter
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.arch.lifecycle.LiveData
+import android.util.Log
 import kotlin.concurrent.thread
 
 
@@ -32,6 +33,7 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
     private lateinit var settingsButton: Button
     private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,9 +56,13 @@ class ActivityNotificationTable : AppCompatActivity(), View.OnClickListener {
         val liveData = mViewModel!!.bisqNotifications
         liveData.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
 
-        thread(start = true) {
-            var x = mViewModel!!.getFromID(6)
-            x = BisqNotification()
+        Log.i("Bisq", "--- START ---")
+
+        var x = mViewModel!!.getFromID(8)
+        if (x == null) {
+            Log.i("Bisq", "id 8: NULL")
+        } else {
+            Log.i("Bisq", "id 8: "+x.title+" " +x.message)
         }
 
         setContentView(R.layout.activity_notificationtable)

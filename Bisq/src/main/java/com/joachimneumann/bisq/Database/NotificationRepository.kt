@@ -3,12 +3,18 @@ package com.joachimneumann.bisq.Database
 import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.os.AsyncTask
+import android.arch.lifecycle.MutableLiveData
 
-class NotificationRepository(context: Context) {
 
+class NotificationRepository(context: Context){
 
     private val bisqNotificationDao: BisqNotificationDao
+
+    private val delegate: NotificationRepository? = null
+
     val allBisqNotifications: LiveData<List<BisqNotification>>
+    private val searchResults = MutableLiveData<BisqNotification>()
+
 
     init {
         val db = NotificationDatabase.getDatabase(context)
@@ -32,13 +38,6 @@ class NotificationRepository(context: Context) {
         markAllAsReadAsyncTask(bisqNotificationDao).execute()
     }
 
-
-    private class getFromIDAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao): AsyncTask<BisqNotification, Void, Void>() {
-        override fun doInBackground(vararg params: BisqNotification?): Void {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-    }
     private class insertAsyncTask internal constructor(private val mAsyncTaskDao: BisqNotificationDao) : AsyncTask<BisqNotification, Void, Void>() {
         override fun doInBackground(vararg params: BisqNotification): Void? {
             mAsyncTaskDao.insert(params[0])
