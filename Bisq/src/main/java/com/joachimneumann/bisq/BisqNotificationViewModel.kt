@@ -32,8 +32,8 @@ class BisqNotificationViewModel(application: Application) : AndroidViewModel(app
         mRepository.nukeTable()
     }
 
-    fun getFromID(id: Int): BisqNotification? {
-        return mRepository.getFromID(id)
+    fun getFromUid(uid: Int): BisqNotification? {
+        return mRepository.getFromUid(uid)
     }
 
     fun markAllAsRead() {

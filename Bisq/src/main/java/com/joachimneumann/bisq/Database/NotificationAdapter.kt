@@ -26,7 +26,7 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         }
         holder.title.text = n.title
         if (n.timestampEvent != null) {
-            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent)+" "+n.uid
+            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent) // for debugging database access add:  +" "+n.uid
         } else {
             holder.time.text = "time: ??"
         }
@@ -41,10 +41,9 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         return nList.size
     }
 
-    fun removeItem(vm: BisqNotificationViewModel?, position: Int) {
-        val id = nList[position].uid
-        val toBeDeleted = vm!!.getFromID(id)
-        vm!!.delete(toBeDeleted!!)
+
+    fun uid(postition: Int): Int {
+        return nList[postition].uid
     }
 
     inner class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {

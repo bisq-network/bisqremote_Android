@@ -24,7 +24,7 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 
 class ActivityNotificationTable : AppCompatActivity() {
-    private var mViewModel: BisqNotificationViewModel? = null
+    private lateinit var mViewModel: BisqNotificationViewModel
     private var notificationManager: NotificationManager? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
@@ -32,6 +32,9 @@ class ActivityNotificationTable : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
 
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -47,18 +50,8 @@ class ActivityNotificationTable : AppCompatActivity() {
             notificationManager!!.createNotificationChannel(notificationChannel)
         }
 
-        mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
-        val liveData = mViewModel!!.bisqNotifications
+        val liveData = mViewModel.bisqNotifications
         liveData.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
-
-        Log.i("Bisq", "--- START ---")
-
-        var x = mViewModel!!.getFromID(14)
-        if (x == null) {
-            Log.i("Bisq", "id 8: NULL")
-        } else {
-            Log.i("Bisq", "id 8: "+x.title+" " +x.message)
-        }
 
         setContentView(R.layout.activity_notificationtable)
 
@@ -72,7 +65,7 @@ class ActivityNotificationTable : AppCompatActivity() {
         val swipeHandler = object : SwipeToDeleteCallback(this) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = recyclerView.adapter as NotificationAdapter
-                adapter.removeItem(mViewModel, viewHolder.adapterPosition)
+                mViewModel.delete(mViewModel.getFromUid(adapter.uid(viewHolder.adapterPosition))!!)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
@@ -81,7 +74,6 @@ class ActivityNotificationTable : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu, menu)
         return true
     }

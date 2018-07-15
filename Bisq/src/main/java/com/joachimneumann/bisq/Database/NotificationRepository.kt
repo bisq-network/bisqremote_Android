@@ -30,11 +30,11 @@ class NotificationRepository(context: Context){
         async { bisqNotificationDao.delete(bisqNotification) }
     }
 
-    fun getFromID(id: Int): BisqNotification? {
+    fun getFromUid(uid: Int): BisqNotification? {
         var x: BisqNotification? = null
         runBlocking {
             async {
-                x = bisqNotificationDao.getFromID(id)
+                x = bisqNotificationDao.getFromUid(uid)
             }.await()
         }
         return x
