@@ -1,3 +1,5 @@
 Bisq/build
 .gradle
 .idea
+local.properties
+
