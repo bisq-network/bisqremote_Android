@@ -1,5 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
+
+repositories {
+    mavenCentral()
+}
+
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
 
 android {
     compileSdkVersion 27
@@ -58,9 +71,4 @@ dependencies {
     kapt "android.arch.lifecycle:compiler:$lifecycle_version"
 }
 
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'kotlin-kapt'
-repositories {
-    mavenCentral()
-}
 

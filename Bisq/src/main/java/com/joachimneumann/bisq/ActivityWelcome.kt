@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Button
-import android.widget.PopupWindow
 import android.widget.Toast
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
@@ -19,14 +18,10 @@ import com.google.firebase.iid.InstanceIdResult
 
 class ActivityWelcome: AppCompatActivity() {
     private lateinit var learnMoreButton: Button
-    private lateinit var registerButton: Button
-
-    private val mPopupWindow: PopupWindow? = null
-
+    private lateinit var pairButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // already registered?
         val registered = Phone.instance.readFromPreferences(this)
         if (registered) {
@@ -45,13 +40,13 @@ class ActivityWelcome: AppCompatActivity() {
             }
         })
 
-        registerButton = bind(R.id.register_button)
-        registerButton.setOnClickListener { startActivity(Intent(this,ActivityRegisterInstructions::class.java)) }
-        registerButton.isEnabled = false
+        pairButton = bind(R.id.pair_button)
+        pairButton.setOnClickListener { startActivity(Intent(this,ActivityRegisterQR::class.java)) }
+        pairButton.isEnabled = false
 
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@ActivityWelcome, OnSuccessListener<InstanceIdResult> { instanceIdResult ->
             Phone.instance.newToken(instanceIdResult.token)
-            registerButton.isEnabled = true
+            pairButton.isEnabled = true
             checkForToken()
         })
     }
@@ -60,7 +55,7 @@ class ActivityWelcome: AppCompatActivity() {
         if (Phone.instance.token == null) {
             internetDialog()
         } else {
-            registerButton.isEnabled = true
+            pairButton.isEnabled = true
         }
     }
 
@@ -91,7 +86,7 @@ class ActivityWelcome: AppCompatActivity() {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.primary))
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.DKGRAY)
     }
-
+//
     fun bisqWebpagePressed() {
         try {
             val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bisq.network"))

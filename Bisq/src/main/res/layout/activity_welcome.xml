@@ -16,37 +16,33 @@
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:cropToPadding="false"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:paddingTop="40dp"
         android:scaleType="fitStart"
-        app:srcCompat="@drawable/welcome" />
+        app:srcCompat="@drawable/playstore_icon" />
 
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="30dp"
-        android:paddingLeft="20dp"
-        android:text="@string/welcome_title"
-        android:textColor="@color/primaryDark"
-        android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeImageView" />
 
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:gravity="start"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
-        android:textColor="@color/primaryDark"
         android:text="@string/welcome"
+        android:textColor="@color/primary"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/pair_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/welcomeImageView" />
 
 
     <Button
@@ -54,20 +50,23 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="30dp"
-        android:enabled="true"
-        android:textColor="@color/primary"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
         android:backgroundTint="@android:color/transparent"
+        android:enabled="true"
         android:text="@string/button_learn_more"
         android:textAllCaps="false"
-        android:textSize="18sp"
+        android:textColor="@color/primary"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeImageView" />
+        app:layout_constraintStart_toEndOf="@+id/register_button" />
 
     <Button
-        android:id="@+id/register_button"
+        android:id="@+id/pair_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -77,8 +76,9 @@
         android:layout_marginStart="8dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="@string/button_register"
-        android:textSize="18sp"
+        android:text="@string/button_pair"
+        android:textAllCaps="false"
+        android:textSize="16sp"
         android:theme="@style/PrimaryButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -20,22 +20,16 @@ import android.view.Gravity
 class ActivityRegisterQR: AppCompatActivity() {
 
     private lateinit var qrImage: ImageView
-    private lateinit var instructionsLabel: TextView
-    private lateinit var instructionButton: Button
+    private lateinit var emailButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_qr)
 
         qrImage = bind(R.id.qrImageView)
-        instructionsLabel = bind(R.id.register_qr_instructions)
-        instructionsLabel.visibility = View.INVISIBLE
-        instructionButton = bind(R.id.register_qr_instructions_button)
-        instructionButton.setOnClickListener { instructionPressed() }
+        emailButton = bind(R.id.email_button)
+        emailButton.setOnClickListener { emailPressed() }
         createQR()
-        val layout = findViewById<ConstraintLayout>(R.id.layout_register_qr)
-        layout.setOnClickListener({ _ -> toggleInstructions() })
-
     }
 
     fun confirmed() {
@@ -43,15 +37,12 @@ class ActivityRegisterQR: AppCompatActivity() {
             try {
                 val notificationTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
                 RingtoneManager.getRingtone(applicationContext, notificationTone).play()
+
+                val i = Intent(Intent(this,ActivityCongratulations::class.java))
+                startActivity(i)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            instructionsLabel.text = getString(R.string.register_qr_confirmation_received)
-            instructionsLabel.textSize = 20f
-            instructionsLabel.gravity = Gravity.CENTER
-            qrImage.visibility = View.INVISIBLE
-            instructionsLabel.visibility = View.VISIBLE
-            instructionButton.text = "SHOW NOTIFICATIONS"
         })
     }
 
@@ -74,24 +65,10 @@ class ActivityRegisterQR: AppCompatActivity() {
         }
     }
 
-    private fun toggleInstructions() {
-        if (qrImage.visibility == View.VISIBLE) {
-            qrImage.visibility = View.INVISIBLE
-            instructionsLabel.visibility = View.VISIBLE
-        } else {
-            qrImage.visibility = View.VISIBLE
-            instructionsLabel.visibility = View.INVISIBLE
-        }
-    }
 
-
-    private fun instructionPressed() {
-        if (Phone.instance.confirmed) {
-            val i = Intent(Intent(this,ActivityNotificationTable::class.java))
-            startActivity(i)
-        } else {
-            toggleInstructions()
-        }
+    private fun emailPressed() {
+       val i = Intent(Intent(this,ActivityRegisterEmail::class.java))
+       startActivity(i)
     }
 
 }

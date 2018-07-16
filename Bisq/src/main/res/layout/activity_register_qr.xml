@@ -21,36 +21,30 @@
         app:srcCompat="@drawable/missing_qr" />
 
 
-    <TextView
-        android:id="@+id/register_qr_instructions"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginStart="40dp"
-        android:paddingTop="20pt"
-        android:gravity="center_vertical"
-        android:text="@string/register_qr_instructions"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/qrImageView" />
-
     <Button
-        android:id="@+id/register_qr_instructions_button"
+        android:id="@+id/email_button"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
-        android:text="@string/button_instructions"
+        android:text="@string/button_email"
+        android:textAllCaps="false"
         android:textColor="@color/primary"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/question_email"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/email_button" />
 
 
 </android.support.constraint.ConstraintLayout>
