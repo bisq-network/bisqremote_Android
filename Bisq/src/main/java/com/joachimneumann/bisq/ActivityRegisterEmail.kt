@@ -32,7 +32,7 @@ class ActivityRegisterEmail : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/html"
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject))
-        val emailBody = getString(R.string.email_content1) + Phone.instance.phoneID() + getString(R.string.email_content2)
+        val emailBody = getString(R.string.email_content1) + Phone.instance.pairingToken() + getString(R.string.email_content2)
         intent.putExtra(Intent.EXTRA_TEXT, emailBody)
         startActivity(Intent.createChooser(intent, "Send Email"))
     }

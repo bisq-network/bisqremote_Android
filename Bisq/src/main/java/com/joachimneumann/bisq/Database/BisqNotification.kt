@@ -7,8 +7,8 @@ import java.util.*
 @Entity
 open class BisqNotification : RawBisqNotification() {
 
-    @ColumnInfo(name = "timestampReceived")
-    var timestampReceived: Date? = null
+    @ColumnInfo(name = "sentDate")
+    var sentDate: Date? = null
 
     @ColumnInfo(name = "read")
     var read: Boolean = false

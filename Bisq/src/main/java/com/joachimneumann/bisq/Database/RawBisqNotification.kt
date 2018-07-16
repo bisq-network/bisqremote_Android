@@ -26,8 +26,8 @@ open class RawBisqNotification {
     @ColumnInfo(name = "version")
     var version: Int = 0
 
-    @ColumnInfo(name = "notificationType")
-    var notificationType: String? = null
+    @ColumnInfo(name = "type")
+    var type: String? = null
 
     @ColumnInfo(name = "title")
     var title: String? = null
@@ -38,9 +38,9 @@ open class RawBisqNotification {
     @ColumnInfo(name = "actionRequired")
     var actionRequired: String? = null
 
-    @ColumnInfo(name = "transactionID")
-    var transactionID: String? = null
+    @ColumnInfo(name = "txId")
+    var txId: String? = null
 
-    @ColumnInfo(name = "timestampEvent")
-    var timestampEvent: Date? = null
+    @ColumnInfo(name = "receivedDate")
+    var receivedDate: Date? = null
 }

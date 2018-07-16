@@ -47,7 +47,7 @@ class ActivitySettings : AppCompatActivity() {
             val new = BisqNotification()
             new.title = "Added from Settings "+counter
             counter += 1
-            new.timestampEvent = Date()
+            new.sentDate = Date()
             mViewModel.insert(new)
         }
 

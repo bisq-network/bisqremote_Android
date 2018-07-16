@@ -56,7 +56,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             val gson = gsonBuilder.create()
             val newNotification = gson.fromJson<BisqNotification>(success, BisqNotification::class.java)
             val currentActivity = getCurrentActivity()
-            when (newNotification.notificationType) {
+            when (newNotification.type) {
                 NotificationType.SETUP_CONFIRMATION.name -> {
                     Phone.instance.confirmed = true
                     Phone.instance.saveToPreferences(this) // only confirmed phones are saved to the preferences

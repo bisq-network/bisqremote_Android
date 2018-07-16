@@ -25,8 +25,8 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
             holder.title.setTextColor(Color.BLACK)
         }
         holder.title.text = n.title
-        if (n.timestampEvent != null) {
-            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.timestampEvent) // for debugging database access add:  +" "+n.uid
+        if (n.sentDate != null) {
+            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.sentDate) // for debugging database access add:  +" "+n.uid
         } else {
             holder.time.text = "time: ??"
         }

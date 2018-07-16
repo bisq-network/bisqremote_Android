@@ -58,7 +58,7 @@ class ActivityRegisterQR: AppCompatActivity() {
     private fun createQR() {
         val writer = QRCodeWriter()
         try {
-            val bitMatrix = writer.encode(Phone.instance.phoneID(), BarcodeFormat.QR_CODE, 1024, 1024)
+            val bitMatrix = writer.encode(Phone.instance.pairingToken(), BarcodeFormat.QR_CODE, 1024, 1024)
             val width = bitMatrix.width
             val height = bitMatrix.height
             val bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
