@@ -79,7 +79,7 @@ public class Phone private constructor() {
     fun fromString(s: String): Boolean {
         val a = s.split(Phone.PHONE_SEPARATOR_ESCAPED.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
         try {
-            if (a.size != 3) {
+            if (a.size != 4) {
                 throw IOException("invalid ${BISQ_SHARED_PREFERENCE_PAIRING_TOKEN} format")
             }
             if (a[2].length != 32) {

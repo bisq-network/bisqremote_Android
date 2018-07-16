@@ -1,27 +1,37 @@
-package com.joachimneumann.bisq.Database
+package com.joachimneumann.bisq
 
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
+import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import com.joachimneumann.bisq.R
 import android.view.LayoutInflater
-import com.joachimneumann.bisq.BisqNotificationViewModel
+import com.joachimneumann.bisq.Database.BisqNotification
 import java.text.SimpleDateFormat
 
 
 class NotificationAdapter(private var nList: List<BisqNotification>) :
         RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
+
+    companion object {
+        var font: Typeface? = null
+    }
+
+
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
-        val n = nList[position]
+
+        var n = nList[position]
+        holder.icon.setText(R.string.icon_trade)
+        if (n.type == "TRADE") { holder.icon.setText(R.string.icon_trade) }
+        if (n.type == "OFFER") { holder.icon.setText(R.string.icon_offer) }
+        if (n.type == "DISPUTE") { holder.icon.setText(R.string.icon_dispute) }
+        if (n.type == "PRICE") { holder.icon.setText(R.string.icon_price) }
+        if (n.type == "MARKET") { holder.icon.setText(R.string.icon_market) }
+
         if (n.read) {
-            holder.icon.setImageResource(R.drawable.info_read)
             holder.title.setTextColor(Color.GRAY)
         } else {
-            holder.icon.setImageResource(R.drawable.info)
             holder.title.setTextColor(Color.BLACK)
         }
         holder.title.text = n.title
@@ -47,12 +57,17 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
     }
 
     inner class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var icon: ImageView
+        var icon: TextView
         var title: TextView
         var time: TextView
 
         init {
-            this.icon = view.findViewById(R.id.notification_cell_image) as ImageView
+            if (NotificationAdapter.font == null) {
+                NotificationAdapter.font = Typeface.createFromAsset(view.context.getAssets(), "Font Awesome 5 Free-Solid-900.otf")
+            }
+            icon = view.findViewById(R.id.notification_cell_image) as TextView
+            icon.typeface = NotificationAdapter.font
+            icon.textSize = 33F
             this.title = view.findViewById<View>(R.id.notification_cell_title) as TextView
             this.time = view.findViewById<View>(R.id.notification_cell_time) as TextView
         }

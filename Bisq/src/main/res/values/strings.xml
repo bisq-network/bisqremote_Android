@@ -10,12 +10,15 @@
     <string name="button_about">About</string>
     <string name="button_settings_register_again">Reset and pair again</string>xc
     <string name="button_congratulations">Show notifications</string>
-
     <string name="question_email">No Webcam?</string>
     <string name="question_email2">No Webcam?</string>
     <string name="congratulations">Congratulations, you are all set.</string>
 
-
+    <string name="icon_trade">\uf362</string>
+    <string name="icon_offer">\uf00c</string>
+    <string name="icon_dispute">\uf0e3</string>
+    <string name="icon_price">\uf0d6</string>
+    <string name="icon_market">\uf201</string>
 
     <string name="learn_more">Bisq is an open-source desktop application that allows you to buy and sell bitcoins in exchange for national currencies, or alternative crypto currencies.</string>
     <string name="register_instructions">Do you want to use your computer\'s webcam or do you want to send an email to yourself?</string>

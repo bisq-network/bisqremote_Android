@@ -7,7 +7,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.graphics.Canvas
 import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.IdRes
@@ -19,9 +18,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.joachimneumann.bisq.Database.BisqNotification
-import com.joachimneumann.bisq.Database.NotificationAdapter
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 
 class ActivityNotificationTable : AppCompatActivity() {
     private lateinit var mViewModel: BisqNotificationViewModel

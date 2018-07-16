@@ -3,6 +3,7 @@ package com.joachimneumann.bisq
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -33,6 +34,7 @@ class ActivityWelcome: AppCompatActivity() {
         Phone.instance.reset()
 
         setContentView(R.layout.activity_welcome)
+
         learnMoreButton = bind(R.id.learn_more_button)
         learnMoreButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
