@@ -88,8 +88,8 @@ class ActivitySettings : AppCompatActivity() {
         }
 
         val phone = Phone.instance
-        if (phone.key != null)      {   settingsKeyTextView.text = "key   "+phone.key!!.substring(0, 8)+"..." }
-        if (phone.token != null) { settingsTokenTextView.text = "token "+phone.token!!.substring(0, 8)+"..." }
+        if (phone.key != null)      {   settingsKeyTextView.text = "key   "+phone.key!!.substring(0, 10)+"..." }
+        if (phone.token != null) { settingsTokenTextView.text = "token "+phone.token!!.substring(0, 10)+"..." }
         settingsVersionTextView.text = "Version 0.4"
     }
 

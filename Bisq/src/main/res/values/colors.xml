@@ -2,6 +2,8 @@
 <resources>
     <color name="primary">#0f86c3</color>
     <color name="primary_disabled">#7fb5d5</color>
+    <color name="unread_title">#000000</color>
+    <color name="read_title">#808080</color>
     <color name="accent">#DDDDDD</color>
     <color name="background">#FFFFFF</color>
     <color name="background_image">#EEEEEE</color>

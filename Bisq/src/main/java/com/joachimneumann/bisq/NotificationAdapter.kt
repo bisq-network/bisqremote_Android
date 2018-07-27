@@ -38,8 +38,10 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         }
         if (n.read) {
             holder.icon.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.primary_disabled))
+            holder.title.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.read_title))
         } else {
             holder.icon.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.primary))
+            holder.title.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.unread_title))
         }
     }
 
