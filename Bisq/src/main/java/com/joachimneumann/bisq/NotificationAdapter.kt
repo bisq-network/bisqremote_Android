@@ -47,7 +47,7 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
         val view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_cell, parent, false)
-        return NotificationViewHolder(view, false)
+        return NotificationViewHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -59,7 +59,7 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         return nList[postition].uid
     }
 
-    inner class NotificationViewHolder(view: View, read: Boolean) : RecyclerView.ViewHolder(view) {
+    inner class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var icon: TextView
         var title: TextView
         var time: TextView
