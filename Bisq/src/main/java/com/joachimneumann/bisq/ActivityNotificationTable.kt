@@ -59,7 +59,7 @@ class ActivityNotificationTable : AppCompatActivity() {
         recyclerView = bind(R.id.notification_recycler_view)
 
         // TODO   No horizontal divider line visible
-        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL))
+        // recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL))
 
         var mLayoutManager = LinearLayoutManager (this);
         recyclerView.setLayoutManager(mLayoutManager);
