@@ -26,6 +26,8 @@
         <activity android:name=".ActivityNotificationTable">
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         </activity>
+        <activity android:name=".ActivityNotificationDetail">
+        </activity>
 
         <service
             android:name=".BisqFirebaseInstanceIdService">

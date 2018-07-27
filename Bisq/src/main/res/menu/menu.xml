@@ -8,6 +8,5 @@ tools:context=".MainActivity">
     android:id="@+id/action_settings"
     android:orderInCategory="200"
     android:title="Settings"
-    android:icon="@drawable/settings"
     app:showAsAction="ifRoom"/>
 </menu>

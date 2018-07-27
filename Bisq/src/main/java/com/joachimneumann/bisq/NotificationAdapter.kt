@@ -54,7 +54,6 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         return nList.size
     }
 
-
     fun uid(postition: Int): Int {
         return nList[postition].uid
     }
