@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="primary">#0f86c3</color>
+    <color name="primary_disabled">#7fb5d5</color>
     <color name="accent">#DDDDDD</color>
     <color name="background">#FFFFFF</color>
     <color name="background_image">#EEEEEE</color>

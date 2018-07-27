@@ -23,7 +23,6 @@ class ActivitySettings : AppCompatActivity() {
     private lateinit var settingsTokenTextView:   TextView
     private lateinit var settingsVersionTextView: TextView
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,10 +41,35 @@ class ActivitySettings : AppCompatActivity() {
             startActivity(Intent(this, ActivityWelcome::class.java))
         }
 
+
         settingsAddExampleButton.setOnClickListener {
             val mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
             val new = BisqNotification()
-            new.title = "Added from Settings "+counter
+            if (counter % 5 == 0) {
+                new.type = "TRADE"
+                new.title = "Trade confirmed"
+                new.message = "The trade with ID 38765384 is confirmed."
+            }
+            if (counter % 5 == 1) {
+                new.type = "OFFER"
+                new.title = "Offer taken"
+                new.message = "Your offer with ID 39847534 was taken"
+            }
+            if (counter % 5 == 2) {
+                new.type = "DISPUTE"
+                new.title = "Dispute message"
+                new.message = "You received a dispute message for trade with ID 34059340"
+            }
+            if (counter % 5 == 3) {
+                new.type = "PRICE"
+                new.title = "Price below 5000 Euro"
+                new.message = "Your price alert got triggered. The current Euro price is below 5000"
+            }
+            if (counter % 5 == 4) {
+                new.type = "MARKET"
+                new.title = "New offer"
+                new.message = "A new offer offer with price 5600 Euro (5% below market price) and payment method SEPA was published to the Bisq offerbook.\nThe offer ID is 34534"
+            }
             counter += 1
             new.sentDate = Date()
             mViewModel.insert(new)

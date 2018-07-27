@@ -24,7 +24,8 @@ class ActivityWelcome: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // already registered?
-        val registered = Phone.instance.readFromPreferences(this)
+        val registered = Phone.instance.exampleToken() // Phone.instance.readFromPreferences(this)
+//        val registered = Phone.instance.readFromPreferences(this)
         if (registered) {
             startActivity(Intent(this,ActivityNotificationTable::class.java))
             return

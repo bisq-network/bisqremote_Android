@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -56,6 +57,10 @@ class ActivityNotificationTable : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         recyclerView = bind(R.id.notification_recycler_view)
+
+        // TODO   No horizontal divider line visible
+        recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL))
+
         var mLayoutManager = LinearLayoutManager (this);
         recyclerView.setLayoutManager(mLayoutManager);
 

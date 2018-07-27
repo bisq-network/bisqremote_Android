@@ -37,6 +37,11 @@ public class Phone private constructor() {
         var INSTANCE = Phone()
     }
 
+    fun exampleToken(): Boolean {
+        fromString(Phone.PHONE_MAGIC_ANDROID + Phone.PHONE_SEPARATOR + "android emulator" + Phone.PHONE_SEPARATOR + "12345678901234567890123456789012" + Phone.PHONE_SEPARATOR + "exampleToken12345678901234567890123456789012")
+        return true
+    }
+
     fun pairingToken(): String? {
         if (key != null) {
             return Phone.PHONE_MAGIC_ANDROID + Phone.PHONE_SEPARATOR + descriptor + Phone.PHONE_SEPARATOR + key + Phone.PHONE_SEPARATOR + token
