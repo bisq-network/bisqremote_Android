@@ -8,7 +8,7 @@ import java.util.*
 open class BisqNotification : RawBisqNotification() {
 
     @ColumnInfo(name = "sentDate")
-    var sentDate: Date? = null
+    var sentDate: Long = 0
 
     @ColumnInfo(name = "read")
     var read: Boolean = false

@@ -1,6 +1,5 @@
 package com.joachimneumann.bisq
 
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.Observer
@@ -9,15 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import com.joachimneumann.bisq.Database.BisqNotification
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.widget.Toast
@@ -31,7 +27,6 @@ class ActivityNotificationTable : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
 
@@ -90,7 +85,10 @@ class ActivityNotificationTable : AppCompatActivity() {
     }
 
     private fun bisqNotificationClicked(item : BisqNotification) {
-        Toast.makeText(this, "Clicked: ${item.title}", Toast.LENGTH_SHORT).show()
+
+        val intent = Intent(this, ActivityNotificationDetail::class.java)
+        intent.putExtra("uid", item.uid)
+        startActivity(intent)
     }
 
     private fun updateGUI(bisqNotifications: List<BisqNotification>) {

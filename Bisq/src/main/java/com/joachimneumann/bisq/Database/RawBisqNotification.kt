@@ -42,5 +42,5 @@ open class RawBisqNotification {
     var txId: String? = null
 
     @ColumnInfo(name = "receivedDate")
-    var receivedDate: Date? = null
+    var receivedDate: Long = 0
 }

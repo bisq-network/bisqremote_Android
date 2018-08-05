@@ -71,7 +71,10 @@ class ActivitySettings : AppCompatActivity() {
                 new.message = "A new offer offer with price 5600 Euro (5% below market price) and payment method SEPA was published to the Bisq offerbook.\nThe offer ID is 34534"
             }
             counter += 1
-            new.sentDate = Date()
+
+            val now = Date()
+            new.sentDate = now.time - 1000 * 60 * 60 // 1 hour earlier
+            new.receivedDate = now.time
             mViewModel.insert(new)
         }
 
