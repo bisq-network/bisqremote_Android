@@ -71,6 +71,10 @@ class ActivityNotificationTable : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        // no back button in this screen // super.onBackPressed()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         return true
