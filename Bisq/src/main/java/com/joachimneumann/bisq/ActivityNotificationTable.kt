@@ -93,9 +93,3 @@ class ActivityNotificationTable : AppCompatActivity() {
     }
 
 }
-
-// copied from https://medium.com/@quiro91/improving-findviewbyid-with-kotlin-4cf2f8f779bb
-fun <T : View> Activity.bind(@IdRes res : Int) : T {
-    @Suppress("UNCHECKED_CAST")
-    return findViewById(res) as T
-}
