@@ -3,6 +3,7 @@ package com.joachimneumann.bisq
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import android.widget.TextView
 import java.util.Date
 
@@ -20,7 +21,7 @@ class ActivityNotificationDetail : AppCompatActivity() {
         setContentView(R.layout.activity_notificationdetail)
         title = bind(R.id.detail_title)
         message = bind(R.id.detail_message)
-        action = bind(R.id.detail_message)
+        action = bind(R.id.detail_action)
         event_time = bind(R.id.detail_event_time)
         receive_time = bind(R.id.detail_received_time)
         transactionID = bind(R.id.detail_transaction_id)
@@ -30,12 +31,32 @@ class ActivityNotificationDetail : AppCompatActivity() {
         val n = mViewModel.getFromUid(uid)
         if (n != null) {
             title.text = n.title
-            message.text = n.message
-            action.text = n.message
+            if (n.message != null) {
+                message.text = n.message
+            } else {
+                message.visibility = View.GONE
+            }
+            if (n.actionRequired != null) {
+                action.text = n.actionRequired
+            } else {
+                action.visibility = View.GONE
+            }
             val sdf = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            event_time.text = sdf.format(Date(n.sentDate!!))
-            receive_time.text = sdf.format(Date(n.receivedDate!!))
-            transactionID.text = n.txId
+            if (n.sentDate != null) {
+                event_time.text =   "event:    "+sdf.format(Date(n.sentDate!!))
+            } else {
+                event_time.visibility = View.GONE
+            }
+            if (n.receivedDate != null) {
+                receive_time.text = "received: "+sdf.format(Date(n.receivedDate!!))
+            } else {
+                receive_time.visibility = View.GONE
+            }
+            if (n.txId != null) {
+                transactionID.text = "txID:     "+n.txId
+            } else {
+                transactionID.visibility = View.GONE
+            }
         }
     }
 }

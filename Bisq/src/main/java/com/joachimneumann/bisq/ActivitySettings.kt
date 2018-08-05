@@ -58,7 +58,9 @@ class ActivitySettings : AppCompatActivity() {
             if (counter % 5 == 2) {
                 new.type = "DISPUTE"
                 new.title = "Dispute message"
+                new.actionRequired = "Please contact the arbitrator"
                 new.message = "You received a dispute message for trade with ID 34059340"
+                new.txId = "34059340"
             }
             if (counter % 5 == 3) {
                 new.type = "PRICE"
