@@ -12,7 +12,7 @@ import com.joachimneumann.bisq.Database.BisqNotification
 import java.text.SimpleDateFormat
 
 
-class NotificationAdapter(private var nList: List<BisqNotification>) :
+class NotificationAdapter(private var nList: List<BisqNotification>, val clickListener: (BisqNotification) -> Unit):
         RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
     companion object {
@@ -43,6 +43,7 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
             holder.icon.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.primary))
             holder.title.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.unread_title))
         }
+        holder.bind(nList.get(position), clickListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
@@ -62,6 +63,11 @@ class NotificationAdapter(private var nList: List<BisqNotification>) :
         var icon: TextView
         var title: TextView
         var time: TextView
+
+        fun bind(part: BisqNotification, clickListener: (BisqNotification) -> Unit) {
+            itemView.setOnClickListener { clickListener(part)}
+        }
+
 
         init {
             if (NotificationAdapter.font == null) {

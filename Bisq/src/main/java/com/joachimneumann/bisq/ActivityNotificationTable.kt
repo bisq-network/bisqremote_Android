@@ -20,6 +20,7 @@ import android.view.MenuItem
 import android.view.View
 import com.joachimneumann.bisq.Database.BisqNotification
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.widget.Toast
 
 class ActivityNotificationTable : AppCompatActivity() {
     private lateinit var mViewModel: BisqNotificationViewModel
@@ -88,8 +89,11 @@ class ActivityNotificationTable : AppCompatActivity() {
         return true
     }
 
-    private fun updateGUI(bisqNotifications: List<BisqNotification>) {
-        recyclerView.adapter = NotificationAdapter(bisqNotifications)
+    private fun bisqNotificationClicked(item : BisqNotification) {
+        Toast.makeText(this, "Clicked: ${item.title}", Toast.LENGTH_SHORT).show()
     }
+
+    private fun updateGUI(bisqNotifications: List<BisqNotification>) {
+        recyclerView.adapter = NotificationAdapter(bisqNotifications, { item: BisqNotification -> bisqNotificationClicked(item)})    }
 
 }
