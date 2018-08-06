@@ -16,12 +16,15 @@ import com.joachimneumann.bisq.Database.NotificationRepository
 
 import java.util.Date
 import android.app.Activity
+import android.arch.lifecycle.ViewModelProviders
 import com.joachimneumann.bisq.Database.NotificationType
 
 
 const val BISQ_MESSAGE_ANDROID_MAGIC = "BisqMessageAndroid"
 
 class BisqFirebaseMessagingService : FirebaseMessagingService() {
+
+    private var currentActivity: Activity? = null
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
 
@@ -55,27 +58,25 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             gsonBuilder.registerTypeAdapter(Date::class.java, DateDeserializer())
             val gson = gsonBuilder.create()
             val newNotification = gson.fromJson<BisqNotification>(success, BisqNotification::class.java)
-            val currentActivity = getCurrentActivity()
+            currentActivity = getCurrentActivity()
+            val notificationRepository = NotificationRepository(this)
             when (newNotification.type) {
                 NotificationType.SETUP_CONFIRMATION.name -> {
                     Phone.instance.confirmed = true
                     Phone.instance.saveToPreferences(this) // only confirmed phones are saved to the preferences
                     if (currentActivity is ActivityRegisterQR) {
-                        currentActivity.confirmed()
+                        (currentActivity as ActivityRegisterQR).confirmed()
                     }
                     if (currentActivity is ActivityRegisterEmail) {
-                        currentActivity.confirmed()
+                        (currentActivity as ActivityRegisterEmail).confirmed()
                     }
                 }
                 NotificationType.ERASE.name -> {
+                    notificationRepository.nukeTable()
                     Phone.instance.reset()
-                    if (currentActivity is ActivityNotificationTable) {
-                        // currentActivity.()
-                    }
                 }
                 else -> {
                     // notification from Bisq
-                    val notificationRepository = NotificationRepository(this)
                     notificationRepository.insert(newNotification)
                 }
             }
@@ -104,7 +105,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
 
     }
 
-    fun getCurrentActivity(): Activity? {
+    private fun getCurrentActivity(): Activity? {
         val activityThreadClass = Class.forName("android.app.ActivityThread")
         val activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null)
         val activitiesField = activityThreadClass.getDeclaredField("mActivities")

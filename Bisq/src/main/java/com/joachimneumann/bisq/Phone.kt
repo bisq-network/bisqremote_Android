@@ -1,6 +1,7 @@
 package com.joachimneumann.bisq
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 
 import java.io.IOException

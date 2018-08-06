@@ -36,6 +36,8 @@ class ActivitySettings : AppCompatActivity() {
         settingsVersionTextView             = bind(R.id.settingsVersionTextView)
 
         settingsRegisterAgainButton.setOnClickListener {
+            val mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
+            mViewModel.nukeTable()
             Phone.instance.reset()
             Phone.instance.clearPreferences(this)
             startActivity(Intent(this, ActivityWelcome::class.java))
