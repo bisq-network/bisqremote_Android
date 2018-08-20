@@ -29,7 +29,7 @@ class ActivityWelcome: AppCompatActivity() {
 //        val registered = Phone.instance.exampleToken() // Phone.instance.readFromPreferences(this)
         val registered = Phone.instance.readFromPreferences(this)
         if (registered) {
-            startActivity(Intent(this,ActivityNotificationTable::class.java))
+            startActivity(Intent(this, ActivityNotificationTable::class.java))
             return
         }
 
@@ -52,7 +52,6 @@ class ActivityWelcome: AppCompatActivity() {
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@ActivityWelcome, OnSuccessListener<InstanceIdResult> { instanceIdResult ->
             Phone.instance.newToken(instanceIdResult.token)
             pairButton.isEnabled = true
-            checkForToken()
         })
     }
 
@@ -70,7 +69,7 @@ class ActivityWelcome: AppCompatActivity() {
             if (Phone.instance.token == null) {
                 checkForToken()
             }
-        }, 4000)
+        }, 10000)
     }
 
     fun internetDialog() {

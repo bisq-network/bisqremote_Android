@@ -19,7 +19,7 @@ class DateDeserializer : JsonDeserializer<Date> {
     override fun deserialize(element: JsonElement, arg1: Type, arg2: JsonDeserializationContext): Date? {
         val date = element.asString
 
-        val formatter = SimpleDateFormat("yyyy-mm-dd hh:mm:ss")
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         formatter.timeZone = TimeZone.getTimeZone("UTC")
 
         try {

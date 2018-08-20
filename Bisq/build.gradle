@@ -20,8 +20,7 @@ android {
         // from http://www.codexpedia.com/android/using-git-commit-count-for-version-code-for-android/
         versionCode project.getVersionCode()
         versionName '0.' + project.getVersionCode()
-
-        applicationId "com.joachimneumann.bisqremotetest"
+        applicationId "com.joachimneumann.bisq"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1

@@ -32,7 +32,7 @@ class NotificationAdapter(private var nList: List<BisqNotification>, val clickLi
 
         holder.title.text = n.title
         if (n.sentDate != null) {
-            holder.time.text = SimpleDateFormat("yyyy-mm-dd hh:mm").format(n.sentDate) // for debugging database access add:  +" "+n.uid
+            holder.time.text = SimpleDateFormat("yyyy-MM-dd HH:mm").format(n.sentDate) // for debugging database access add:  +" "+n.uid
         } else {
             holder.time.text = "time: ??"
         }

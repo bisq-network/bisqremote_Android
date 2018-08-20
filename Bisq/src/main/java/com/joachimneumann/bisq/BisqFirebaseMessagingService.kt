@@ -58,6 +58,8 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             gsonBuilder.registerTypeAdapter(Date::class.java, DateDeserializer())
             val gson = gsonBuilder.create()
             val newNotification = gson.fromJson<BisqNotification>(success, BisqNotification::class.java)
+            val now = Date()
+            newNotification.receivedDate = now.time
             currentActivity = getCurrentActivity()
             val notificationRepository = NotificationRepository(this)
             when (newNotification.type) {

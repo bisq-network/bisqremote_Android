@@ -31,28 +31,20 @@ class ActivityNotificationDetail : AppCompatActivity() {
         val n = mViewModel.getFromUid(uid)
         if (n != null) {
             title.text = n.title
-            if (n.message != null) {
+            if (n.message != null && n.message!!.count() > 0) {
                 message.text = n.message
             } else {
                 message.visibility = View.GONE
             }
-            if (n.actionRequired != null) {
+            if (n.actionRequired != null && n.actionRequired!!.count() > 0) {
                 action.text = n.actionRequired
             } else {
                 action.visibility = View.GONE
             }
             val sdf = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            if (n.sentDate != null) {
-                event_time.text =   "event:    "+sdf.format(Date(n.sentDate!!))
-            } else {
-                event_time.visibility = View.GONE
-            }
-            if (n.receivedDate != null) {
-                receive_time.text = "received: "+sdf.format(Date(n.receivedDate!!))
-            } else {
-                receive_time.visibility = View.GONE
-            }
-            if (n.txId != null) {
+            event_time.text =   "event:    "+sdf.format(Date(n.sentDate!!))
+            receive_time.text = "received: "+sdf.format(Date(n.receivedDate!!))
+            if (n.txId != null && n.txId!!.count() > 0) {
                 transactionID.text = "txID:     "+n.txId
             } else {
                 transactionID.visibility = View.GONE
