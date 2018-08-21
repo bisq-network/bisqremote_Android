@@ -31,11 +31,7 @@ class NotificationAdapter(private var nList: List<BisqNotification>, val clickLi
         if (n.type == "MARKET") { holder.icon.setText(R.string.icon_market) }
 
         holder.title.text = n.title
-        if (n.sentDate != null) {
-            holder.time.text = SimpleDateFormat("yyyy-MM-dd HH:mm").format(n.sentDate) // for debugging database access add:  +" "+n.uid
-        } else {
-            holder.time.text = "time: ??"
-        }
+        holder.time.text = SimpleDateFormat("yyyy-MM-dd HH:mm").format(n.sentDate) // for debugging database access add:  +" "+n.uid
         if (n.read) {
             holder.icon.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.primary_disabled))
             holder.title.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.read_title))

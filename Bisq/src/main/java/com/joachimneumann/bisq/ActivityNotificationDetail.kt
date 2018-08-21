@@ -42,8 +42,8 @@ class ActivityNotificationDetail : AppCompatActivity() {
                 action.visibility = View.GONE
             }
             val sdf = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            event_time.text =   "event:    "+sdf.format(Date(n.sentDate!!))
-            receive_time.text = "received: "+sdf.format(Date(n.receivedDate!!))
+            event_time.text =   "event:    "+sdf.format(Date(n.sentDate))
+            receive_time.text = "received: "+sdf.format(Date(n.receivedDate))
             if (n.txId != null && n.txId!!.count() > 0) {
                 transactionID.text = "txID:     "+n.txId
             } else {
