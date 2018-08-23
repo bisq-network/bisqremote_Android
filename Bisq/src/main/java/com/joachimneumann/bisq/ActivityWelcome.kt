@@ -49,7 +49,7 @@ class ActivityWelcome: AppCompatActivity() {
         pairButton.setOnClickListener { startActivity(Intent(this,ActivityRegisterQR::class.java)) }
         pairButton.isEnabled = false
 
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@ActivityWelcome, OnSuccessListener<InstanceIdResult> { instanceIdResult ->
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this@ActivityWelcome, OnSuccessListener<InstanceIdResult> { instanceIdResult ->
             Phone.instance.newToken(instanceIdResult.token)
             pairButton.isEnabled = true
         })

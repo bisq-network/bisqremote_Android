@@ -1,6 +1,6 @@
 package com.joachimneumann.bisq
 
-import android.app.NotificationManager
+//import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -27,6 +27,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
     private var currentActivity: Activity? = null
 
     override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+        super.onMessageReceived(remoteMessage);
 
         val notificationMessage = remoteMessage!!.data["encrypted"]
         if (notificationMessage != null) {
@@ -82,24 +83,6 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                     notificationRepository.insert(newNotification)
                 }
             }
-
-            val intent = Intent(this, ActivityNotificationTable::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            // Create the pending intent to launch the activity
-            val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                    PendingIntent.FLAG_ONE_SHOT)
-
-
-            val notificationBuilder = NotificationCompat.Builder(this, "Bisq")
-                    .setSmallIcon(R.drawable.help)
-                    .setContentTitle("bisq")
-                    .setContentText(success)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            notificationManager.notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
             Log.i("Bisq", "added to database: $success")
         } else {
             Log.i("Bisq", "ERROR decrypting json: $success")

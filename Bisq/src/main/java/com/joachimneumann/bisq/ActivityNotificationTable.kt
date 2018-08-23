@@ -20,7 +20,6 @@ import android.widget.Toast
 
 class ActivityNotificationTable : AppCompatActivity() {
     private lateinit var mViewModel: BisqNotificationViewModel
-    private var notificationManager: NotificationManager? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
 
@@ -29,20 +28,6 @@ class ActivityNotificationTable : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         mViewModel = ViewModelProviders.of(this).get(BisqNotificationViewModel::class.java)
-
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val importance = NotificationManager.IMPORTANCE_LOW
-            val notificationChannel: NotificationChannel
-
-            notificationChannel = NotificationChannel("Bisq", "Bisq", importance)
-            notificationChannel.enableLights(true)
-            notificationChannel.lightColor = Color.RED
-            notificationChannel.enableVibration(true)
-            notificationChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
-            notificationManager!!.createNotificationChannel(notificationChannel)
-        }
 
         val liveData = mViewModel.bisqNotifications
         liveData.observe(this, Observer { bisqNotifications -> updateGUI(bisqNotifications!!) })
