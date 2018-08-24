@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.gms.google-services'
 
 repositories {
     mavenCentral()
@@ -23,7 +22,7 @@ android {
         applicationId "com.joachimneumann.bisq"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 3
+        versionCode 4
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -70,4 +69,5 @@ dependencies {
     kapt "android.arch.lifecycle:compiler:$lifecycle_version"
 }
 
-
+// THIS SHOULD BE AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'

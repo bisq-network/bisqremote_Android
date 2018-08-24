@@ -4,8 +4,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -16,13 +18,14 @@ import android.view.Menu
 import android.view.MenuItem
 import com.joachimneumann.bisq.Database.BisqNotification
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.widget.Toast
 
 class ActivityNotificationTable : AppCompatActivity() {
     private lateinit var mViewModel: BisqNotificationViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
-
+    private var receiver: BisqNotificationReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +45,7 @@ class ActivityNotificationTable : AppCompatActivity() {
         // TODO   No horizontal divider line visible
         // recyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL))
 
-        var mLayoutManager = LinearLayoutManager (this);
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(LinearLayoutManager (this));
 
         val swipeHandler = object : SwipeToDeleteCallback(this) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -53,8 +55,38 @@ class ActivityNotificationTable : AppCompatActivity() {
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(recyclerView)
+    }
+
+    override fun onStart() {
+        Log.e("Bisq", "ActivityNotificationTable onStart()")
+        super.onStart()
+
+        if (receiver == null) {
+            receiver = BisqNotificationReceiver(this)
+        }
+        val filter = IntentFilter()
+        filter.addAction(this.getString(R.string.bisq_broadcast))
+        registerReceiver(receiver, filter)
+    }
+
+    override fun onResume() {
+        Log.e("Bisq", "ActivityNotificationTable onResume()")
+        super.onResume()
 
     }
+
+    override fun onPause() {
+        Log.e("Bisq", "ActivityNotificationTable onPause()")
+
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
+        receiver = null
+    }
+
 
     override fun onBackPressed() {
         // no back button in this screen // super.onBackPressed()

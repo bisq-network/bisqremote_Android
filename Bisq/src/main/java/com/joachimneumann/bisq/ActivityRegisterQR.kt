@@ -1,6 +1,7 @@
 package com.joachimneumann.bisq
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
@@ -21,12 +22,13 @@ class ActivityRegisterQR: AppCompatActivity() {
 
     private lateinit var qrImage: ImageView
     private lateinit var emailButton: Button
+    private var receiver: BisqNotificationReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_qr)
 
-        qrImage = bind(R.id.qrImageView)
+        qrImage = this.bind(R.id.qrImageView)
         emailButton = bind(R.id.email_button)
         emailButton.setOnClickListener { emailPressed() }
         createQR()
@@ -44,6 +46,22 @@ class ActivityRegisterQR: AppCompatActivity() {
                 e.printStackTrace()
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (receiver == null) {
+            receiver = BisqNotificationReceiver(this)
+        }
+        val filter = IntentFilter()
+        filter.addAction(this.getString(R.string.bisq_broadcast))
+        registerReceiver(receiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
     }
 
     private fun createQR() {

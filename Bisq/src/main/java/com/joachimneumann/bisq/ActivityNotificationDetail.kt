@@ -1,6 +1,7 @@
 package com.joachimneumann.bisq
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -14,6 +15,7 @@ class ActivityNotificationDetail : AppCompatActivity() {
     private lateinit var event_time: TextView
     private lateinit var receive_time: TextView
     private lateinit var transactionID: TextView
+    private var receiver: BisqNotificationReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -50,5 +52,20 @@ class ActivityNotificationDetail : AppCompatActivity() {
                 transactionID.visibility = View.GONE
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (receiver == null) {
+            receiver = BisqNotificationReceiver(this)
+        }
+        val filter = IntentFilter()
+        filter.addAction(this.getString(R.string.bisq_broadcast))
+        registerReceiver(receiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
     }
 }

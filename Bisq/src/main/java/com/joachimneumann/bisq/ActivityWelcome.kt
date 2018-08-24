@@ -12,19 +12,41 @@ import android.support.annotation.IdRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
+import android.content.IntentFilter
+
 
 class ActivityWelcome: AppCompatActivity() {
     private lateinit var learnMoreButton: Button
     private lateinit var pairButton: Button
+    private var receiver: BisqNotificationReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e("Bisq", "ActivityWelcome onCreate()")
+
+        val bundle = intent.extras
+        if (bundle != null) {
+            val notificationMessage = bundle.get("encrypted")
+            if (notificationMessage != null) {
+                val broadcastIntent = Intent()
+                broadcastIntent.action = this.getString(R.string.bisq_broadcast)
+                broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
+                broadcastIntent.putExtra("notificationMessage", notificationMessage as String)
+                if (receiver == null) { receiver = BisqNotificationReceiver(this) }
+                val filter = IntentFilter()
+                filter.addAction(this.getString(R.string.bisq_broadcast))
+                registerReceiver(receiver, filter)
+                sendBroadcast(broadcastIntent)
+            }
+        }
+
         // already registered?
 //        val registered = Phone.instance.exampleToken() // Phone.instance.readFromPreferences(this)
         val registered = Phone.instance.readFromPreferences(this)
@@ -61,6 +83,28 @@ class ActivityWelcome: AppCompatActivity() {
         } else {
             pairButton.isEnabled = true
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.e("Bisq", "ActivityWelcome onStart()")
+
+        if (receiver == null) {
+            receiver = BisqNotificationReceiver(this)
+        }
+        val filter = IntentFilter()
+        filter.addAction(this.getString(R.string.bisq_broadcast))
+        registerReceiver(receiver, filter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.e("Bisq", "ActivityWelcome onPause()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
     }
 
     override fun onResume() {
