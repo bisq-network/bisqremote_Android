@@ -20,12 +20,14 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
 import android.content.IntentFilter
+import android.widget.TextView
 
 
 class ActivityWelcome: AppCompatActivity() {
     private lateinit var learnMoreButton: Button
     private lateinit var pairButton: Button
     private var receiver: BisqNotificationReceiver? = null
+    private lateinit var settingsVersionTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +77,17 @@ class ActivityWelcome: AppCompatActivity() {
             Phone.instance.newToken(instanceIdResult.token)
             pairButton.isEnabled = true
         })
+
+        settingsVersionTextView = bind(R.id.welcomeVersionTextView)
+        settingsVersionTextView.text = ""
+
+        try {
+            val pInfo = this.packageManager.getPackageInfo(packageName, 0)
+            val version = pInfo.versionName
+            val build = pInfo.versionCode
+            settingsVersionTextView.text = "version "+version+" build "+build
+        } catch (e: Exception) {
+        }
     }
 
     fun checkForToken() {
