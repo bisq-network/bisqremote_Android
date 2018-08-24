@@ -8,6 +8,11 @@ import android.widget.Button
 import android.widget.TextView
 import com.joachimneumann.bisq.Database.BisqNotification
 import java.util.Date
+import android.content.pm.PackageManager
+import android.R.attr.versionName
+import android.content.pm.PackageInfo
+
+
 
 
 class ActivitySettings : AppCompatActivity() {
@@ -97,7 +102,16 @@ class ActivitySettings : AppCompatActivity() {
         val phone = Phone.instance
         if (phone.key != null)      {   settingsKeyTextView.text = "key   "+phone.key!!.substring(0, 10)+"..." }
         if (phone.token != null) { settingsTokenTextView.text = "token "+phone.token!!.substring(0, 10)+"..." }
-        settingsVersionTextView.text = "Version 0.4"
+
+        try {
+            val pInfo = this.packageManager.getPackageInfo(packageName, 0)
+            val version = pInfo.versionName
+            val build = pInfo.versionCode
+            settingsVersionTextView.text = version+" build "+build
+        } catch (e: PackageManager.NameNotFoundException) {
+        }
+
+
     }
 
 }

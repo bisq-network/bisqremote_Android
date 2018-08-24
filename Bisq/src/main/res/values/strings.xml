@@ -24,7 +24,7 @@
     <string name="register_instructions">Do you want to use your computer\'s webcam or do you want to send an email to yourself?</string>
     <string name="welcome">Now you can receive notifications about your Bisq trades.</string>
     <string name="email_subject">Pair your phone with Bisq</string>
-    <string name="email_content1">Please copy this Pairing token into the field \"Pairing token\" in the Bisq desktop app:\n\n</string>
+    <string name="email_content1">Please open the Bisq desktop app on your computer and go to Account -> Notifications. Then copy this Pairing token into the field  \"Pairing token\":\n\n</string>
     <string name="email_content2">\n\nThe pairing token contains your excryption key (AES/CBC/NOPadding with initialization vector) which is used by Bisq to encrypt the notifications for you and a token from Google that identifies this app.</string>
     <string name="welcome_title">Bisq notifications</string>
     <string name="register_email_instructions">Send the email to yourself.\n\nThen go to your computer and open the Bisq App.\n\nOpen Account -> Notifications\n\nThen open the email and paste the Pairing token into Bisq.\n\nYour phone will automatically receive a confirmation notification.</string>
