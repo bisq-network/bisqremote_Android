@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Bisq</string>
     <string name="button_pair">Pair</string>
-    <string name="button_email">Send Email to myself</string>
+    <string name="button_email">Send token to myself</string>
     <string name="button_next">Next</string>
     <string name="button_learn_more">Learn more</string>
     <string name="button_done">Show notifications</string>

@@ -1,6 +1,8 @@
 package com.joachimneumann.bisq
 
 import android.content.Intent
+import android.content.IntentFilter
+import android.media.RingtoneManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -11,6 +13,7 @@ class ActivityRegisterEmail : AppCompatActivity() {
 
     private lateinit var resendEmailButton: Button
     private lateinit var register_email_instructions: TextView
+    private var receiver: BisqNotificationReceiver? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,8 +27,32 @@ class ActivityRegisterEmail : AppCompatActivity() {
 
     fun confirmed() {
         this.runOnUiThread(java.lang.Runnable {
-            register_email_instructions.setText(getString(R.string.register_qr_confirmation_received))
+            try {
+                val notificationTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+                RingtoneManager.getRingtone(applicationContext, notificationTone).play()
+
+                val i = Intent(Intent(this,ActivityCongratulations::class.java))
+                startActivity(i)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (receiver == null) {
+            receiver = BisqNotificationReceiver(this)
+        }
+        val filter = IntentFilter()
+        filter.addAction(this.getString(R.string.bisq_broadcast))
+        registerReceiver(receiver, filter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(receiver)
     }
 
     private fun createEmail() {

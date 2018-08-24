@@ -137,7 +137,7 @@ class ActivityWelcome: AppCompatActivity() {
 //
     fun bisqWebpagePressed() {
         try {
-            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://bisq.network"))
+            val myIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://docs.bisq.network/bisq-mobile"))
             startActivity(myIntent)
         } catch (e: ActivityNotFoundException) {
             Toast.makeText(this, "Please install a webbrowser", Toast.LENGTH_LONG).show()
