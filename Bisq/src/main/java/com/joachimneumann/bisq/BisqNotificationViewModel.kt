@@ -39,4 +39,8 @@ class BisqNotificationViewModel(application: Application) : AndroidViewModel(app
     fun markAllAsRead() {
         mRepository.markAllAsRead()
     }
+
+    fun markAsRead(uid: Int) {
+        mRepository.markAsRead(uid)
+    }
 }

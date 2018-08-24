@@ -48,4 +48,8 @@ class NotificationRepository(context: Context){
         async { bisqNotificationDao.markAllAsRead(true) }
     }
 
+    fun markAsRead(uid: Int) {
+        async { bisqNotificationDao.markAsRead(uid, true) }
+    }
+
 }

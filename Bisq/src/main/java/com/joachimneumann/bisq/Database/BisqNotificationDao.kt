@@ -25,4 +25,7 @@ interface BisqNotificationDao {
 
     @Query( "UPDATE BisqNotification SET read = :readValue")
     fun markAllAsRead(readValue: Boolean)
+
+    @Query( "UPDATE BisqNotification SET read = :readValue WHERE uid=:uid")
+    fun markAsRead(uid: Int, readValue: Boolean)
 }

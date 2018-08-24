@@ -109,6 +109,7 @@ class ActivityNotificationTable : AppCompatActivity() {
 
         val intent = Intent(this, ActivityNotificationDetail::class.java)
         intent.putExtra("uid", item.uid)
+        mViewModel.markAsRead(item.uid)
         startActivity(intent)
     }
 
