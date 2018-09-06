@@ -22,7 +22,7 @@
 
     <string name="learn_more">Bisq is an open-source desktop application that allows you to buy and sell bitcoins in exchange for national currencies, or alternative crypto currencies.</string>
     <string name="register_instructions">Do you want to use your computer\'s webcam or do you want to send an email to yourself?</string>
-    <string name="welcome">Now you can receive notifications about your Bisq trades.</string>
+    <string name="welcome">After pairing this app to Bisq on your computer, you will be able to monitor your trades.</string>
     <string name="email_subject">Pair your phone with Bisq</string>
     <string name="email_content1">Please open the Bisq desktop app on your computer and go to Account -> Notifications. Then copy this Pairing token into the field  \"Pairing token\":\n\n</string>
     <string name="email_content2">\n\nThe pairing token contains your excryption key (AES/CBC/NOPadding with initialization vector) which is used by Bisq to encrypt the notifications for you and a token from Google that identifies this app.</string>
