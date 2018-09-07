@@ -22,7 +22,7 @@ android {
         applicationId "com.joachimneumann.bisq"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 9
+        versionCode 11
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

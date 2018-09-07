@@ -34,5 +34,10 @@
     <string name="button_resend_email">Resend email</string>
     <string name="default_notification_channel_id">Bisq_notification_channel</string>
     <string name="bisq_broadcast">bisq_broadcast</string>
+    <string name="settingsAboutBisqNotifications">About Bisq notifications</string>
+    <string name="settingsAboutBisq">About Bisq</string>
+    <string name="settingsAddExample">Add example notification</string>
+    <string name="settingsMarkAsRead">Mark all as read</string>
+    <string name="settingsDeleteAllNotifcations">Delete all notifications</string>
 
 </resources>
