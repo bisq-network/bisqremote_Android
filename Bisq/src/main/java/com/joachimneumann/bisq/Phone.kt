@@ -1,7 +1,7 @@
 package com.joachimneumann.bisq
 
 import android.annotation.SuppressLint
-import android.arch.lifecycle.ViewModelProviders
+import android.util.Base64
 import android.content.Context
 
 import java.io.IOException
@@ -10,6 +10,9 @@ import java.util.UUID
 import android.content.Context.MODE_PRIVATE
 import android.text.TextUtils
 import android.os.Build
+import java.util.Base64.getEncoder
+
+
 
 
 
@@ -76,9 +79,16 @@ public class Phone private constructor() {
         editor.commit()
     }
 
+    fun String.hexStringToByteArray() = ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+
     fun newToken(token_: String) {
         token = token_
-        key = UUID.randomUUID().toString().replace("-", "")
+        val uuid1 = UUID.randomUUID().toString().replace("-", "")
+        val uuid2 = UUID.randomUUID().toString().replace("-", "")
+        val uuid = uuid1+uuid2
+        val bytearray = (uuid).hexStringToByteArray()
+        val key_long = Base64.encodeToString(bytearray, Base64.NO_WRAP)
+        key = key_long.substring(0, 32)
         confirmed = false
     }
 
