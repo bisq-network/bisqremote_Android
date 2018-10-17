@@ -5,7 +5,7 @@ import android.arch.persistence.room.*
 
 @Dao
 interface BisqNotificationDao {
-    @get:Query("SELECT * FROM BisqNotification")
+    @get:Query("SELECT * FROM BisqNotification order by receivedDate desc")
     val all: LiveData<List<BisqNotification>>
 
     @Query("SELECT * FROM BisqNotification WHERE uid=:uid")
