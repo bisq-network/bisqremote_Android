@@ -96,7 +96,10 @@ class ActivityNotificationTable : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        // no back button in this screen // super.onBackPressed()
+        val a = Intent(Intent.ACTION_MAIN)
+        a.addCategory(Intent.CATEGORY_HOME)
+        a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(a)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
