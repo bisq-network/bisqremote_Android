@@ -22,8 +22,8 @@ android {
         applicationId "com.joachimneumann.bisq"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 13
-        versionName "1.0.1"
+        versionCode 17
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -32,7 +32,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
