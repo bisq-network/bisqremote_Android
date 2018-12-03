@@ -73,6 +73,13 @@ class ActivityNotificationTable : AppCompatActivity() {
         Log.e("Bisq", "ActivityNotificationTable onResume()")
         super.onResume()
 
+        // This is a hack so that the scrollview lands somehow where it belongs,
+        // which is close the the previously selected notification.
+        // A clean solution would need to use ony one position
+        recyclerView.smoothScrollToPosition(scrollingPosition2)
+        if (scrollingPosition1 == 0) {
+            recyclerView.smoothScrollToPosition(scrollingPosition1)
+        }
     }
 
     override fun onPause() {
@@ -89,7 +96,10 @@ class ActivityNotificationTable : AppCompatActivity() {
 
 
     override fun onBackPressed() {
-        // no back button in this screen // super.onBackPressed()
+        val a = Intent(Intent.ACTION_MAIN)
+        a.addCategory(Intent.CATEGORY_HOME)
+        a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(a)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -105,15 +115,25 @@ class ActivityNotificationTable : AppCompatActivity() {
         return true
     }
 
+    private var scrollingPosition1: Int = 0
+    private var scrollingPosition2: Int = 0
+
     private fun bisqNotificationClicked(item : BisqNotification) {
 
         val intent = Intent(this, ActivityNotificationDetail::class.java)
         intent.putExtra("uid", item.uid)
         mViewModel.markAsRead(item.uid)
+
+        // remember the scrolling position
+        val llm = recyclerView.layoutManager as LinearLayoutManager
+        scrollingPosition1 = llm.findFirstVisibleItemPosition()
+        scrollingPosition2 = llm.findLastVisibleItemPosition()
         startActivity(intent)
     }
 
     private fun updateGUI(bisqNotifications: List<BisqNotification>) {
-        recyclerView.adapter = NotificationAdapter(bisqNotifications, { item: BisqNotification -> bisqNotificationClicked(item)})    }
-
+        recyclerView.adapter = NotificationAdapter(bisqNotifications, {
+            item: BisqNotification -> bisqNotificationClicked(item)
+        })
+    }
 }

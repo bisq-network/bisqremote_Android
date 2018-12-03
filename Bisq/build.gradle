@@ -22,7 +22,7 @@ android {
         applicationId "com.joachimneumann.bisq"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 15
+        versionCode 18
         versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -32,7 +32,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
