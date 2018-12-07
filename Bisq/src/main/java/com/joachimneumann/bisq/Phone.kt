@@ -96,16 +96,16 @@ public class Phone private constructor() {
         val a = s.split(Phone.PHONE_SEPARATOR_ESCAPED.toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
         try {
             if (a.size != 4) {
-                throw IOException("invalid ${BISQ_SHARED_PREFERENCE_PAIRING_TOKEN} format")
+                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format")
             }
             if (a[2].length != 32) {
-                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN} format")
+                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format")
             }
             if (a[3].length < 32) {
-                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN} format")
+                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format")
             }
             if (a[0] != PHONE_MAGIC_ANDROID) {
-                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN} format")
+                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format")
             }
             key = a[2]
             token = a[3]
