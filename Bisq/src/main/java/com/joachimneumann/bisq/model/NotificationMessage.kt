@@ -1,12 +1,12 @@
-package com.joachimneumann.bisq.model
+package bisq.android.model
 
 import android.util.Log
+import bisq.android.database.BisqNotification
+import bisq.android.services.BISQ_MESSAGE_ANDROID_MAGIC
+import bisq.android.util.CryptoUtil
+import bisq.android.util.DateUtil
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
-import com.joachimneumann.bisq.database.BisqNotification
-import com.joachimneumann.bisq.services.BISQ_MESSAGE_ANDROID_MAGIC
-import com.joachimneumann.bisq.util.CryptoUtil
-import com.joachimneumann.bisq.util.DateUtil
 import java.util.*
 
 class NotificationMessage(private var notification: String?) {

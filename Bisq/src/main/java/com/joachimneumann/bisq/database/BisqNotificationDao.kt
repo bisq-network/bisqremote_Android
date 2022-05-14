@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.database
+package bisq.android.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao

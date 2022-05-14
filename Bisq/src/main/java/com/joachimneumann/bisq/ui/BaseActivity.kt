@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.ui
+package bisq.android.ui
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -11,8 +11,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.services.NotificationReceiver
+import bisq.android.R
+import bisq.android.services.NotificationReceiver
 
 open class BaseActivity : AppCompatActivity() {
 

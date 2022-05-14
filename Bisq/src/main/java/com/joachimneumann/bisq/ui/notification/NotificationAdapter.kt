@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.ui.notification
+package bisq.android.ui.notification
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.database.BisqNotification
-import com.joachimneumann.bisq.model.NotificationType
-import com.joachimneumann.bisq.util.DateUtil
+import bisq.android.R
+import bisq.android.database.BisqNotification
+import bisq.android.model.NotificationType
+import bisq.android.util.DateUtil
 
 class NotificationAdapter(
     private var notifications: List<BisqNotification>,

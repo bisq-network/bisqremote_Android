@@ -1,13 +1,13 @@
-package com.joachimneumann.bisq.ui.notification
+package bisq.android.ui.notification
 
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.database.BisqNotification
-import com.joachimneumann.bisq.ui.PairedBaseActivity
-import com.joachimneumann.bisq.util.DateUtil
+import bisq.android.R
+import bisq.android.database.BisqNotification
+import bisq.android.ui.PairedBaseActivity
+import bisq.android.util.DateUtil
 
 class NotificationDetailActivity : PairedBaseActivity() {
 

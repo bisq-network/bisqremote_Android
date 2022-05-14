@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
@@ -8,12 +9,12 @@ repositories {
 }
 
 android {
-    namespace 'com.joachimneumann.bisq'
+    namespace 'bisq.android'
     compileSdkVersion 32
     defaultConfig {
         versionCode project.getGitCommitCount()
         versionName '1.1.' + project.getGitCommitCount()
-        applicationId "com.joachimneumann.bisq"
+        applicationId "bisq.android"
         minSdkVersion 21
         targetSdkVersion 32
         multiDexEnabled true
@@ -102,6 +103,3 @@ dependencies {
 
     androidTestUtil 'androidx.test:orchestrator:1.4.1'
 }
-
-// This should be at the bottom
-apply plugin: 'com.google.gms.google-services'

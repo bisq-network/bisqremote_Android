@@ -1,11 +1,11 @@
-package com.joachimneumann.bisq.ui.notification
+package bisq.android.ui.notification
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.joachimneumann.bisq.database.BisqNotification
-import com.joachimneumann.bisq.database.NotificationRepository
+import bisq.android.database.BisqNotification
+import bisq.android.database.NotificationRepository
 import kotlinx.coroutines.launch
 
 class NotificationViewModel(application: Application) : AndroidViewModel(application) {

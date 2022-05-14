@@ -1,11 +1,11 @@
-package com.joachimneumann.bisq.model
+package bisq.android.model
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import android.util.Log
-import com.joachimneumann.bisq.ext.capitalizeEachWord
-import com.joachimneumann.bisq.util.generateKey
+import bisq.android.ext.capitalizeEachWord
+import bisq.android.util.generateKey
 import java.io.IOException
 
 class Device private constructor() {

@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.ui.notification
+package bisq.android.ui.notification
 
 import android.content.Intent
 import android.graphics.*
@@ -13,10 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.database.BisqNotification
-import com.joachimneumann.bisq.ui.PairedBaseActivity
-import com.joachimneumann.bisq.ui.settings.SettingsActivity
+import bisq.android.R
+import bisq.android.database.BisqNotification
+import bisq.android.ui.PairedBaseActivity
+import bisq.android.ui.settings.SettingsActivity
 
 class NotificationTableActivity : PairedBaseActivity() {
 

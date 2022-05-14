@@ -1,12 +1,12 @@
-package com.joachimneumann.bisq.ui.pairing
+package bisq.android.ui.pairing
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.model.Device
-import com.joachimneumann.bisq.ui.UnpairedBaseActivity
+import bisq.android.R
+import bisq.android.model.Device
+import bisq.android.ui.UnpairedBaseActivity
 
 class PairingSendActivity : UnpairedBaseActivity() {
 

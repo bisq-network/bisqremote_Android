@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.model
+package bisq.android.model
 
 enum class NotificationType {
     SETUP_CONFIRMATION, ERASE, // setup

@@ -1,7 +1,7 @@
-package com.joachimneumann.bisq.util
+package bisq.android.util
 
 import android.util.Base64
-import com.joachimneumann.bisq.ext.hexStringToByteArray
+import bisq.android.ext.hexStringToByteArray
 import java.nio.charset.Charset
 import java.security.NoSuchAlgorithmException
 import java.util.*

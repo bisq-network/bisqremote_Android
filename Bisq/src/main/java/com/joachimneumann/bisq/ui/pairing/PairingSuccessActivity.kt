@@ -1,11 +1,11 @@
-package com.joachimneumann.bisq.ui.pairing
+package bisq.android.ui.pairing
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.ui.PairedBaseActivity
-import com.joachimneumann.bisq.ui.notification.NotificationTableActivity
+import bisq.android.R
+import bisq.android.ui.PairedBaseActivity
+import bisq.android.ui.notification.NotificationTableActivity
 
 class PairingSuccessActivity : PairedBaseActivity() {
 

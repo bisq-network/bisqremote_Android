@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.ext
+package bisq.android.ext
 
 import android.text.TextUtils
 

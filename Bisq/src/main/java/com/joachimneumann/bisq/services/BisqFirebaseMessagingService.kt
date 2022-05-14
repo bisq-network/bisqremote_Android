@@ -1,14 +1,14 @@
-package com.joachimneumann.bisq.services
+package bisq.android.services
 
 import android.content.Intent
 import android.util.Log
+import bisq.android.R
+import bisq.android.model.Device
+import bisq.android.ui.welcome.WelcomeActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.model.Device
-import com.joachimneumann.bisq.ui.welcome.WelcomeActivity
 
 class BisqFirebaseMessagingService : FirebaseMessagingService() {
 

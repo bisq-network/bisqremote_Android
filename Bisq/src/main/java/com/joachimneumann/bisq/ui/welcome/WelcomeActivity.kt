@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.ui.welcome
+package bisq.android.ui.welcome
 
 import android.content.Intent
 import android.graphics.Color
@@ -11,14 +11,14 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.joachimneumann.bisq.BISQ_MOBILE_URL
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.model.Device
-import com.joachimneumann.bisq.services.BisqFirebaseMessagingService
-import com.joachimneumann.bisq.ui.DialogBuilder
-import com.joachimneumann.bisq.ui.UnpairedBaseActivity
-import com.joachimneumann.bisq.ui.notification.NotificationTableActivity
-import com.joachimneumann.bisq.ui.pairing.PairingScanActivity
+import bisq.android.BISQ_MOBILE_URL
+import bisq.android.R
+import bisq.android.model.Device
+import bisq.android.services.BisqFirebaseMessagingService
+import bisq.android.ui.DialogBuilder
+import bisq.android.ui.UnpairedBaseActivity
+import bisq.android.ui.notification.NotificationTableActivity
+import bisq.android.ui.pairing.PairingScanActivity
 
 class WelcomeActivity : UnpairedBaseActivity() {
 

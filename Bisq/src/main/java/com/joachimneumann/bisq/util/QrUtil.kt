@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.util
+package bisq.android.util
 
 import android.graphics.Bitmap
 import android.graphics.Color

@@ -1,8 +1,8 @@
-package com.joachimneumann.bisq.ui
+package bisq.android.ui
 
 import android.content.Intent
 import android.widget.Toast
-import com.joachimneumann.bisq.ui.welcome.WelcomeActivity
+import bisq.android.ui.welcome.WelcomeActivity
 
 open class PairedBaseActivity : BaseActivity() {
 

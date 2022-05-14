@@ -1,11 +1,11 @@
-package com.joachimneumann.bisq.ui
+package bisq.android.ui
 
 import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import com.joachimneumann.bisq.R
+import bisq.android.R
 
 class DialogBuilder {
 

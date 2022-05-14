@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.services
+package bisq.android.services
 
 import android.app.Activity
 import android.content.BroadcastReceiver
@@ -6,14 +6,14 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.database.NotificationRepository
-import com.joachimneumann.bisq.ext.goAsync
-import com.joachimneumann.bisq.model.Device
-import com.joachimneumann.bisq.model.NotificationMessage
-import com.joachimneumann.bisq.model.NotificationType
-import com.joachimneumann.bisq.ui.PairedBaseActivity
-import com.joachimneumann.bisq.ui.UnpairedBaseActivity
+import bisq.android.R
+import bisq.android.database.NotificationRepository
+import bisq.android.ext.goAsync
+import bisq.android.model.Device
+import bisq.android.model.NotificationMessage
+import bisq.android.model.NotificationType
+import bisq.android.ui.PairedBaseActivity
+import bisq.android.ui.UnpairedBaseActivity
 import java.util.*
 
 const val BISQ_MESSAGE_ANDROID_MAGIC = "BisqMessageAndroid"

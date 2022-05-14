@@ -1,4 +1,4 @@
-package com.joachimneumann.bisq.ui.settings
+package bisq.android.ui.settings
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -7,15 +7,15 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
-import com.joachimneumann.bisq.BISQ_MOBILE_URL
-import com.joachimneumann.bisq.BISQ_NETWORK_URL
-import com.joachimneumann.bisq.R
-import com.joachimneumann.bisq.database.BisqNotification
-import com.joachimneumann.bisq.model.Device
-import com.joachimneumann.bisq.model.NotificationType
-import com.joachimneumann.bisq.ui.PairedBaseActivity
-import com.joachimneumann.bisq.ui.notification.NotificationViewModel
-import com.joachimneumann.bisq.ui.welcome.WelcomeActivity
+import bisq.android.BISQ_MOBILE_URL
+import bisq.android.BISQ_NETWORK_URL
+import bisq.android.R
+import bisq.android.database.BisqNotification
+import bisq.android.model.Device
+import bisq.android.model.NotificationType
+import bisq.android.ui.PairedBaseActivity
+import bisq.android.ui.notification.NotificationViewModel
+import bisq.android.ui.welcome.WelcomeActivity
 import java.util.*
 
 class SettingsActivity : PairedBaseActivity() {

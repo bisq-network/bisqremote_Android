@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context="com.joachimneumann.bisq.ui.welcome.WelcomeActivity">
+    tools:context="bisq.android.ui.welcome.WelcomeActivity">
 
     <ImageView
         android:id="@+id/welcomeImageView"

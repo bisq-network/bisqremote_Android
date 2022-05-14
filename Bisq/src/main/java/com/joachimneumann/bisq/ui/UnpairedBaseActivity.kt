@@ -1,7 +1,7 @@
-package com.joachimneumann.bisq.ui
+package bisq.android.ui
 
 import android.content.Intent
-import com.joachimneumann.bisq.ui.pairing.PairingSuccessActivity
+import bisq.android.ui.pairing.PairingSuccessActivity
 
 open class UnpairedBaseActivity : BaseActivity() {
 
