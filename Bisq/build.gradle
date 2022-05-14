@@ -3,71 +3,105 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 repositories {
+    google()
     mavenCentral()
 }
 
-
-kotlin {
-    experimental {
-        coroutines 'enable'
-    }
-}
-
 android {
-    compileSdkVersion 27
+    namespace 'com.joachimneumann.bisq'
+    compileSdkVersion 32
     defaultConfig {
-        // from http://www.codexpedia.com/android/using-git-commit-count-for-version-code-for-android/
-        versionCode project.getVersionCode()
-        versionName '0.' + project.getVersionCode()
+        versionCode project.getGitCommitCount()
+        versionName '1.1.' + project.getGitCommitCount()
         applicationId "com.joachimneumann.bisq"
-        minSdkVersion 15
-        targetSdkVersion 27
-        versionCode 18
-        versionName "1.1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        minSdkVersion 21
+        targetSdkVersion 32
+        multiDexEnabled true
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+    }
+    testOptions {
+        animationsDisabled = true
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '28.0.3'
+    lint {
+        abortOnError true
+    }
+    sourceSets {
+        androidTest {
+            java.srcDirs += 'src/test-utils/java'
+        }
+        test {
+            java.srcDirs += 'src/test-utils/java'
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:support-media-compat:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.google.zxing:core:3.3.3'
-    implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.google.firebase:firebase-messaging:17.3.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.23.4'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.media:media:1.6.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
+    implementation 'com.google.android.material:material:1.6.0'
 
-    def room_version = "1.1.1"
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
-    implementation 'android.arch.lifecycle:livedata:1.1.1'
-    kapt "android.arch.persistence.room:compiler:$room_version"
+    implementation 'com.google.zxing:core:3.4.1'
 
+    implementation platform('com.google.firebase:firebase-bom:28.2.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.0.0'
+    implementation 'com.google.firebase:firebase-core:21.0.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.4'
 
-    def lifecycle_version = "1.1.1"
-    // ViewModel and LiveData
-    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    kapt "android.arch.lifecycle:compiler:$lifecycle_version"
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+
+    implementation 'androidx.room:room-ktx:2.4.2'
+    implementation 'androidx.room:room-runtime:2.4.2'
+    annotationProcessor 'androidx.room:room-compiler:2.4.2'
+    kapt 'androidx.room:room-compiler:2.4.2'
+
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation "androidx.multidex:multidex:2.0.1"
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation "io.mockk:mockk:1.12.3"
+    testImplementation 'org.powermock:powermock:1.6.5'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
+
+    androidTestImplementation "junit:junit:4.13.2"
+    androidTestImplementation "androidx.test:core-ktx:1.4.0"
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.3"
+    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:3.4.0"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.4.0"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
+    androidTestImplementation "io.mockk:mockk-android:1.12.3"
+
+    androidTestUtil 'androidx.test:orchestrator:1.4.1'
 }
 
-// THIS SHOULD BE AT THE BOTTOM
+// This should be at the bottom
 apply plugin: 'com.google.gms.google-services'

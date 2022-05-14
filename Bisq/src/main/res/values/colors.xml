@@ -6,7 +6,4 @@
     <color name="read_title">#808080</color>
     <color name="accent">#DDDDDD</color>
     <color name="background">#FFFFFF</color>
-    <color name="background_image">#EEEEEE</color>
-    <color name="navigationBarBackground">#EEEEEE</color>
-    <color name="readNotificationTitle">#888888</color>
 </resources>
