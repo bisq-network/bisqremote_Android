@@ -13,7 +13,7 @@ android {
     compileSdkVersion 32
     defaultConfig {
         versionCode project.getGitCommitCount()
-        versionName '1.1.' + project.getGitCommitCount()
+        versionName '1.2.' + project.getGitCommitCount()
         applicationId "bisq.android"
         minSdkVersion 21
         targetSdkVersion 32
