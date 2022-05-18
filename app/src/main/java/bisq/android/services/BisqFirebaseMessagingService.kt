@@ -2,13 +2,11 @@ package bisq.android.services
 
 import android.content.Intent
 import android.util.Log
-import bisq.android.R
 import bisq.android.model.Device
 import bisq.android.ui.welcome.WelcomeActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
-import com.google.firebase.messaging.RemoteMessage
 
 class BisqFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -55,22 +53,6 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             Device.instance.confirmed = true
             Device.instance.clearPreferences(this)
             startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
-        }
-    }
-
-    /**
-     * Called when a message is received from Firebase Cloud Messaging (FCM).
-     */
-    override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.i(TAG, "Message received: $remoteMessage")
-        super.onMessageReceived(remoteMessage)
-        val notificationMessage = remoteMessage.data["encrypted"]
-        if (notificationMessage != null) {
-            val broadcastIntent = Intent()
-            broadcastIntent.action = this.getString(R.string.bisq_broadcast)
-            broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
-            broadcastIntent.putExtra("notificationMessage", notificationMessage)
-            sendBroadcast(broadcastIntent)
         }
     }
 

@@ -1,13 +1,13 @@
-package com.joachimneumann.bisq.tests.model
+package bisq.android.tests.model
 
+import bisq.android.database.BisqNotification
+import bisq.android.model.Device
+import bisq.android.model.NotificationMessage
+import bisq.android.model.NotificationMessage.Companion.BISQ_MESSAGE_ANDROID_MAGIC
+import bisq.android.model.NotificationType
+import bisq.android.util.CryptoUtil
+import bisq.android.util.DateUtil
 import com.google.gson.GsonBuilder
-import com.joachimneumann.bisq.database.BisqNotification
-import com.joachimneumann.bisq.model.Device
-import com.joachimneumann.bisq.model.NotificationMessage
-import com.joachimneumann.bisq.model.NotificationType
-import com.joachimneumann.bisq.services.BISQ_MESSAGE_ANDROID_MAGIC
-import com.joachimneumann.bisq.util.CryptoUtil
-import com.joachimneumann.bisq.util.DateUtil
 import org.junit.Before
 import org.junit.Test
 import java.util.*

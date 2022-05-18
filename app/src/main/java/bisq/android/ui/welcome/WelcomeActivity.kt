@@ -37,8 +37,6 @@ class WelcomeActivity : UnpairedBaseActivity() {
 
         initView()
 
-        checkForOpenedNotificationMessageAndRetrieveData()
-
         if (Device.instance.readFromPreferences(this)) {
             startActivity(Intent(this, NotificationTableActivity::class.java))
             return
@@ -88,22 +86,6 @@ class WelcomeActivity : UnpairedBaseActivity() {
                 }
             }
         }.start()
-    }
-
-    private fun checkForOpenedNotificationMessageAndRetrieveData() {
-        val bundle = intent.extras
-        if (bundle != null) {
-            val notificationMessage = bundle.get("encrypted")
-            if (notificationMessage != null) {
-                registerNotificationReceiver()
-
-                val broadcastIntent = Intent()
-                broadcastIntent.action = this.getString(R.string.bisq_broadcast)
-                broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
-                broadcastIntent.putExtra("notificationMessage", notificationMessage as String)
-                sendBroadcast(broadcastIntent)
-            }
-        }
     }
 
     private fun onPairButtonClick() {

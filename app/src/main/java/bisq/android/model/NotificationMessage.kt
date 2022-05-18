@@ -2,7 +2,6 @@ package bisq.android.model
 
 import android.util.Log
 import bisq.android.database.BisqNotification
-import bisq.android.services.BISQ_MESSAGE_ANDROID_MAGIC
 import bisq.android.util.CryptoUtil
 import bisq.android.util.DateUtil
 import com.google.gson.GsonBuilder
@@ -20,6 +19,7 @@ class NotificationMessage(private var notification: String?) {
 
     companion object {
         private const val TAG = "NotificationMessage"
+        const val BISQ_MESSAGE_ANDROID_MAGIC = "BisqMessageAndroid"
     }
 
     init {

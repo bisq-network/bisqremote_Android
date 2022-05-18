@@ -49,7 +49,7 @@ class NotificationDetailActivity : PairedBaseActivity() {
     private fun updateView(notification: BisqNotification) {
         title.text = notification.title
 
-        if (notification.message != null && notification.message!!.count() > 0) {
+        if (notification.message != null && notification.message!!.isNotEmpty()) {
             message.text = notification.message
         } else {
             message.visibility = View.GONE

@@ -1,47 +1,42 @@
 package bisq.android.services
 
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
-import bisq.android.R
 import bisq.android.database.NotificationRepository
 import bisq.android.ext.goAsync
 import bisq.android.model.Device
 import bisq.android.model.NotificationMessage
 import bisq.android.model.NotificationType
-import bisq.android.ui.PairedBaseActivity
-import bisq.android.ui.UnpairedBaseActivity
 import java.util.*
 
-const val BISQ_MESSAGE_ANDROID_MAGIC = "BisqMessageAndroid"
-
-class NotificationReceiver(private val activity: Activity? = null) : BroadcastReceiver() {
+class NotificationReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "NotificationReceiver"
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (Device.instance.key == null ||
-            intent.action == null ||
-            !intent.action.equals(context.getString(R.string.bisq_broadcast))
-        ) {
+        if (Device.instance.key == null || intent.action == null) {
             return
         }
 
         Log.i(TAG, "Notification received")
-        processNotification(intent.getStringExtra("notificationMessage"))
+        val encryptedMessage = intent.extras?.get("encrypted").toString()
+        processNotification(encryptedMessage, context)
     }
 
-    private fun processNotification(notification: String?) {
+    private fun processNotification(encryptedMessage: String?, context: Context) {
         val notificationMessage: NotificationMessage
         try {
-            notificationMessage = NotificationMessage(notification)
+            notificationMessage = NotificationMessage(encryptedMessage)
         } catch (e: Exception) {
-            Toast.makeText(activity, "${e.message}; try pairing again", Toast.LENGTH_LONG).show()
+            Intent().also { intent ->
+                intent.action = "bisqNotification"
+                intent.putExtra("error", "${e.message}; try pairing again")
+                context.sendBroadcast(intent)
+            }
             return
         }
         val bisqNotification = notificationMessage.bisqNotification
@@ -49,30 +44,33 @@ class NotificationReceiver(private val activity: Activity? = null) : BroadcastRe
 
         Log.i(TAG, "${bisqNotification.type} notification")
 
-        val notificationRepository = NotificationRepository(activity!!)
+        val notificationRepository = NotificationRepository(context)
 
         when (bisqNotification.type) {
             NotificationType.SETUP_CONFIRMATION.name -> {
-                if (Device.instance.key != null &&
-                    Device.instance.token != null &&
-                    activity is UnpairedBaseActivity
-                ) {
-                    Device.instance.confirmed = true
-                    Device.instance.saveToPreferences(activity)
-                    activity.pairingConfirmed()
-                    Log.i(TAG, "Setup confirmed")
+                if (Device.instance.token == null) {
+                    Log.e(TAG, "Device token is null")
+                    return
                 }
+                if (Device.instance.key == null) {
+                    Log.e(TAG, "Device key is null")
+                    return
+                }
+                if (Device.instance.confirmed) {
+                    Log.w(TAG, "Device is already paired")
+                    return
+                }
+                Device.instance.confirmed = true
+                Device.instance.saveToPreferences(context)
+                Log.i(TAG, "Setup confirmed")
             }
             NotificationType.ERASE.name -> {
-                if (activity is PairedBaseActivity) {
-                    goAsync {
-                        notificationRepository.deleteAll()
-                    }
-                    Device.instance.reset()
-                    Device.instance.clearPreferences(activity)
-                    activity.pairingRemoved(activity.getString(R.string.pairing_erased))
-                    Log.i(TAG, "Pairing erased")
+                goAsync {
+                    notificationRepository.deleteAll()
                 }
+                Device.instance.reset()
+                Device.instance.clearPreferences(context)
+                Log.i(TAG, "Pairing erased")
             }
             else -> {
                 goAsync {
@@ -81,6 +79,13 @@ class NotificationReceiver(private val activity: Activity? = null) : BroadcastRe
                 }
             }
         }
+
+        Intent().also { intent ->
+            intent.action = "bisqNotification"
+            intent.putExtra("type", bisqNotification.type)
+            context.sendBroadcast(intent)
+        }
+
     }
 
 }

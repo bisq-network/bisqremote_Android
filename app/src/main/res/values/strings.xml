@@ -2,9 +2,6 @@
 
     <string name="app_name">Bisq</string>
 
-    <string name="default_notification_channel_id">Bisq_notification_channel</string>
-    <string name="bisq_broadcast">bisq_broadcast</string>
-
     <string name="version">Version %1$s</string>
 
     <string name="button_pair">Pair</string>
@@ -59,7 +56,7 @@
     <string name="event_occurred_at">Event occurred: %1$s</string>
     <string name="event_received_at">Event received: %1$s</string>
 
-    <string name="pairing_erased">App has been unpaired via the Bisq desktop application</string>
+    <string name="pairing_erased">App has been unpaired remotely</string>
     <string name="pairing_erased_new_token">App has been unpaired as a result of receiving a new FCM token</string>
 
 </resources>

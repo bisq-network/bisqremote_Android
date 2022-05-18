@@ -1,7 +1,9 @@
 package bisq.android.ui
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.RingtoneManager
@@ -12,7 +14,7 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import bisq.android.R
-import bisq.android.services.NotificationReceiver
+import bisq.android.services.BisqNotificationReceiver
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -20,7 +22,7 @@ open class BaseActivity : AppCompatActivity() {
         private const val TAG = "BaseActivity"
     }
 
-    private var receiver: NotificationReceiver? = null
+    private var receiver: BisqNotificationReceiver? = null
 
     fun <T : View> Activity.bind(@IdRes res: Int): T {
         @Suppress("UNCHECKED_CAST")
@@ -29,7 +31,8 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        registerNotificationReceiver()
+        clearNotifications()
+        registerBroadcastReceiver()
     }
 
     override fun onStop() {
@@ -38,12 +41,17 @@ open class BaseActivity : AppCompatActivity() {
         receiver = null
     }
 
-    protected fun registerNotificationReceiver() {
+    private fun clearNotifications() {
+        val nManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        nManager.cancelAll()
+    }
+
+    private fun registerBroadcastReceiver() {
         if (receiver == null) {
-            receiver = NotificationReceiver(this)
+            receiver = BisqNotificationReceiver(this)
         }
         val filter = IntentFilter()
-        filter.addAction(getString(R.string.bisq_broadcast))
+        filter.addAction("bisqNotification")
         registerReceiver(receiver, filter)
     }
 
