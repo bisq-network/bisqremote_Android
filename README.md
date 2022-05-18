@@ -7,7 +7,7 @@ not near your computer.
 ## How to Run
 
 To build this project, you will need to create your own `google-services.json` file and place it
-under the Bisq/ directory. Refer to
+under the app/ directory. Refer to
 [firebase documentation](https://firebase.google.com/docs/android/setup#add-config-file)
 for more information.
 
