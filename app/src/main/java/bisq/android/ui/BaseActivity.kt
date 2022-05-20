@@ -14,7 +14,9 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import bisq.android.R
+import bisq.android.model.Device
 import bisq.android.services.BisqNotificationReceiver
+import bisq.android.ui.welcome.WelcomeActivity
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -31,6 +33,9 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        if (!Device.instance.readFromPreferences(this) && this is PairedBaseActivity) {
+            startActivity(Intent(this, WelcomeActivity::class.java))
+        }
         clearNotifications()
         registerBroadcastReceiver()
     }
