@@ -1,7 +1,7 @@
-Bisq/google-services.json
-Bisq/build
-build
-Bisq/release
-.gradle
-.idea
+.gradle/
+.idea/
+app/google-services.json
+app/build/
+app/release/
+build/
 local.properties

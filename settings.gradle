@@ -1,1 +1,1 @@
-include ':Bisq'
+include ':app'
