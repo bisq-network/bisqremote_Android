@@ -50,9 +50,9 @@ class DeviceTest {
         Device.instance.newToken(token)
         assertEquals(
             Device.DEVICE_MAGIC_ANDROID
-                    + Device.DEVICE_SEPARATOR + Device.instance.descriptor +
-                    Device.DEVICE_SEPARATOR + Device.instance.key +
-                    Device.DEVICE_SEPARATOR + Device.instance.token,
+                + Device.DEVICE_SEPARATOR + Device.instance.descriptor +
+                Device.DEVICE_SEPARATOR + Device.instance.key +
+                Device.DEVICE_SEPARATOR + Device.instance.token,
             Device.instance.pairingToken()
         )
     }

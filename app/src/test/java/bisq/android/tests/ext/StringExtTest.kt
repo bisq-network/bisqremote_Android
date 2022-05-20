@@ -30,7 +30,7 @@ class StringExtTest {
         val bytearray = (hexString).hexStringToByteArray()
         assertEquals(
             "[-84, -30, 79, 44, 62, 8, 72, -67, -98, 87, -10, -76, 21, -54, 8, " +
-                    "-33, 110, -57, -62, 38, -110, -67, 72, -94, -106, -2, 64, 68, 117, -98, 94, -1]",
+                "-33, 110, -57, -62, 38, -110, -67, 72, -94, -106, -2, 64, 68, 117, -98, 94, -1]",
             bytearray.asList().toString()
         )
     }

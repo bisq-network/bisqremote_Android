@@ -1,7 +1,5 @@
 <resources>
 
-    <string name="app_name">Bisq</string>
-
     <string name="version">Version %1$s</string>
 
     <string name="button_pair">Pair</string>

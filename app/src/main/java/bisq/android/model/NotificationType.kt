@@ -18,6 +18,14 @@
 package bisq.android.model
 
 enum class NotificationType {
-    SETUP_CONFIRMATION, ERASE, // setup
-    TRADE, DISPUTE, OFFER, PRICE, MARKET, // from Bisq
+    // setup
+    SETUP_CONFIRMATION,
+    ERASE,
+
+    // from Bisq
+    TRADE,
+    DISPUTE,
+    OFFER,
+    PRICE,
+    MARKET
 }
