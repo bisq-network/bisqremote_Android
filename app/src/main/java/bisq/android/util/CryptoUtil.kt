@@ -17,8 +17,8 @@ import javax.crypto.spec.SecretKeySpec
  */
 class CryptoUtil(private val key: String) {
 
-    private var ivspec: IvParameterSpec? = null
-    private val keyspec: SecretKeySpec = SecretKeySpec(key.toByteArray(), "AES")
+    private var ivSpec: IvParameterSpec? = null
+    private val keySpec: SecretKeySpec = SecretKeySpec(key.toByteArray(), "AES")
     private var cipher: Cipher? = null
 
     init {
@@ -31,64 +31,64 @@ class CryptoUtil(private val key: String) {
         }
     }
 
-    @Throws(Exception::class)
+    @Throws(IllegalArgumentException::class)
     fun encrypt(valueToEncrypt: String, iv: String): String {
         var paddedValueToEncrypt = valueToEncrypt
         while (paddedValueToEncrypt.length % 16 != 0) {
             paddedValueToEncrypt = "$paddedValueToEncrypt "
         }
         if (iv.length != 16) {
-            throw Exception("iv not 16 characters")
+            throw IllegalArgumentException("Initialization vector is not 16 characters")
         }
-        ivspec = IvParameterSpec(iv.toByteArray())
-        val encryptedBytes = encryptInternal(paddedValueToEncrypt, ivspec!!)
+        ivSpec = IvParameterSpec(iv.toByteArray())
+        val encryptedBytes = encryptInternal(paddedValueToEncrypt, ivSpec!!)
         val encryptedBase64 = Base64.encode(encryptedBytes, Base64.DEFAULT)
         return String(encryptedBase64, Charset.forName("UTF-8"))
     }
 
-    @Throws(Exception::class)
+    @Throws(IllegalArgumentException::class)
     fun decrypt(valueToDecrypt: String, iv: String): String {
         if (iv.length != 16) {
-            throw Exception("iv not 16 characters")
+            throw IllegalArgumentException("Initialization vector is not 16 characters")
         }
-        ivspec = IvParameterSpec(iv.toByteArray())
-        val decryptedBytes = decryptInternal(valueToDecrypt, ivspec!!)
+        ivSpec = IvParameterSpec(iv.toByteArray())
+        val decryptedBytes = decryptInternal(valueToDecrypt, ivSpec!!)
         return String(decryptedBytes!!)
     }
 
-    @Throws(Exception::class)
-    private fun encryptInternal(text: String?, ivspec: IvParameterSpec): ByteArray? {
+    @Throws(IllegalArgumentException::class)
+    private fun encryptInternal(text: String?, ivSpec: IvParameterSpec): ByteArray? {
         if (text == null || text.isEmpty()) {
-            throw Exception("Empty string")
+            throw IllegalArgumentException("Empty string")
         }
         if (key.length != 32) {
-            throw Exception("key not 32 characters")
+            throw IllegalArgumentException("Key is not 32 characters")
         }
         val encrypted: ByteArray?
         try {
-            cipher!!.init(Cipher.ENCRYPT_MODE, keyspec, ivspec)
+            cipher!!.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec)
             encrypted = cipher!!.doFinal(text.toByteArray())
         } catch (e: Exception) {
-            throw Exception("[encrypt] " + e.message)
+            throw CryptoException("[encrypt] " + e.message)
         }
         return encrypted
     }
 
-    @Throws(Exception::class)
-    private fun decryptInternal(codeBase64: String?, ivspec: IvParameterSpec): ByteArray? {
+    @Throws(IllegalArgumentException::class)
+    private fun decryptInternal(codeBase64: String?, ivSpec: IvParameterSpec): ByteArray? {
         if (codeBase64 == null || codeBase64.isEmpty()) {
-            throw Exception("Empty string")
+            throw IllegalArgumentException("Empty string")
         }
         if (key.length != 32) {
-            throw Exception("key not 32 characters")
+            throw IllegalArgumentException("Key is not 32 characters")
         }
         val decrypted: ByteArray?
         try {
-            cipher!!.init(Cipher.DECRYPT_MODE, keyspec, ivspec)
+            cipher!!.init(Cipher.DECRYPT_MODE, keySpec, ivSpec)
             val code = Base64.decode(codeBase64, Base64.DEFAULT)
             decrypted = cipher!!.doFinal(code)
         } catch (e: Exception) {
-            throw Exception("[decrypt] " + e.message)
+            throw CryptoException("[decrypt] " + e.message)
         }
         return decrypted
     }
@@ -102,3 +102,5 @@ fun generateKey(): String {
     val keyLong = Base64.encodeToString(bytearray, Base64.NO_WRAP)
     return keyLong.substring(0, 32)
 }
+
+class CryptoException(message: String) : Exception(message)

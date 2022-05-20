@@ -5,7 +5,6 @@ import bisq.android.util.generateKey
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.matchesPattern
 import org.junit.Assert.*
-
 import org.junit.Test
 import java.util.*
 
@@ -65,29 +64,44 @@ class CryptoUtilTest {
         assertEquals(expectedDecryptedValue, decrypted)
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = IllegalArgumentException::class)
     fun testEncryptWithInvalidKey() {
         val testCrypto = CryptoUtil(generateInvalidKey())
         val valueToEncrypt = "valueToEncrypt"
         testCrypto.encrypt(valueToEncrypt, iv)
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = IllegalArgumentException::class)
+    fun testDecryptWithInvalidKey() {
+        val testCrypto = CryptoUtil(generateInvalidKey())
+        val valueToDecrypt = "valueToDecrypt"
+        testCrypto.decrypt(valueToDecrypt, iv)
+    }
+
+    @Test
+    fun testDecryptWithIncorrectKey() {
+        val valueToEncrypt = "valueToEncrypt"
+        val encryptedString = crypto.encrypt(valueToEncrypt, iv)
+        val testCrypto = CryptoUtil(generateKey())
+        testCrypto.decrypt(encryptedString, iv)
+    }
+
+    @Test(expected = IllegalArgumentException::class)
     fun testEncryptEmptyString() {
         crypto.encrypt("", iv)
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = IllegalArgumentException::class)
     fun testDecryptEmptyString() {
         crypto.decrypt("", iv)
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = IllegalArgumentException::class)
     fun testEncryptWithInvalidIv() {
         crypto.encrypt("valueToEncrypt", generateInvalidIV())
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = IllegalArgumentException::class)
     fun testDecryptWithInvalidIv() {
         crypto.decrypt(crypto.encrypt("valueToEncrypt", iv), generateInvalidIV())
     }
