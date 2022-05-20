@@ -9,11 +9,18 @@ import bisq.android.ui.notification.NotificationTableActivity
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.matchesPattern
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class NotificationDetailTest : BaseTest() {
+
+    @Before
+    override fun setup() {
+        super.setup()
+        pairDevice()
+    }
 
     @Test
     fun notificationDetailsArePopulatedCorrectly() {

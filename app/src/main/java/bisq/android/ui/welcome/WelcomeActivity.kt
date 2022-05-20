@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import bisq.android.BISQ_MOBILE_URL
 import bisq.android.R
 import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.services.BisqFirebaseMessagingService
 import bisq.android.ui.DialogBuilder
 import bisq.android.ui.UnpairedBaseActivity
@@ -42,9 +43,15 @@ class WelcomeActivity : UnpairedBaseActivity() {
             return
         }
 
-        if (Device.instance.confirmed) {
+        if (Device.instance.status == DeviceStatus.NEEDS_REPAIR) {
             Toast.makeText(
                 this, getString(R.string.pairing_erased_new_token),
+                Toast.LENGTH_LONG
+            ).show()
+            Device.instance.reset()
+        } else if (Device.instance.status == DeviceStatus.ERASED) {
+            Toast.makeText(
+                this, getString(R.string.pairing_erased),
                 Toast.LENGTH_LONG
             ).show()
             Device.instance.reset()

@@ -7,6 +7,7 @@ import android.util.Log
 import bisq.android.database.NotificationRepository
 import bisq.android.ext.goAsync
 import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.model.NotificationMessage
 import bisq.android.model.NotificationType
 import java.util.*
@@ -57,11 +58,11 @@ class NotificationReceiver : BroadcastReceiver() {
                     Log.e(TAG, "Device key is null")
                     return
                 }
-                if (Device.instance.confirmed) {
+                if (Device.instance.status == DeviceStatus.PAIRED) {
                     Log.w(TAG, "Device is already paired")
                     return
                 }
-                Device.instance.confirmed = true
+                Device.instance.status = DeviceStatus.PAIRED
                 Device.instance.saveToPreferences(context)
                 Log.i(TAG, "Setup confirmed")
             }
@@ -71,6 +72,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 }
                 Device.instance.reset()
                 Device.instance.clearPreferences(context)
+                Device.instance.status = DeviceStatus.ERASED
                 Log.i(TAG, "Pairing erased")
             }
             else -> {

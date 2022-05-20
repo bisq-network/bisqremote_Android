@@ -2,6 +2,7 @@ package bisq.android.tests.services
 
 import bisq.android.mocks.Firebase
 import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.services.BisqFirebaseMessagingService
 import org.junit.Assert
 import org.junit.Assert.assertEquals
@@ -16,7 +17,7 @@ class BisqFirebaseMessagingServiceTest {
         BisqFirebaseMessagingService.fetchFcmToken()
         Assert.assertNull(Device.instance.key)
         Assert.assertNull(Device.instance.token)
-        Assert.assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
     @Test
@@ -30,7 +31,7 @@ class BisqFirebaseMessagingServiceTest {
         }
         Assert.assertNull(Device.instance.key)
         Assert.assertNull(Device.instance.token)
-        Assert.assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
 
         assertEquals(1, invokeCount)
     }
@@ -45,7 +46,7 @@ class BisqFirebaseMessagingServiceTest {
             Device.instance.token
         )
         Assert.assertNotNull(Device.instance.key)
-        Assert.assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
     @Test
@@ -62,7 +63,7 @@ class BisqFirebaseMessagingServiceTest {
             Device.instance.token
         )
         Assert.assertNotNull(Device.instance.key)
-        Assert.assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
 
         assertEquals(1, invokeCount)
     }

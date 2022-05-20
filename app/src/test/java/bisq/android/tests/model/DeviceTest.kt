@@ -1,6 +1,7 @@
 package bisq.android.tests.model
 
 import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Assert.*
@@ -16,7 +17,7 @@ class DeviceTest {
         Device.instance.reset()
         assertNull(Device.instance.key)
         assertNull(Device.instance.token)
-        assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
     @Test
@@ -24,7 +25,7 @@ class DeviceTest {
         Device.instance.newToken(token)
         assertEquals(token, Device.instance.token)
         MatcherAssert.assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
-        assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
     @Test
@@ -58,7 +59,7 @@ class DeviceTest {
         assertTrue(result)
         assertEquals(token, Device.instance.token)
         MatcherAssert.assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
-        assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
     @Test
@@ -67,7 +68,7 @@ class DeviceTest {
         assertFalse(Device.instance.fromString("android|Manufacturer Model|invalidKey|invalidToken"))
         assertNull(Device.instance.key)
         assertNull(Device.instance.token)
-        assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
     @Test
@@ -76,7 +77,7 @@ class DeviceTest {
         assertFalse(Device.instance.fromString(""))
         assertNull(Device.instance.key)
         assertNull(Device.instance.token)
-        assertFalse(Device.instance.confirmed)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
     private fun generateToken(): String {

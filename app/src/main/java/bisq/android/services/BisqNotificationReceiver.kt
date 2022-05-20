@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import bisq.android.R
+import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.model.NotificationType
 import bisq.android.ui.PairedBaseActivity
 import bisq.android.ui.UnpairedBaseActivity
@@ -27,6 +29,7 @@ class BisqNotificationReceiver(private val activity: Activity? = null) : Broadca
             if (type == NotificationType.SETUP_CONFIRMATION.name && activity is UnpairedBaseActivity) {
                 activity.pairingConfirmed()
             } else if (type == NotificationType.ERASE.name && activity is PairedBaseActivity) {
+                Device.instance.status = DeviceStatus.UNPAIRED
                 activity.pairingRemoved(context.getString(R.string.pairing_erased))
             }
         }

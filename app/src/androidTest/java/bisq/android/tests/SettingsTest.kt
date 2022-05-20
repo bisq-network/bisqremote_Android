@@ -11,24 +11,29 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import bisq.android.BISQ_MOBILE_URL
 import bisq.android.BISQ_NETWORK_URL
 import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.ui.notification.NotificationTableActivity
 import bisq.android.ui.settings.SettingsActivity
 import bisq.android.ui.welcome.WelcomeActivity
 import org.junit.Assert
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class SettingsTest : BaseTest() {
 
+    @Before
+    override fun setup() {
+        super.setup()
+        pairDevice()
+    }
+
     @Test
     fun clickResetButtonWipesPairingAndLoadsWelcomeScreen() {
-        val token =
-            "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEpLHGbLSFBN3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_"
-        Device.instance.newToken(token)
         val key = Device.instance.key
-        Device.instance.confirmed = true
+        val token = Device.instance.token
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.resetButton.click()
             intended(IntentMatchers.hasComponent(WelcomeActivity::class.java.name))
@@ -36,7 +41,7 @@ class SettingsTest : BaseTest() {
             Assert.assertNotEquals(key, Device.instance.key)
             Assert.assertNotNull(Device.instance.token)
             Assert.assertNotEquals(token, Device.instance.token)
-            Assert.assertFalse(Device.instance.confirmed)
+            Assert.assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
         }
     }
 

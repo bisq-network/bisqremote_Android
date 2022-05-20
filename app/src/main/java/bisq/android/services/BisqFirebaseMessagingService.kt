@@ -3,6 +3,7 @@ package bisq.android.services
 import android.content.Intent
 import android.util.Log
 import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.ui.welcome.WelcomeActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
@@ -50,7 +51,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         if (Device.instance.readFromPreferences(this)) {
             Log.i(TAG, "New FCM token received, app needs to be re-paired: $newToken")
             Device.instance.reset()
-            Device.instance.confirmed = true
+            Device.instance.status = DeviceStatus.NEEDS_REPAIR
             Device.instance.clearPreferences(this)
             startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
         }

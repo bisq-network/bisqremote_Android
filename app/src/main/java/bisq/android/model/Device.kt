@@ -25,7 +25,7 @@ class Device private constructor() {
     var descriptor: String? = getDeviceName()
     var key: String? = null
     var token: String? = null
-    var confirmed: Boolean = false
+    var status: DeviceStatus = DeviceStatus.UNPAIRED
 
     private object Holder {
         var INSTANCE = Device()
@@ -40,13 +40,13 @@ class Device private constructor() {
     fun newToken(token: String) {
         this.token = token
         key = generateKey()
-        confirmed = false
+        status = DeviceStatus.UNPAIRED
     }
 
     fun reset() {
         key = null
         token = null
-        confirmed = false
+        status = DeviceStatus.UNPAIRED
     }
 
     fun readFromPreferences(context: Context): Boolean {
@@ -89,7 +89,7 @@ class Device private constructor() {
             }
             key = a[2]
             token = a[3]
-            confirmed = false
+            status = DeviceStatus.UNPAIRED
             return true
         } catch (e: IOException) {
             Log.w(TAG, e.message.toString())

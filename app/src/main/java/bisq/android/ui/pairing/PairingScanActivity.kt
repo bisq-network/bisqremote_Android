@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import bisq.android.R
 import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.ui.UnpairedBaseActivity
 import bisq.android.util.QrUtil
 
@@ -70,7 +71,7 @@ class PairingScanActivity : UnpairedBaseActivity() {
     }
 
     private fun onSimulatePairingButtonClick() {
-        Device.instance.confirmed = true
+        Device.instance.status = DeviceStatus.PAIRED
         Device.instance.saveToPreferences(this)
         pairingConfirmed()
     }

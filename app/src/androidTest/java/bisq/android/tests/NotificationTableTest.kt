@@ -8,11 +8,18 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import bisq.android.ui.notification.NotificationDetailActivity
 import bisq.android.ui.notification.NotificationTableActivity
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class NotificationTableTest : BaseTest() {
+
+    @Before
+    override fun setup() {
+        super.setup()
+        pairDevice()
+    }
 
     @Test
     fun clickNotificationLoadsNotificationDetailActivity() {
