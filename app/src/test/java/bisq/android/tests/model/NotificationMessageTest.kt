@@ -3,13 +3,14 @@ package bisq.android.tests.model
 import bisq.android.database.BisqNotification
 import bisq.android.model.Device
 import bisq.android.model.NotificationMessage
+import bisq.android.model.NotificationMessage.Companion.BISQ_MESSAGE_ANDROID_MAGIC
 import bisq.android.model.NotificationType
-import bisq.android.services.BISQ_MESSAGE_ANDROID_MAGIC
 import bisq.android.util.CryptoUtil
 import bisq.android.util.DateUtil
 import com.google.gson.GsonBuilder
 import org.junit.Before
 import org.junit.Test
+import java.text.ParseException
 import java.util.*
 
 class NotificationMessageTest {
@@ -22,27 +23,27 @@ class NotificationMessageTest {
         Device.instance.newToken(token)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = ParseException::class)
     fun testEmptyNotificationRaisesException() {
         NotificationMessage("")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = ParseException::class)
     fun testNullNotificationRaisesException() {
         NotificationMessage(null)
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = ParseException::class)
     fun testNotificationInUnexpectedFormatRaisesException() {
         NotificationMessage("this is not the format you are looking for")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = ParseException::class)
     fun testInvalidMagicValueRaisesException() {
         NotificationMessage("magicValue|initializationVector|encryptedPayload")
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test(expected = ParseException::class)
     fun testInvalidInitializationVectorLengthRaisesException() {
         NotificationMessage("$BISQ_MESSAGE_ANDROID_MAGIC|initializationVector|encryptedPayload")
     }

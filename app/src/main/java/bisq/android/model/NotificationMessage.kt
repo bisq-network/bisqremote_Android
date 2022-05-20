@@ -6,6 +6,7 @@ import bisq.android.util.CryptoUtil
 import bisq.android.util.DateUtil
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
+import java.text.ParseException
 import java.util.*
 
 class NotificationMessage(private var notification: String?) {
@@ -33,22 +34,21 @@ class NotificationMessage(private var notification: String?) {
             val array = notification?.split("\\|".toRegex())?.dropLastWhile { it.isEmpty() }
                 ?.toTypedArray()
             if (array == null || array.size != 3) {
-                throw IllegalArgumentException("Unexpected format")
+                throw ParseException("Invalid format", 0)
             }
             magicValue = array[0]
             initializationVector = array[1]
             encryptedPayload = array[2]
             if (magicValue != BISQ_MESSAGE_ANDROID_MAGIC) {
-                throw IllegalArgumentException("Invalid magic value: $magicValue")
+                throw ParseException("Invalid magic value", 0)
             }
             if (initializationVector.length != 16) {
-                throw IllegalArgumentException(
-                    "Invalid initialization vector: $initializationVector"
-                )
+                throw ParseException("Invalid initialization vector (must be 16 characters)", 0)
             }
-        } catch (e: IllegalArgumentException) {
-            Log.e(TAG, "Unable to parse notification; ${e.message}")
-            throw IllegalArgumentException("Unable to parse notification; ${e.message}")
+        } catch (e: ParseException) {
+            val message = "Failed to parse notification; ${e.message}"
+            Log.e(TAG, message)
+            throw ParseException(message, e.errorOffset)
         }
     }
 
@@ -58,8 +58,9 @@ class NotificationMessage(private var notification: String?) {
                 encryptedPayload, initializationVector
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Unable to decrypt notification payload: $encryptedPayload")
-            throw Exception("Unable to decrypt notification payload")
+            val message = "Failed to decrypt notification"
+            Log.e(TAG, "$message: $encryptedPayload")
+            throw Exception(message)
         }
     }
 
@@ -70,8 +71,9 @@ class NotificationMessage(private var notification: String?) {
         try {
             bisqNotification = gson.fromJson(decryptedPayload, BisqNotification::class.java)
         } catch (e: JsonSyntaxException) {
-            Log.e(TAG, "Unable to deserialize notification message: $decryptedPayload")
-            throw Exception("Unable to deserialize notification message")
+            val message = "Failed to deserialize notification"
+            Log.e(TAG, "$message: $decryptedPayload")
+            throw Exception(message)
         }
     }
 

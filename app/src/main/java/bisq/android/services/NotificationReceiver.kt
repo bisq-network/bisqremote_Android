@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import bisq.android.R
 import bisq.android.database.NotificationRepository
 import bisq.android.ext.goAsync
 import bisq.android.model.Device
@@ -33,9 +34,10 @@ class NotificationReceiver : BroadcastReceiver() {
         try {
             notificationMessage = NotificationMessage(encryptedMessage)
         } catch (e: Exception) {
+            e.message?.let { Log.e(TAG, it) }
             Intent().also { intent ->
                 intent.action = "bisqNotification"
-                intent.putExtra("error", "${e.message}; try pairing again")
+                intent.putExtra("error", context.getString(R.string.failed_to_process_notification))
                 context.sendBroadcast(intent)
             }
             abortBroadcast()
