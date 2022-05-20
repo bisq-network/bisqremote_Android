@@ -37,6 +37,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 intent.putExtra("error", "${e.message}; try pairing again")
                 context.sendBroadcast(intent)
             }
+            abortBroadcast()
             return
         }
         val bisqNotification = notificationMessage.bisqNotification
