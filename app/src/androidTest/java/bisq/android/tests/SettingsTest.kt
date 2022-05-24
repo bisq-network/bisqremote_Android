@@ -32,7 +32,9 @@ import bisq.android.model.DeviceStatus
 import bisq.android.ui.notification.NotificationTableActivity
 import bisq.android.ui.settings.SettingsActivity
 import bisq.android.ui.welcome.WelcomeActivity
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -54,11 +56,11 @@ class SettingsTest : BaseTest() {
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.resetButton.click()
             intended(IntentMatchers.hasComponent(WelcomeActivity::class.java.name))
-            Assert.assertNotNull(Device.instance.key)
-            Assert.assertNotEquals(key, Device.instance.key)
-            Assert.assertNotNull(Device.instance.token)
-            Assert.assertNotEquals(token, Device.instance.token)
-            Assert.assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+            assertNotNull(Device.instance.key)
+            assertNotEquals(key, Device.instance.key)
+            assertNotNull(Device.instance.token)
+            assertNotEquals(token, Device.instance.token)
+            assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
         }
     }
 
@@ -84,7 +86,7 @@ class SettingsTest : BaseTest() {
             for (position in 0 until count - 1) {
                 val readState =
                     notificationTableScreen.notificationRecylerView.getReadStateAtPosition(position)
-                Assert.assertEquals(false, readState)
+                assertEquals(false, readState)
             }
 
             notificationTableScreen.settingsButton.click()
@@ -93,7 +95,7 @@ class SettingsTest : BaseTest() {
             for (position in 0 until count - 1) {
                 val readState =
                     notificationTableScreen.notificationRecylerView.getReadStateAtPosition(position)
-                Assert.assertEquals(true, readState)
+                assertEquals(true, readState)
             }
         }
     }
@@ -125,5 +127,4 @@ class SettingsTest : BaseTest() {
             intended(IntentMatchers.hasData(BISQ_MOBILE_URL))
         }
     }
-
 }

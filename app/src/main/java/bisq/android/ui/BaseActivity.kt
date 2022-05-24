@@ -83,8 +83,7 @@ open class BaseActivity : AppCompatActivity() {
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             RingtoneManager.getRingtone(applicationContext, notificationTone).play()
         } catch (e: Exception) {
-            Log.e(TAG, "Unable to play notification tone")
-            e.printStackTrace()
+            Log.e(TAG, "Unable to play notification tone", e)
         }
     }
 
@@ -103,5 +102,4 @@ open class BaseActivity : AppCompatActivity() {
             }
         ).show()
     }
-
 }

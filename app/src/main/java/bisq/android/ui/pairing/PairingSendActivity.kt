@@ -53,5 +53,4 @@ class PairingSendActivity : UnpairedBaseActivity() {
         intent.putExtra(Intent.EXTRA_TEXT, Device.instance.pairingToken())
         startActivity(Intent.createChooser(intent, getString(R.string.send_pairing_token)))
     }
-
 }

@@ -23,14 +23,18 @@ import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.*
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import bisq.android.BISQ_MOBILE_URL
-import bisq.android.mocks.Firebase
+import bisq.android.mocks.FirebaseMock
 import bisq.android.model.Device
 import bisq.android.ui.pairing.PairingScanActivity
 import bisq.android.ui.welcome.WelcomeActivity
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,7 +51,7 @@ class WelcomeTest : BaseTest() {
 
     @Test
     fun clickPairButtonAfterReceivingFcmTokenLoadsPairingScanActivity() {
-        Firebase.mockFirebaseTokenSuccessful()
+        FirebaseMock.mockFirebaseTokenSuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {
             welcomeScreen.pairButton.click()
             intended(hasComponent(PairingScanActivity::class.java.name))
@@ -56,7 +60,7 @@ class WelcomeTest : BaseTest() {
 
     @Test
     fun clickPairButtonAfterFailingToReceiveFcmTokenShowsPromptToRetryFetchingToken() {
-        Firebase.mockFirebaseTokenUnsuccessful()
+        FirebaseMock.mockFirebaseTokenUnsuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {
             welcomeScreen.pairButton.click()
             assertTrue(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
@@ -65,7 +69,7 @@ class WelcomeTest : BaseTest() {
 
     @Test
     fun clickCancelOnTokenFailurePromptAllowsClickingPairButtonAgain() {
-        Firebase.mockFirebaseTokenUnsuccessful()
+        FirebaseMock.mockFirebaseTokenUnsuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {
             welcomeScreen.pairButton.click()
             assertTrue(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
@@ -80,12 +84,12 @@ class WelcomeTest : BaseTest() {
 
     @Test
     fun clickTryAgainOnTokenFailurePromptRetriesFetchingToken() {
-        Firebase.mockFirebaseTokenUnsuccessful()
+        FirebaseMock.mockFirebaseTokenUnsuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {
             welcomeScreen.pairButton.click()
             assertTrue(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
 
-            Firebase.mockFirebaseTokenSuccessful()
+            FirebaseMock.mockFirebaseTokenSuccessful()
             welcomeScreen.alertDialogCannotRetrieveDeviceToken.positiveButton.click()
             intended(hasComponent(PairingScanActivity::class.java.name))
             assertEquals(
@@ -97,7 +101,7 @@ class WelcomeTest : BaseTest() {
 
     @Test
     fun clickLearnMoreButtonLoadsBisqMobileWebpage() {
-        Firebase.mockFirebaseTokenSuccessful()
+        FirebaseMock.mockFirebaseTokenSuccessful()
         intending(hasAction(Intent.ACTION_VIEW)).respondWith(
             Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
         )
@@ -110,5 +114,4 @@ class WelcomeTest : BaseTest() {
             intended(hasData(BISQ_MOBILE_URL))
         }
     }
-
 }

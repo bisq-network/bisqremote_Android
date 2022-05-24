@@ -18,7 +18,11 @@
 package bisq.android.ui.notification
 
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Menu
@@ -131,7 +135,6 @@ class NotificationTableActivity : PairedBaseActivity() {
         scrollFirstVisibleItemPosition = llm.findFirstVisibleItemPosition()
         scrollLastVisibleItemPosition = llm.findLastVisibleItemPosition()
     }
-
 }
 
 abstract class SwipeToDeleteCallback(context: NotificationTableActivity) :

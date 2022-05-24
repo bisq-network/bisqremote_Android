@@ -23,8 +23,8 @@ import com.google.gson.JsonObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
-import java.util.*
-
+import java.util.Date
+import java.util.Locale
 
 class DateUtilTest {
 
@@ -89,5 +89,4 @@ class DateUtilTest {
             )
         )
     }
-
 }

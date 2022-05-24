@@ -28,7 +28,8 @@ import com.google.gson.GsonBuilder
 import org.junit.Before
 import org.junit.Test
 import java.text.ParseException
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 class NotificationMessageTest {
 
@@ -116,5 +117,4 @@ class NotificationMessageTest {
         uuid = uuid.replace("-", "")
         return uuid.substring(0, 16)
     }
-
 }

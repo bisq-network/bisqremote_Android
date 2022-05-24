@@ -25,5 +25,4 @@ class NotificationTableScreen : Screen() {
 
     val settingsButton = ButtonElement(R.id.action_settings)
     val notificationRecylerView = RecyclerViewElement(R.id.notification_recycler_view)
-
 }

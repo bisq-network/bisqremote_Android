@@ -45,5 +45,4 @@ class PairingSuccessActivity : PairedBaseActivity() {
     private fun onPairingCompleteButtonClick() {
         startActivity(Intent(Intent(this, NotificationTableActivity::class.java)))
     }
-
 }

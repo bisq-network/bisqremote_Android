@@ -32,23 +32,25 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         private const val TAG = "FirebaseMsgSvc"
 
         fun fetchFcmToken(onComplete: () -> Unit = {}) {
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.e(TAG, "Fetching FCM token failed: " + task.exception)
+            FirebaseMessaging.getInstance().token.addOnCompleteListener(
+                OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        Log.e(TAG, "Fetching FCM token failed: " + task.exception)
+                        onComplete()
+                        return@OnCompleteListener
+                    }
+                    val token: String? = task.result
+                    if (token == null) {
+                        Log.e(TAG, "FCM token is null")
+                        onComplete()
+                        return@OnCompleteListener
+                    }
+                    Device.instance.newToken(token)
+                    Log.i(TAG, "FCM token: $token")
+                    Log.i(TAG, "Pairing token: " + Device.instance.pairingToken())
                     onComplete()
-                    return@OnCompleteListener
                 }
-                val token: String? = task.result
-                if (token == null) {
-                    Log.e(TAG, "FCM token is null")
-                    onComplete()
-                    return@OnCompleteListener
-                }
-                Device.instance.newToken(token)
-                Log.i(TAG, "FCM token: $token")
-                Log.i(TAG, "Pairing token: " + Device.instance.pairingToken())
-                onComplete()
-            })
+            )
         }
     }
 
@@ -73,5 +75,4 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
         }
     }
-
 }

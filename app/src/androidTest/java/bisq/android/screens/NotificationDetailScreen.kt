@@ -27,5 +27,4 @@ class NotificationDetailScreen : Screen() {
     val action = TextElement(R.id.detail_action)
     val eventTime = TextElement(R.id.detail_event_time)
     val receivedTime = TextElement(R.id.detail_received_time)
-
 }

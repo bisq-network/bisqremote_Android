@@ -83,5 +83,4 @@ class NotificationDetailActivity : PairedBaseActivity() {
         receivedTime.text =
             getString(R.string.event_received_at, DateUtil.format(notification.receivedDate))
     }
-
 }

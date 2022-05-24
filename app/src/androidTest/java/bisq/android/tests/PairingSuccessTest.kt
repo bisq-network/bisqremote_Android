@@ -43,5 +43,4 @@ class PairingSuccessTest : BaseTest() {
             Intents.intended(IntentMatchers.hasComponent(NotificationTableActivity::class.java.name))
         }
     }
-
 }

@@ -22,7 +22,8 @@ import android.content.Context.MODE_PRIVATE
 import android.os.Build
 import android.util.Log
 import bisq.android.ext.capitalizeEachWord
-import bisq.android.util.generateKey
+import bisq.android.util.CryptoUtil.Companion.KEY_LENGTH
+import bisq.android.util.CryptoUtil.Companion.generateKey
 import java.io.IOException
 
 class Device private constructor() {
@@ -89,14 +90,14 @@ class Device private constructor() {
     }
 
     fun fromString(s: String): Boolean {
-        val a =
-            s.split(DEVICE_SEPARATOR_ESCAPED.toRegex()).dropLastWhile { it.isEmpty() }
-                .toTypedArray()
+        val a = s.split(DEVICE_SEPARATOR_ESCAPED.toRegex())
+            .dropLastWhile { it.isEmpty() }
+            .toTypedArray()
         try {
             if (a.size != 4) {
                 throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format")
             }
-            if (a[2].length != 32) {
+            if (a[2].length != KEY_LENGTH) {
                 throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format; incorrect key value")
             }
             if (a[3].length < 32) {
@@ -125,23 +126,27 @@ class Device private constructor() {
     }
 
     fun isEmulator(): Boolean {
-        return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic")
-            || Build.FINGERPRINT.startsWith("generic")
-            || Build.FINGERPRINT.startsWith("unknown")
-            || Build.HARDWARE.contains("goldfish")
-            || Build.HARDWARE.contains("ranchu")
-            || Build.MODEL.contains("google_sdk")
-            || Build.MODEL.contains("Emulator")
-            || Build.MODEL.contains("Android SDK built for x86")
-            || Build.MANUFACTURER.contains("Genymotion")
-            || Build.PRODUCT.contains("sdk_google")
-            || Build.PRODUCT.contains("google_sdk")
-            || Build.PRODUCT.contains("sdk")
-            || Build.PRODUCT.contains("sdk_x86")
-            || Build.PRODUCT.contains("sdk_gphone64_arm64")
-            || Build.PRODUCT.contains("vbox86p")
-            || Build.PRODUCT.contains("emulator")
-            || Build.PRODUCT.contains("simulator"))
+        val emulatorHardware = listOf(
+            "goldfish", "ranchu"
+        )
+        val emulatorModels = listOf(
+            "google_sdk", "Emulator", "Android SDK built for x86"
+        )
+        val emulatorManufacturers = listOf(
+            "Genymotion"
+        )
+        val emulatorProducts = listOf(
+            "sdk_google", "google_sdk", "sdk", "sdk_x86", "sdk_gphone64_arm64",
+            "vbox86p", "emulator", "simulator"
+        )
+        return (
+            Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic") ||
+                Build.FINGERPRINT.startsWith("generic") ||
+                Build.FINGERPRINT.startsWith("unknown") ||
+                emulatorHardware.contains(Build.HARDWARE) ||
+                emulatorModels.contains(Build.MODEL) ||
+                emulatorManufacturers.contains(Build.MANUFACTURER) ||
+                emulatorProducts.contains(Build.PRODUCT)
+            )
     }
-
 }

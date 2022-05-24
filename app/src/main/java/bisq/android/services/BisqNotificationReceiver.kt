@@ -51,5 +51,4 @@ class BisqNotificationReceiver(private val activity: Activity? = null) : Broadca
             }
         }
     }
-
 }

@@ -19,11 +19,14 @@ package bisq.android.tests.model
 
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
-import org.hamcrest.MatcherAssert
+import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.*
+import java.util.UUID
 
 class DeviceTest {
 
@@ -41,7 +44,7 @@ class DeviceTest {
     fun testSetNewToken() {
         Device.instance.newToken(token)
         assertEquals(token, Device.instance.token)
-        MatcherAssert.assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
+        assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
         assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
@@ -49,8 +52,8 @@ class DeviceTest {
     fun testGetPairingToken() {
         Device.instance.newToken(token)
         assertEquals(
-            Device.DEVICE_MAGIC_ANDROID
-                + Device.DEVICE_SEPARATOR + Device.instance.descriptor +
+            Device.DEVICE_MAGIC_ANDROID +
+                Device.DEVICE_SEPARATOR + Device.instance.descriptor +
                 Device.DEVICE_SEPARATOR + Device.instance.key +
                 Device.DEVICE_SEPARATOR + Device.instance.token,
             Device.instance.pairingToken()
@@ -75,7 +78,7 @@ class DeviceTest {
         Device.instance.pairingToken()?.let { result = Device.instance.fromString(it) }
         assertTrue(result)
         assertEquals(token, Device.instance.token)
-        MatcherAssert.assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
+        assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
         assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
@@ -104,5 +107,4 @@ class DeviceTest {
         uuid = uuid.replace("-", "")
         return uuid.substring(0, 32)
     }
-
 }

@@ -32,5 +32,4 @@ class WelcomeScreen : Screen() {
     val alertDialogLoadBisqMobileUrl = ChoicePromptDialog(
         applicationContext.resources.getString(R.string.load_web_page_text, BISQ_MOBILE_URL)
     )
-
 }

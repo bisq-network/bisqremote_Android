@@ -28,5 +28,4 @@ open class UnpairedBaseActivity : BaseActivity() {
             startActivity(Intent(Intent(this, PairingSuccessActivity::class.java)))
         }
     }
-
 }

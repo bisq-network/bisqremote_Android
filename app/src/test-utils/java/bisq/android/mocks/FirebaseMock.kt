@@ -25,7 +25,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 
-class Firebase {
+class FirebaseMock {
 
     companion object {
         fun mockFirebaseTokenSuccessful() {
@@ -68,5 +68,4 @@ class Firebase {
             every { mockGetTokenTask.result } returns null
         }
     }
-
 }

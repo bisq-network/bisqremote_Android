@@ -37,5 +37,4 @@ class SettingsScreen : Screen() {
     val deleteNotificationsButton = ButtonElement(R.id.settingsDeleteAllNotificationsButton)
     val markAsReadButton = ButtonElement(R.id.settingsMarkAsReadButton)
     val addExampleNotificationsButton = ButtonElement(R.id.settingsAddExampleButton)
-
 }

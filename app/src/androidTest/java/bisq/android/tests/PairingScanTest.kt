@@ -36,5 +36,4 @@ class PairingScanTest : BaseTest() {
             Intents.intended(IntentMatchers.hasComponent(PairingSendActivity::class.java.name))
         }
     }
-
 }

@@ -18,12 +18,14 @@
 package bisq.android.tests.util
 
 import bisq.android.util.CryptoUtil
-import bisq.android.util.generateKey
+import bisq.android.util.CryptoUtil.Companion.generateKey
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.matchesPattern
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.*
+import java.util.UUID
 
 class CryptoUtilTest {
 
@@ -40,6 +42,7 @@ class CryptoUtilTest {
     @Test
     fun testGenerateKeyIsUnique() {
         val generatedKeys: MutableList<String> = ArrayList()
+        @Suppress("UnusedPrivateMember")
         for (i in 1..10000) {
             val testKey = generateKey()
             assertTrue(testKey !in generatedKeys)
@@ -82,17 +85,8 @@ class CryptoUtilTest {
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun testEncryptWithInvalidKey() {
-        val testCrypto = CryptoUtil(generateInvalidKey())
-        val valueToEncrypt = "valueToEncrypt"
-        testCrypto.encrypt(valueToEncrypt, iv)
-    }
-
-    @Test(expected = IllegalArgumentException::class)
-    fun testDecryptWithInvalidKey() {
-        val testCrypto = CryptoUtil(generateInvalidKey())
-        val valueToDecrypt = "valueToDecrypt"
-        testCrypto.decrypt(valueToDecrypt, iv)
+    fun testInitializationWithInvalidKey() {
+        CryptoUtil(generateInvalidKey())
     }
 
     @Test
@@ -142,5 +136,4 @@ class CryptoUtilTest {
             .map(charPool::get)
             .joinToString("")
     }
-
 }

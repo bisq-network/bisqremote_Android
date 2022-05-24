@@ -92,5 +92,4 @@ class PairingScanActivity : UnpairedBaseActivity() {
         Device.instance.saveToPreferences(this)
         pairingConfirmed()
     }
-
 }

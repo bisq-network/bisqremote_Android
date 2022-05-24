@@ -52,5 +52,4 @@ class StringExtTest {
         val test = "".capitalizeEachWord()
         assertEquals("", test)
     }
-
 }

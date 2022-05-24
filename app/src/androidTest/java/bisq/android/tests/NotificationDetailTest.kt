@@ -62,5 +62,4 @@ class NotificationDetailTest : BaseTest() {
             )
         }
     }
-
 }
