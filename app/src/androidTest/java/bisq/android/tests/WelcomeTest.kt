@@ -20,6 +20,7 @@ package bisq.android.tests
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
+import android.os.Build
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
@@ -27,11 +28,13 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import bisq.android.BISQ_MOBILE_URL
 import bisq.android.mocks.FirebaseMock
 import bisq.android.model.Device
 import bisq.android.ui.pairing.PairingScanActivity
 import bisq.android.ui.welcome.WelcomeActivity
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -49,7 +52,14 @@ class WelcomeTest : BaseTest() {
         Device.instance.clearPreferences(applicationContext)
     }
 
+    @After
+    override fun cleanup() {
+        super.cleanup()
+        FirebaseMock.unmockFirebaseMessaging()
+    }
+
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
     fun clickPairButtonAfterReceivingFcmTokenLoadsPairingScanActivity() {
         FirebaseMock.mockFirebaseTokenSuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {
@@ -59,6 +69,7 @@ class WelcomeTest : BaseTest() {
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
     fun clickPairButtonAfterFailingToReceiveFcmTokenShowsPromptToRetryFetchingToken() {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {
@@ -68,6 +79,7 @@ class WelcomeTest : BaseTest() {
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
     fun clickCancelOnTokenFailurePromptAllowsClickingPairButtonAgain() {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {
@@ -83,6 +95,7 @@ class WelcomeTest : BaseTest() {
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
     fun clickTryAgainOnTokenFailurePromptRetriesFetchingToken() {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {
@@ -93,13 +106,16 @@ class WelcomeTest : BaseTest() {
             welcomeScreen.alertDialogCannotRetrieveDeviceToken.positiveButton.click()
             intended(hasComponent(PairingScanActivity::class.java.name))
             assertEquals(
-                "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEpLHGbLSFBN3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_",
+                "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqn" +
+                    "Ql8owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHY" +
+                    "E7XPFUQDD7UlnVB-giAI",
                 Device.instance.token
             )
         }
     }
 
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
     fun clickLearnMoreButtonLoadsBisqMobileWebpage() {
         FirebaseMock.mockFirebaseTokenSuccessful()
         intending(hasAction(Intent.ACTION_VIEW)).respondWith(

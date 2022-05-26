@@ -20,18 +20,23 @@ package bisq.android.tests
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
+import android.os.Build
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.SdkSuppress
 import bisq.android.BISQ_MOBILE_URL
 import bisq.android.BISQ_NETWORK_URL
+import bisq.android.mocks.FirebaseMock
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
+import bisq.android.services.BisqFirebaseMessagingService.Companion.isFirebaseMessagingInitialized
 import bisq.android.ui.notification.NotificationTableActivity
 import bisq.android.ui.settings.SettingsActivity
 import bisq.android.ui.welcome.WelcomeActivity
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
@@ -49,8 +54,18 @@ class SettingsTest : BaseTest() {
         pairDevice()
     }
 
+    @After
+    override fun cleanup() {
+        super.cleanup()
+        FirebaseMock.unmockFirebaseMessaging()
+    }
+
     @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
     fun clickResetButtonWipesPairingAndLoadsWelcomeScreen() {
+        if (!isFirebaseMessagingInitialized()) {
+            FirebaseMock.mockFirebaseTokenSuccessful()
+        }
         val key = Device.instance.key
         val token = Device.instance.token
         ActivityScenario.launch(SettingsActivity::class.java).use {

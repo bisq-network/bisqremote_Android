@@ -24,48 +24,45 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
+import io.mockk.unmockkStatic
 
-class FirebaseMock {
+object FirebaseMock {
 
-    companion object {
-        fun mockFirebaseTokenSuccessful() {
-            mockkStatic("com.google.firebase.messaging.FirebaseMessaging")
+    private val mockGetTokenTask = mockk<Task<String>>()
 
-            val firebaseMessagingMock = mockk<FirebaseMessaging>()
-            every { FirebaseMessaging.getInstance() } returns firebaseMessagingMock
+    fun mockFirebaseTokenSuccessful() {
+        mockFirebaseMessaging()
+        every { mockGetTokenTask.isSuccessful } returns true
+        every { mockGetTokenTask.exception } returns null
+        every { mockGetTokenTask.result } returns "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBg" +
+            "KYWQfP4I1g21rukjFpyKsjGCvFqnQl8owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9" +
+            "HS-MjZlfFJXc-LU_ycjwdHYE7XPFUQDD7UlnVB-giAI"
+    }
 
-            val mockGetTokenTask = mockk<Task<String>>()
-            every { firebaseMessagingMock.token } returns mockGetTokenTask
+    fun mockFirebaseTokenUnsuccessful() {
+        mockFirebaseMessaging()
+        every { mockGetTokenTask.isSuccessful } returns false
+        every { mockGetTokenTask.exception } returns null
+        every { mockGetTokenTask.result } returns null
+    }
 
-            val slot = slot<OnCompleteListener<String>>()
-            every { mockGetTokenTask.addOnCompleteListener(capture(slot)) } answers {
-                slot.captured.onComplete(mockGetTokenTask)
-                mockGetTokenTask
-            }
+    fun unmockFirebaseMessaging() {
+        unmockkStatic("com.google.firebase.messaging.FirebaseMessaging")
+    }
 
-            every { mockGetTokenTask.isSuccessful } returns true
-            every { mockGetTokenTask.exception } returns null
-            every { mockGetTokenTask.result } returns "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEpLHGbLSFBN3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_"
-        }
+    private fun mockFirebaseMessaging() {
+        mockkStatic("com.google.firebase.messaging.FirebaseMessaging")
 
-        fun mockFirebaseTokenUnsuccessful() {
-            mockkStatic("com.google.firebase.messaging.FirebaseMessaging")
+        val firebaseMessagingMock = mockk<FirebaseMessaging>()
 
-            val firebaseMessagingMock = mockk<FirebaseMessaging>()
-            every { FirebaseMessaging.getInstance() } returns firebaseMessagingMock
+        every { FirebaseMessaging.getInstance() } returns firebaseMessagingMock
 
-            val mockGetTokenTask = mockk<Task<String>>()
-            every { firebaseMessagingMock.token } returns mockGetTokenTask
+        every { firebaseMessagingMock.token } returns mockGetTokenTask
 
-            val slot = slot<OnCompleteListener<String>>()
-            every { mockGetTokenTask.addOnCompleteListener(capture(slot)) } answers {
-                slot.captured.onComplete(mockGetTokenTask)
-                mockGetTokenTask
-            }
-
-            every { mockGetTokenTask.isSuccessful } returns false
-            every { mockGetTokenTask.exception } returns null
-            every { mockGetTokenTask.result } returns null
+        val slot = slot<OnCompleteListener<String>>()
+        every { mockGetTokenTask.addOnCompleteListener(capture(slot)) } answers {
+            slot.captured.onComplete(mockGetTokenTask)
+            mockGetTokenTask
         }
     }
 }

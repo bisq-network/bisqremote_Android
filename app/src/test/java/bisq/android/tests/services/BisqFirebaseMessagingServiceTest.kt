@@ -21,12 +21,18 @@ import bisq.android.mocks.FirebaseMock
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.services.BisqFirebaseMessagingService
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Test
 
 class BisqFirebaseMessagingServiceTest {
+
+    @After
+    fun cleanup() {
+        FirebaseMock.unmockFirebaseMessaging()
+    }
 
     @Test
     fun testFetchFcmTokenUnsuccessfulWithoutOnComplete() {
@@ -60,8 +66,9 @@ class BisqFirebaseMessagingServiceTest {
         Device.instance.reset()
         BisqFirebaseMessagingService.fetchFcmToken()
         assertEquals(
-            "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEpLHGbLSFBN" +
-                "3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_",
+            "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
+                "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
+                "QDD7UlnVB-giAI",
             Device.instance.token
         )
         assertNotNull(Device.instance.key)
@@ -78,8 +85,9 @@ class BisqFirebaseMessagingServiceTest {
             invokeCount++
         }
         assertEquals(
-            "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEpLHGbLSFBN" +
-                "3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_",
+            "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
+                "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
+                "QDD7UlnVB-giAI",
             Device.instance.token
         )
         assertNotNull(Device.instance.key)

@@ -31,7 +31,21 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
     companion object {
         private const val TAG = "FirebaseMsgSvc"
 
+        fun isFirebaseMessagingInitialized(): Boolean {
+            try {
+                FirebaseMessaging.getInstance()
+            } catch (e: IllegalStateException) {
+                return false
+            }
+            return true
+        }
+
         fun fetchFcmToken(onComplete: () -> Unit = {}) {
+            if (!isFirebaseMessagingInitialized()) {
+                Log.e(TAG, "FirebaseMessaging is not initialized")
+                onComplete()
+                return
+            }
             FirebaseMessaging.getInstance().token.addOnCompleteListener(
                 OnCompleteListener { task ->
                     if (!task.isSuccessful) {
