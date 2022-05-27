@@ -1,0 +1,104 @@
+name: Master
+
+on:
+    push:
+        branches: [ master ]
+
+    # Allows for running this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            -   name: Checkout the code
+                uses: actions/checkout@v3
+
+            -   name: Bump version
+                id: bump_version
+                uses: oflynned/Android-Semantic-Release@master
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            -   name: Create google-services.json from secrets
+                env:
+                    GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+                run: echo $GOOGLE_SERVICES_JSON > app/google-services.json
+
+            -   name: Set up JDK 11
+                uses: actions/setup-java@v3
+                with:
+                    java-version: '11'
+                    distribution: 'temurin'
+                    cache: gradle
+
+            -   name: Clear gradle cache
+                run: |
+                    mv ~/.gradle ~/.invalid || true
+
+            -   name: Cache dependencies
+                uses: actions/cache@v3
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ env.CACHE_VERSION }}-${{ hashFiles('**/**.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
+
+            -   name: Check Gradle wrapper
+                uses: gradle/wrapper-validation-action@v1
+
+            -   name: Build the app
+                run: ./gradlew assembleRelease
+
+    sign_and_upload:
+        name: Sign and upload
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        needs: build
+        steps:
+            -   name: Sign APK
+                uses: r0adkll/sign-android-release@v1
+                id: sign
+                with:
+                    releaseDirectory: app/build/outputs/apk/release
+                    signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+                    alias: ${{ secrets.KEY_ALIAS }}
+                    keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+                    keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+            -   name: Upload APK
+                uses: actions/upload-artifact@v2
+                with:
+                    name: release apk
+                    path: ${{ steps.sign.outputs.signedReleaseFile }}
+
+            -   name: Upload artifact to Firebase App Distribution
+                uses: wzieba/Firebase-Distribution-Github-Action@v1
+                with:
+                    appId: ${{ secrets.FIREBASE_APP_ID }}
+                    token: ${{ secrets.FIREBASE_TOKEN }}
+                    file: ${{ steps.sign.outputs.signedReleaseFile }}
+
+            -   name: Create release
+                id: create_release
+                uses: actions/create-release@v1
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    tag_name: ${{ steps.bump_version.outputs.new_tag }}
+                    release_name: ${{ steps.bump_version.outputs.new_tag }}
+                    draft: false
+                    prerelease: false
+
+            -   name: Upload Release APK
+                id: upload_release_asset
+                uses: actions/upload-release-asset@v1.0.1
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    upload_url: ${{ steps.create_release.outputs.upload_url }}
+                    asset_path: ${{ steps.sign.outputs.signedReleaseFile }}
+                    asset_name: signed-app.apk
+                    asset_content_type: application/zip
