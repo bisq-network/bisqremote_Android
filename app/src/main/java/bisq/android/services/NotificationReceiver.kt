@@ -28,7 +28,7 @@ import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.model.NotificationMessage
 import bisq.android.model.NotificationType
-import java.util.*
+import java.util.Date
 
 class NotificationReceiver : BroadcastReceiver() {
 
@@ -107,7 +107,5 @@ class NotificationReceiver : BroadcastReceiver() {
             intent.putExtra("type", bisqNotification.type)
             context.sendBroadcast(intent)
         }
-
     }
-
 }

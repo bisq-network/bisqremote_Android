@@ -20,7 +20,9 @@ package bisq.android.screens.dialogs
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.Visibility
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.withText
 
 open class Dialog(private val message: String) {
 
@@ -34,5 +36,4 @@ open class Dialog(private val message: String) {
             false
         }
     }
-
 }

@@ -20,10 +20,8 @@ package bisq.android.util
 import android.util.Base64
 import bisq.android.ext.hexStringToByteArray
 import java.nio.charset.Charset
-import java.security.NoSuchAlgorithmException
-import java.util.*
+import java.util.UUID
 import javax.crypto.Cipher
-import javax.crypto.NoSuchPaddingException
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
@@ -39,23 +37,36 @@ class CryptoUtil(private val key: String) {
     private var cipher: Cipher? = null
 
     init {
-        try {
-            cipher = Cipher.getInstance("AES/CBC/NOPadding")
-        } catch (e: NoSuchAlgorithmException) {
-            e.printStackTrace()
-        } catch (e: NoSuchPaddingException) {
-            e.printStackTrace()
+        if (key.length != KEY_LENGTH) {
+            throw IllegalArgumentException("Key is not $KEY_LENGTH characters")
         }
+        cipher = Cipher.getInstance("AES/CBC/NOPadding")
+    }
+
+    companion object {
+        const val KEY_LENGTH = 32
+        const val IV_LENGTH = 16
+
+        fun generateKey(): String {
+            val uuid1 = UUID.randomUUID().toString().replace("-", "")
+            val uuid2 = UUID.randomUUID().toString().replace("-", "")
+            val uuid = uuid1 + uuid2
+            val bytearray = (uuid).hexStringToByteArray()
+            val keyLong = Base64.encodeToString(bytearray, Base64.NO_WRAP)
+            return keyLong.substring(0, KEY_LENGTH)
+        }
+
+        class CryptoException(message: String) : Exception(message)
     }
 
     @Throws(IllegalArgumentException::class)
     fun encrypt(valueToEncrypt: String, iv: String): String {
-        var paddedValueToEncrypt = valueToEncrypt
-        while (paddedValueToEncrypt.length % 16 != 0) {
-            paddedValueToEncrypt = "$paddedValueToEncrypt "
+        if (iv.length != IV_LENGTH) {
+            throw IllegalArgumentException("Initialization vector is not $IV_LENGTH characters")
         }
-        if (iv.length != 16) {
-            throw IllegalArgumentException("Initialization vector is not 16 characters")
+        var paddedValueToEncrypt = valueToEncrypt
+        while (paddedValueToEncrypt.length % IV_LENGTH != 0) {
+            paddedValueToEncrypt = "$paddedValueToEncrypt "
         }
         ivSpec = IvParameterSpec(iv.toByteArray())
         val encryptedBytes = encryptInternal(paddedValueToEncrypt, ivSpec!!)
@@ -65,8 +76,8 @@ class CryptoUtil(private val key: String) {
 
     @Throws(IllegalArgumentException::class)
     fun decrypt(valueToDecrypt: String, iv: String): String {
-        if (iv.length != 16) {
-            throw IllegalArgumentException("Initialization vector is not 16 characters")
+        if (iv.length != IV_LENGTH) {
+            throw IllegalArgumentException("Initialization vector is not $IV_LENGTH characters")
         }
         ivSpec = IvParameterSpec(iv.toByteArray())
         val decryptedBytes = decryptInternal(valueToDecrypt, ivSpec!!)
@@ -77,9 +88,6 @@ class CryptoUtil(private val key: String) {
     private fun encryptInternal(text: String?, ivSpec: IvParameterSpec): ByteArray? {
         if (text == null || text.isEmpty()) {
             throw IllegalArgumentException("Empty string")
-        }
-        if (key.length != 32) {
-            throw IllegalArgumentException("Key is not 32 characters")
         }
         val encrypted: ByteArray?
         try {
@@ -96,9 +104,6 @@ class CryptoUtil(private val key: String) {
         if (codeBase64 == null || codeBase64.isEmpty()) {
             throw IllegalArgumentException("Empty string")
         }
-        if (key.length != 32) {
-            throw IllegalArgumentException("Key is not 32 characters")
-        }
         val decrypted: ByteArray?
         try {
             cipher!!.init(Cipher.DECRYPT_MODE, keySpec, ivSpec)
@@ -110,14 +115,3 @@ class CryptoUtil(private val key: String) {
         return decrypted
     }
 }
-
-fun generateKey(): String {
-    val uuid1 = UUID.randomUUID().toString().replace("-", "")
-    val uuid2 = UUID.randomUUID().toString().replace("-", "")
-    val uuid = uuid1 + uuid2
-    val bytearray = (uuid).hexStringToByteArray()
-    val keyLong = Base64.encodeToString(bytearray, Base64.NO_WRAP)
-    return keyLong.substring(0, 32)
-}
-
-class CryptoException(message: String) : Exception(message)

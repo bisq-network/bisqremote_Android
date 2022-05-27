@@ -171,5 +171,4 @@ class WelcomeActivity : UnpairedBaseActivity() {
         pairButton.text = ""
         progressBar.visibility = View.VISIBLE
     }
-
 }

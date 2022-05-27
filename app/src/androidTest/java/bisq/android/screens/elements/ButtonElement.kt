@@ -29,5 +29,4 @@ class ButtonElement(private val id: Int) : Element(id) {
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
             .perform(ViewActions.click())
     }
-
 }

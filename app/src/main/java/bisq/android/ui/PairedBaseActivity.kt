@@ -32,5 +32,4 @@ open class PairedBaseActivity : BaseActivity() {
             ).show()
         }
     }
-
 }

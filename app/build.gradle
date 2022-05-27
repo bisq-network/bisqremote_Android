@@ -2,18 +2,29 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 repositories {
     google()
     mavenCentral()
 }
 
+// This is primarily to be able to run unit and instrumented tests in GitHub workflows,
+// since google-services.json is unavailable and will cause the GoogleServices task to fail
+if (!project.file('google-services.json').exists()) {
+    android.applicationVariants.all { variant ->
+        def googleTask = tasks.findByName("process${variant.name.capitalize()}GoogleServices")
+        googleTask.enabled = false
+    }
+}
+
 android {
     namespace 'bisq.android'
     compileSdkVersion 32
     defaultConfig {
-        versionCode project.getGitCommitCount()
-        versionName '1.2.' + project.getGitCommitCount()
+        versionCode 19
+        versionName '1.2.0'
         applicationId "bisq.android"
         minSdkVersion 21
         targetSdkVersion 32
@@ -35,9 +46,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    lint {
-        abortOnError true
-    }
     sourceSets {
         androidTest {
             java.srcDirs += 'src/test-utils/java'
@@ -48,11 +56,18 @@ android {
     }
 }
 
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+}
+
 dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.20.0")
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.media:media:1.6.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
@@ -64,7 +79,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:28.2.0')
     implementation 'com.google.firebase:firebase-analytics-ktx:21.0.0'
     implementation 'com.google.firebase:firebase-core:21.0.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.4'
+    implementation 'com.google.firebase:firebase-messaging:23.0.5'
 
     implementation 'com.google.code.gson:gson:2.9.0'
 

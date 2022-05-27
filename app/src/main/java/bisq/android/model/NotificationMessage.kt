@@ -20,11 +20,12 @@ package bisq.android.model
 import android.util.Log
 import bisq.android.database.BisqNotification
 import bisq.android.util.CryptoUtil
+import bisq.android.util.CryptoUtil.Companion.IV_LENGTH
 import bisq.android.util.DateUtil
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
 import java.text.ParseException
-import java.util.*
+import java.util.Date
 
 class NotificationMessage(private var notification: String?) {
 
@@ -59,8 +60,11 @@ class NotificationMessage(private var notification: String?) {
             if (magicValue != BISQ_MESSAGE_ANDROID_MAGIC) {
                 throw ParseException("Invalid magic value", 0)
             }
-            if (initializationVector.length != 16) {
-                throw ParseException("Invalid initialization vector (must be 16 characters)", 0)
+            if (initializationVector.length != IV_LENGTH) {
+                throw ParseException(
+                    "Invalid initialization vector (must be $IV_LENGTH characters)",
+                    0
+                )
             }
         } catch (e: ParseException) {
             val message = "Failed to parse notification; ${e.message}"
@@ -93,5 +97,4 @@ class NotificationMessage(private var notification: String?) {
             throw Exception(message)
         }
     }
-
 }

@@ -46,5 +46,4 @@ class TextElement(private val id: Int) : Element(id) {
         })
         return text
     }
-
 }

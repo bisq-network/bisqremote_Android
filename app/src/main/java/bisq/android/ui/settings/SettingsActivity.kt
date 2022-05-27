@@ -33,7 +33,7 @@ import bisq.android.model.NotificationType
 import bisq.android.ui.PairedBaseActivity
 import bisq.android.ui.notification.NotificationViewModel
 import bisq.android.ui.welcome.WelcomeActivity
-import java.util.*
+import java.util.Date
 
 class SettingsActivity : PairedBaseActivity() {
 
@@ -174,18 +174,18 @@ class SettingsActivity : PairedBaseActivity() {
                 4 -> {
                     bisqNotification.type = NotificationType.PRICE.name
                     bisqNotification.title = "(example) Price alert for United States Dollar"
-                    bisqNotification.message =
-                        "Your price alert got triggered. The current United States Dollar price is 35351.08 BTC/USD"
+                    bisqNotification.message = "Your price alert got triggered. The current" +
+                        " United States Dollar price is 35351.08 BTC/USD"
                 }
                 5 -> {
                     bisqNotification.type = NotificationType.MARKET.name
                     bisqNotification.title = "(example) New offer"
-                    bisqNotification.message =
-                        "A new offer offer with price 36000 USD (1% above market price) and payment method Zelle was published to the Bisq offerbook.\nThe offer ID is 34534"
+                    bisqNotification.message = "A new offer offer with price 36000 USD" +
+                        " (1% above market price) and payment method Zelle was published to" +
+                        " the Bisq offerbook.\nThe offer ID is 34534"
                 }
             }
             viewModel.insert(bisqNotification)
         }
     }
-
 }

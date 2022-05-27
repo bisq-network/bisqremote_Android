@@ -117,5 +117,4 @@ class NotificationAdapter(
             this.time = view.findViewById<View>(R.id.notification_cell_time) as TextView
         }
     }
-
 }

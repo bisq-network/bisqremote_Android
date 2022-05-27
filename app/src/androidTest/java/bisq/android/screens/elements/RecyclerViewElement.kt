@@ -56,7 +56,8 @@ class RecyclerViewElement(private val id: Int) : Element(id) {
         onView(withId(id)).perform(
             scrollToPosition<RecyclerView.ViewHolder>(position),
             actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                position, GeneralSwipeAction(
+                position,
+                GeneralSwipeAction(
                     Swipe.FAST, GeneralLocation.BOTTOM_RIGHT, GeneralLocation.BOTTOM_LEFT,
                     Press.FINGER
                 )
@@ -97,7 +98,7 @@ class RecyclerViewElement(private val id: Int) : Element(id) {
             override fun describeTo(description: Description?) {}
             override fun matchesSafely(item: View?): Boolean {
                 val viewHolder = (item as RecyclerView).findViewHolderForAdapterPosition(position)
-                    ?: return false  // has no item on such position
+                    ?: return false // has no item on such position
                 content =
                     (viewHolder as NotificationAdapter.NotificationViewHolder).title.text.toString()
                 return true
@@ -113,7 +114,7 @@ class RecyclerViewElement(private val id: Int) : Element(id) {
             override fun describeTo(description: Description?) {}
             override fun matchesSafely(item: View?): Boolean {
                 val viewHolder = (item as RecyclerView).findViewHolderForAdapterPosition(position)
-                    ?: return false  // has no item on such position
+                    ?: return false // has no item on such position
                 readState = (viewHolder as NotificationAdapter.NotificationViewHolder).read
                 return true
             }
@@ -121,5 +122,4 @@ class RecyclerViewElement(private val id: Int) : Element(id) {
         onView(allOf(withId(id), ViewMatchers.isDisplayed())).check(matches(matcher))
         return readState
     }
-
 }

@@ -47,6 +47,5 @@ abstract class NotificationDatabase : RoomDatabase() {
             }
             return instance!!
         }
-
     }
 }

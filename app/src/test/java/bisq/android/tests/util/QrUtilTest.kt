@@ -20,10 +20,13 @@ package bisq.android.tests.util
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import bisq.android.util.QrUtil
+import com.google.zxing.WriterException
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.*
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.powermock.api.mockito.PowerMockito.mockStatic
@@ -60,7 +63,7 @@ class QrUtilTest {
         QrUtil.createQrImage("")
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = WriterException::class)
     fun testCreateQrImageWithTooLongContents() {
         val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val stringLength = 10000
@@ -70,5 +73,4 @@ class QrUtilTest {
             .joinToString("")
         QrUtil.createQrImage(randomString)
     }
-
 }

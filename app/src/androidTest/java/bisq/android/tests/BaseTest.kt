@@ -22,7 +22,13 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.intent.Intents
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
-import bisq.android.screens.*
+import bisq.android.screens.NotificationDetailScreen
+import bisq.android.screens.NotificationTableScreen
+import bisq.android.screens.PairingScanScreen
+import bisq.android.screens.PairingSendScreen
+import bisq.android.screens.PairingSuccessScreen
+import bisq.android.screens.SettingsScreen
+import bisq.android.screens.WelcomeScreen
 import org.junit.After
 import org.junit.Before
 
@@ -56,5 +62,4 @@ abstract class BaseTest {
         Device.instance.status = DeviceStatus.PAIRED
         Device.instance.saveToPreferences(applicationContext)
     }
-
 }

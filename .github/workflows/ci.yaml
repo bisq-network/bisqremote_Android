@@ -1,0 +1,190 @@
+name: CI
+
+on:
+    pull_request:
+        branches: [ master ]
+
+    # Allows for running this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    analyze:
+        name: Analyze
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            -   name: Checkout the code
+                uses: actions/checkout@v3
+
+            -   name: Set up JDK 11
+                uses: actions/setup-java@v3
+                with:
+                    java-version: '11'
+                    distribution: 'temurin'
+                    cache: gradle
+
+            -   name: Clear gradle cache
+                run: |
+                    mv ~/.gradle ~/.invalid || true
+
+            -   name: Cache dependencies
+                uses: actions/cache@v3
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ env.CACHE_VERSION }}-${{ hashFiles('**/**.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
+
+            -   name: Check Gradle wrapper
+                uses: gradle/wrapper-validation-action@v1
+
+            -   name: Check code style
+                run: ./gradlew ktlintCheck
+
+            # TODO: Re-enable code quality check once the issues are resolved or suppressed
+            # -   name: Check code quality
+            #     run: ./gradlew detekt
+
+            # TODO: Add test coverage checks
+            # See https://medium.com/jamf-engineering/android-kotlin-code-coverage-with-jacoco-sonar-and-gradle-plugin-6-x-3933ed503a6e
+            # -   name: Check test coverage
+            #     run: ./gradlew testDebugUnitTestCoverage
+
+            # TODO: Add dependency scanning
+            # See https://snyk.io/blog/gradle-plugin-by-snyk-gradle-dependencies-scanning/
+            # -   name: Check dependencies
+            #     run: ./gradlew snyk-test
+
+            -   name: Upload reports
+                uses: actions/upload-artifact@v2
+                with:
+                    name: Test-Reports
+                    path: app/build/reports
+                if: always()
+
+    unit-tests:
+        name: Unit tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        needs: analyze
+        steps:
+            -   name: Checkout the code
+                uses: actions/checkout@v3
+
+            -   name: Set up JDK 11
+                uses: actions/setup-java@v3
+                with:
+                    java-version: '11'
+                    distribution: 'temurin'
+                    cache: gradle
+
+            -   name: Clear gradle cache
+                run: |
+                    mv ~/.gradle ~/.invalid || true
+
+            -   name: Cache dependencies
+                uses: actions/cache@v3
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ env.CACHE_VERSION }}-${{ hashFiles('**/**.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
+
+            -   name: Check Gradle wrapper
+                uses: gradle/wrapper-validation-action@v1
+
+            -   name: Run unit tests
+                run: ./gradlew testDebugUnitTest
+
+            -   name: Upload reports
+                uses: actions/upload-artifact@v2
+                with:
+                    name: Test-Reports
+                    path: app/build/reports
+                if: always()
+
+    instrumentation-tests:
+        name: Instrumentation tests on ${{ matrix.target }} API ${{ matrix.api-level }}
+        runs-on: macos-latest
+        timeout-minutes: 30
+        needs: unit-tests
+        strategy:
+            fail-fast: true
+            matrix:
+                api-level: [ 21, 31 ]
+                target: [ default ]
+        steps:
+            -   name: Checkout the code
+                uses: actions/checkout@v3
+
+            -   name: Set up JDK 11
+                uses: actions/setup-java@v3
+                with:
+                    java-version: '11'
+                    distribution: 'temurin'
+                    cache: gradle
+
+            -   name: Clear gradle cache
+                run: |
+                    mv ~/.gradle ~/.invalid || true
+
+            -   name: Cache dependencies
+                uses: actions/cache@v3
+                with:
+                    path: |
+                        ~/.gradle/caches
+                        ~/.gradle/wrapper
+                    key: ${{ runner.os }}-gradle-${{ env.CACHE_VERSION }}-${{ hashFiles('**/**.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
+
+            -   name: Check Gradle wrapper
+                uses: gradle/wrapper-validation-action@v1
+
+            # API 30+ emulators only have x86_64 system images
+            -   name: Get AVD info
+                uses: ./.github/actions/get-avd-info
+                id: avd-info
+                with:
+                    api-level: ${{ matrix.api-level }}
+
+            # Retrieve the cached emulator snapshot
+            -   name: Retrieve cached emulator snapshot
+                uses: actions/cache@v3
+                id: avd-cache
+                with:
+                    path: |
+                        ~/.android/avd/*
+                        ~/.android/adb*
+                    key: ${{ runner.os }}-avd-${{ env.CACHE_VERSION }}-${{ steps.avd-info.outputs.arch }}-${{ steps.avd-info.outputs.target }}-${{ matrix.api-level }}
+
+            # Create a new emulator snapshot if it isn't present in the cache
+            -   name: Create AVD snapshot
+                if: steps.avd-cache.outputs.cache-hit != 'true'
+                uses: reactivecircus/android-emulator-runner@v2
+                with:
+                    api-level: ${{ matrix.api-level }}
+                    arch: ${{ steps.avd-info.outputs.arch }}
+                    target: ${{ steps.avd-info.outputs.target }}
+                    disable-animations: false
+                    force-avd-creation: false
+                    ram-size: 4096M
+                    emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+                    script: echo "Generated AVD snapshot"
+
+            -   name: Run instrumentation tests
+                uses: reactivecircus/android-emulator-runner@v2
+                with:
+                    api-level: ${{ matrix.api-level }}
+                    arch: ${{ steps.avd-info.outputs.arch }}
+                    target: ${{ steps.avd-info.outputs.target }}
+                    disable-animations: true
+                    force-avd-creation: false
+                    ram-size: 4096M
+                    emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot-save
+                    script: mv .github/debug.keystore ~/.android; ./gradlew connectedDebugAndroidTest
+
+            -   name: Upload reports
+                uses: actions/upload-artifact@v2
+                with:
+                    name: Test-Reports
+                    path: app/build/reports
+                if: always()

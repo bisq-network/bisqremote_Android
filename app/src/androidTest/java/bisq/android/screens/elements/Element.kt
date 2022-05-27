@@ -43,5 +43,4 @@ open class Element(private val id: Int) {
         }
         return true
     }
-
 }
