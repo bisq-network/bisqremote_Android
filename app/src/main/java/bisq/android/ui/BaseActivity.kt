@@ -18,9 +18,7 @@
 package bisq.android.ui
 
 import android.app.Activity
-import android.app.NotificationManager
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.RingtoneManager
@@ -32,7 +30,8 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import bisq.android.R
 import bisq.android.model.Device
-import bisq.android.services.BisqNotificationReceiver
+import bisq.android.services.IntentReceiver
+import bisq.android.services.NotificationReceiver
 import bisq.android.ui.welcome.WelcomeActivity
 
 open class BaseActivity : AppCompatActivity() {
@@ -41,7 +40,8 @@ open class BaseActivity : AppCompatActivity() {
         private const val TAG = "BaseActivity"
     }
 
-    private var receiver: BisqNotificationReceiver? = null
+    private var notificationReceiver: NotificationReceiver? = null
+    private var intentReceiver: IntentReceiver? = null
 
     fun <T : View> Activity.bind(@IdRes res: Int): T {
         @Suppress("UNCHECKED_CAST")
@@ -53,28 +53,52 @@ open class BaseActivity : AppCompatActivity() {
         if (!Device.instance.readFromPreferences(this) && this is PairedBaseActivity) {
             startActivity(Intent(this, WelcomeActivity::class.java))
         }
-        clearNotifications()
-        registerBroadcastReceiver()
+        registerNotificationReceiver()
+        registerIntentReceiver()
+        maybeProcessOpenedNotification()
     }
 
     override fun onStop() {
         super.onStop()
-        unregisterReceiver(receiver)
-        receiver = null
+        unregisterReceiver(notificationReceiver)
+        unregisterReceiver(intentReceiver)
+        notificationReceiver = null
+        intentReceiver = null
     }
 
-    private fun clearNotifications() {
-        val nManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nManager.cancelAll()
-    }
-
-    private fun registerBroadcastReceiver() {
-        if (receiver == null) {
-            receiver = BisqNotificationReceiver(this)
+    private fun registerNotificationReceiver() {
+        if (notificationReceiver == null) {
+            notificationReceiver = NotificationReceiver()
         }
         val filter = IntentFilter()
-        filter.addAction("bisqNotification")
-        registerReceiver(receiver, filter)
+        filter.addAction(getString(R.string.notification_receiver_action))
+        registerReceiver(notificationReceiver, filter)
+    }
+
+    private fun registerIntentReceiver() {
+        if (intentReceiver == null) {
+            intentReceiver = IntentReceiver(this)
+        }
+        val filter = IntentFilter()
+        filter.addAction(getString(R.string.intent_receiver_action))
+        registerReceiver(intentReceiver, filter)
+    }
+
+    private fun maybeProcessOpenedNotification() {
+        val bundle = intent.extras
+        if (bundle != null) {
+            Log.i(TAG, "Processing opened notification")
+            val notificationMessage = bundle.get("encrypted")
+            if (notificationMessage != null) {
+                Log.i(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
+                Intent().also { broadcastIntent ->
+                    broadcastIntent.action = getString(R.string.notification_receiver_action)
+                    broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
+                    broadcastIntent.putExtra("encrypted", notificationMessage as String)
+                    sendBroadcast(broadcastIntent)
+                }
+            }
+        }
     }
 
     protected fun playTone() {

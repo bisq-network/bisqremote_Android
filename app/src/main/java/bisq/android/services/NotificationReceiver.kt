@@ -22,13 +22,9 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import bisq.android.R
-import bisq.android.database.NotificationRepository
+import bisq.android.database.BisqNotification
 import bisq.android.ext.goAsync
 import bisq.android.model.Device
-import bisq.android.model.DeviceStatus
-import bisq.android.model.NotificationMessage
-import bisq.android.model.NotificationType
-import java.util.Date
 
 class NotificationReceiver : BroadcastReceiver() {
 
@@ -37,75 +33,47 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (Device.instance.key == null || intent.action == null) {
+        Log.i(TAG, "Notification received")
+
+        if (Device.instance.key == null) {
+            Log.w(TAG, "Ignoring notification, device does not have a key")
             return
         }
 
-        Log.i(TAG, "Notification received")
-        val encryptedMessage = intent.extras?.get("encrypted").toString()
-        processNotification(encryptedMessage, context)
-    }
-
-    private fun processNotification(encryptedMessage: String?, context: Context) {
-        val notificationMessage: NotificationMessage
+        Log.i(TAG, "Processing notification")
+        val bisqNotification: BisqNotification
         try {
-            notificationMessage = NotificationMessage(encryptedMessage)
+            bisqNotification = NotificationProcessor.processNotification(
+                intent.extras?.get("encrypted").toString()
+            )
         } catch (e: Exception) {
             e.message?.let { Log.e(TAG, it) }
-            Intent().also { intent ->
-                intent.action = "bisqNotification"
-                intent.putExtra("error", context.getString(R.string.failed_to_process_notification))
-                context.sendBroadcast(intent)
+            Intent().also { broadcastIntent ->
+                broadcastIntent.action = context.getString(R.string.intent_receiver_action)
+                broadcastIntent.putExtra(
+                    "error",
+                    context.getString(R.string.failed_to_process_notification)
+                )
+                context.sendBroadcast(broadcastIntent)
             }
+            // The following will prevent notifications being shown after the app has been unpaired
+            //
+            // If the app had been unpaired, when a notification was received using the
+            // old pairing token while the app is in the foreground, it would show a
+            // toast message indicating it failed to process the notification.
+            //
+            // However, if the app was in the background, it would still show the push
+            // notification decrypted correctly.
+            //
+            // I assume the notification receiver was still processing notifications
+            // using the old key so was able to decrypt them.
             abortBroadcast()
             return
         }
-        val bisqNotification = notificationMessage.bisqNotification
-        bisqNotification.receivedDate = Date().time
 
-        Log.i(TAG, "${bisqNotification.type} notification")
-
-        val notificationRepository = NotificationRepository(context)
-
-        when (bisqNotification.type) {
-            NotificationType.SETUP_CONFIRMATION.name -> {
-                if (Device.instance.token == null) {
-                    Log.e(TAG, "Device token is null")
-                    return
-                }
-                if (Device.instance.key == null) {
-                    Log.e(TAG, "Device key is null")
-                    return
-                }
-                if (Device.instance.status == DeviceStatus.PAIRED) {
-                    Log.w(TAG, "Device is already paired")
-                    return
-                }
-                Device.instance.status = DeviceStatus.PAIRED
-                Device.instance.saveToPreferences(context)
-                Log.i(TAG, "Setup confirmed")
-            }
-            NotificationType.ERASE.name -> {
-                goAsync {
-                    notificationRepository.deleteAll()
-                }
-                Device.instance.reset()
-                Device.instance.clearPreferences(context)
-                Device.instance.status = DeviceStatus.ERASED
-                Log.i(TAG, "Pairing erased")
-            }
-            else -> {
-                goAsync {
-                    notificationRepository.insert(bisqNotification)
-                    Log.i(TAG, "Notification inserted")
-                }
-            }
-        }
-
-        Intent().also { intent ->
-            intent.action = "bisqNotification"
-            intent.putExtra("type", bisqNotification.type)
-            context.sendBroadcast(intent)
+        Log.i(TAG, "Handling ${bisqNotification.type} notification")
+        goAsync {
+            NotificationHandler.handleNotification(bisqNotification, context)
         }
     }
 }

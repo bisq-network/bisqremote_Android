@@ -19,12 +19,14 @@ package bisq.android.services
 
 import android.content.Intent
 import android.util.Log
+import bisq.android.R
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.ui.welcome.WelcomeActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 
 class BisqFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -68,6 +70,21 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        Log.i(TAG, "Message received")
+        super.onMessageReceived(remoteMessage)
+        val notificationMessage = remoteMessage.data["encrypted"]
+        if (notificationMessage != null) {
+            Log.i(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
+            Intent().also { broadcastIntent ->
+                broadcastIntent.action = getString(R.string.notification_receiver_action)
+                broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
+                broadcastIntent.putExtra("encrypted", notificationMessage)
+                sendBroadcast(broadcastIntent)
+            }
+        }
+    }
+
     /**
      * There are two scenarios when onNewToken is called:
      * 1) When a new token is generated on initial app startup
@@ -81,6 +98,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
      * Bisq desktop application with the new token, without losing existing received notifications.
      */
     override fun onNewToken(newToken: String) {
+        super.onNewToken(newToken)
         if (Device.instance.readFromPreferences(this)) {
             Log.i(TAG, "New FCM token received, app needs to be re-paired: $newToken")
             Device.instance.reset()

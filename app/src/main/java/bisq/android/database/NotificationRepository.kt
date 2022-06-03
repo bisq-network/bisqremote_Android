@@ -36,7 +36,11 @@ class NotificationRepository(context: Context) {
     }
 
     suspend fun insert(bisqNotification: BisqNotification) = coroutineScope {
-        launch { bisqNotificationDao.insert(bisqNotification) }
+        launch {
+            if (bisqNotification !in bisqNotificationDao.getAll()) {
+                bisqNotificationDao.insert(bisqNotification)
+            }
+        }
     }
 
     suspend fun delete(bisqNotification: BisqNotification) = coroutineScope {
@@ -58,10 +62,10 @@ class NotificationRepository(context: Context) {
     }
 
     suspend fun markAllAsRead() = coroutineScope {
-        launch { bisqNotificationDao.markAllAsRead(true) }
+        launch { bisqNotificationDao.markAllAsRead() }
     }
 
     suspend fun markAsRead(uid: Int) = coroutineScope {
-        launch { bisqNotificationDao.markAsRead(uid, true) }
+        launch { bisqNotificationDao.markAsRead(uid) }
     }
 }
