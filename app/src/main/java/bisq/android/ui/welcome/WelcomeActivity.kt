@@ -33,6 +33,7 @@ import bisq.android.R
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.services.BisqFirebaseMessagingService
+import bisq.android.services.BisqFirebaseMessagingService.Companion.isGooglePlayServicesAvailable
 import bisq.android.ui.DialogBuilder
 import bisq.android.ui.UnpairedBaseActivity
 import bisq.android.ui.notification.NotificationTableActivity
@@ -54,6 +55,13 @@ class WelcomeActivity : UnpairedBaseActivity() {
         super.onCreate(savedInstanceState)
 
         initView()
+
+        if (!isGooglePlayServicesAvailable(this)) {
+            pairButton.setOnClickListener {
+                promptGooglePlayServicesUnavailable()
+            }
+            return
+        }
 
         if (Device.instance.readFromPreferences(this)) {
             startActivity(Intent(this, NotificationTableActivity::class.java))
@@ -129,12 +137,22 @@ class WelcomeActivity : UnpairedBaseActivity() {
         }
     }
 
+    private fun promptGooglePlayServicesUnavailable() {
+        DialogBuilder.prompt(
+            this,
+            getString(R.string.error),
+            getString(R.string.google_play_services_unavailable),
+            getString(R.string.ok)
+        ).show()
+    }
+
     private fun promptIfMissingFcmToken(onTryAgainFetchFcmTokenComplete: () -> Unit = {}) {
         if (Device.instance.token != null) {
             return
         }
         DialogBuilder.choicePrompt(
-            this, getString(R.string.error),
+            this,
+            getString(R.string.error),
             getString(R.string.cannot_retrieve_fcm_token),
             getString(R.string.try_again),
             getString(R.string.cancel),

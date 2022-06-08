@@ -17,12 +17,15 @@
 
 package bisq.android.services
 
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import bisq.android.R
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.ui.welcome.WelcomeActivity
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -32,6 +35,12 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
 
     companion object {
         private const val TAG = "FirebaseMsgSvc"
+
+        fun isGooglePlayServicesAvailable(context: Context): Boolean {
+            val googleApiAvailability = GoogleApiAvailability.getInstance()
+            val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
+            return resultCode == ConnectionResult.SUCCESS
+        }
 
         fun isFirebaseMessagingInitialized(): Boolean {
             try {

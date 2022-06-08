@@ -17,14 +17,19 @@
 
 package bisq.android.tests.services
 
+import android.content.Context
 import bisq.android.mocks.FirebaseMock
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
-import bisq.android.services.BisqFirebaseMessagingService
+import bisq.android.services.BisqFirebaseMessagingService.Companion.isFirebaseMessagingInitialized
+import bisq.android.services.BisqFirebaseMessagingService.Companion.isGooglePlayServicesAvailable
+import io.mockk.mockk
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class BisqFirebaseMessagingServiceTest {
@@ -32,6 +37,30 @@ class BisqFirebaseMessagingServiceTest {
     @After
     fun cleanup() {
         FirebaseMock.unmockFirebaseMessaging()
+    }
+
+    @Test
+    fun testIsGooglePlayServicesAvailableReturnsFalseWhenNotAvailable() {
+        FirebaseMock.mockGooglePlayServicesNotAvailable()
+        assertFalse(isGooglePlayServicesAvailable(mockk<Context>()))
+    }
+
+    @Test
+    fun testIsGooglePlayServicesAvailableReturnsTrueWhenAvailable() {
+        FirebaseMock.mockGooglePlayServicesAvailable()
+        assertTrue(isGooglePlayServicesAvailable(mockk<Context>()))
+    }
+
+    @Test
+    fun testIsFirebaseMessagingInitializedReturnsFalseWhenNotInitialized() {
+        FirebaseMock.mockFirebaseNotInitialized()
+        assertFalse(isFirebaseMessagingInitialized())
+    }
+
+    @Test
+    fun testIsFirebaseMessagingInitializedReturnsTrueWhenInitialized() {
+        FirebaseMock.mockFirebaseTokenSuccessful()
+        assertTrue(isFirebaseMessagingInitialized())
     }
 
     @Test

@@ -64,4 +64,37 @@ object DialogBuilder {
 
         return alertDialog
     }
+
+    fun prompt(
+        context: Context,
+        title: String,
+        message: String,
+        buttonText: String,
+        actionListener: DialogInterface.OnClickListener? = null
+    ): AlertDialog {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setCancelable(false)
+        if (actionListener != null) {
+            builder.setPositiveButton(
+                buttonText, actionListener
+            )
+        } else {
+            builder.setPositiveButton(
+                buttonText
+            ) { dialog, _ ->
+                dialog.cancel()
+            }
+        }
+
+        val alertDialog = builder.create()
+
+        alertDialog.setOnShowListener { dialog ->
+            val positiveButton = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+            positiveButton.setTextColor(ContextCompat.getColor(context, R.color.primary))
+        }
+
+        return alertDialog
+    }
 }
