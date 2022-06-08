@@ -30,6 +30,7 @@ import bisq.android.R
 import bisq.android.database.BisqNotification
 import bisq.android.model.Device
 import bisq.android.model.NotificationType
+import bisq.android.services.BisqFirebaseMessagingService.Companion.refreshFcmToken
 import bisq.android.ui.PairedBaseActivity
 import bisq.android.ui.notification.NotificationViewModel
 import bisq.android.ui.welcome.WelcomeActivity
@@ -130,9 +131,10 @@ class SettingsActivity : PairedBaseActivity() {
     }
 
     private fun onRegisterAgainButtonClick() {
-        viewModel.nukeTable()
         Device.instance.reset()
         Device.instance.clearPreferences(this)
+        viewModel.nukeTable()
+        refreshFcmToken()
         startActivity(Intent(this, WelcomeActivity::class.java))
     }
 

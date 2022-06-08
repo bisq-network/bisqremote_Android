@@ -58,13 +58,13 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                 return
             }
             FirebaseMessaging.getInstance().token.addOnCompleteListener(
-                OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        Log.e(TAG, "Fetching FCM token failed: " + task.exception)
+                OnCompleteListener { getTokenTask ->
+                    if (!getTokenTask.isSuccessful) {
+                        Log.e(TAG, "Fetching FCM token failed: ${getTokenTask.exception}")
                         onComplete()
                         return@OnCompleteListener
                     }
-                    val token: String? = task.result
+                    val token: String? = getTokenTask.result
                     if (token == null) {
                         Log.e(TAG, "FCM token is null")
                         onComplete()
@@ -72,8 +72,28 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                     }
                     Device.instance.newToken(token)
                     Log.i(TAG, "FCM token: $token")
-                    Log.i(TAG, "Pairing token: " + Device.instance.pairingToken())
+                    Log.i(TAG, "Pairing token: ${Device.instance.pairingToken()}")
                     onComplete()
+                }
+            )
+        }
+
+        fun refreshFcmToken(onComplete: () -> Unit = {}) {
+            if (!isFirebaseMessagingInitialized()) {
+                Log.e(TAG, "FirebaseMessaging is not initialized")
+                onComplete()
+                return
+            }
+            FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(
+                OnCompleteListener { deleteTokenTask ->
+                    if (!deleteTokenTask.isSuccessful) {
+                        Log.e(TAG, "Deleting FCM token failed: ${deleteTokenTask.exception}")
+                        onComplete()
+                        return@OnCompleteListener
+                    }
+                    Log.i(TAG, "FCM token deleted")
+
+                    fetchFcmToken(onComplete)
                 }
             )
         }
@@ -111,8 +131,9 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         if (Device.instance.readFromPreferences(this)) {
             Log.i(TAG, "New FCM token received, app needs to be re-paired: $newToken")
             Device.instance.reset()
-            Device.instance.status = DeviceStatus.NEEDS_REPAIR
             Device.instance.clearPreferences(this)
+            Device.instance.status = DeviceStatus.NEEDS_REPAIR
+            Device.instance.newToken(newToken)
             startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
         }
     }

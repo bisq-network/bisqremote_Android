@@ -26,6 +26,7 @@ import bisq.android.database.NotificationRepository
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.model.NotificationType
+import bisq.android.services.BisqFirebaseMessagingService.Companion.refreshFcmToken
 
 object NotificationHandler {
 
@@ -53,10 +54,11 @@ object NotificationHandler {
                 Log.i(TAG, "Setup confirmed")
             }
             NotificationType.ERASE.name -> {
-                notificationRepository.deleteAll()
                 Device.instance.reset()
                 Device.instance.clearPreferences(context)
+                notificationRepository.deleteAll()
                 Device.instance.status = DeviceStatus.ERASED
+                refreshFcmToken()
                 Log.i(TAG, "Pairing erased")
             }
             else -> {

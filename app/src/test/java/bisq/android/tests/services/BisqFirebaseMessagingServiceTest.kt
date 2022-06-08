@@ -21,8 +21,10 @@ import android.content.Context
 import bisq.android.mocks.FirebaseMock
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
+import bisq.android.services.BisqFirebaseMessagingService.Companion.fetchFcmToken
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isFirebaseMessagingInitialized
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isGooglePlayServicesAvailable
+import bisq.android.services.BisqFirebaseMessagingService.Companion.refreshFcmToken
 import io.mockk.mockk
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -67,7 +69,7 @@ class BisqFirebaseMessagingServiceTest {
     fun testFetchFcmTokenUnsuccessfulWithoutOnComplete() {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
         Device.instance.reset()
-        BisqFirebaseMessagingService.fetchFcmToken()
+        fetchFcmToken()
         assertNull(Device.instance.key)
         assertNull(Device.instance.token)
         assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
@@ -79,7 +81,7 @@ class BisqFirebaseMessagingServiceTest {
 
         FirebaseMock.mockFirebaseTokenUnsuccessful()
         Device.instance.reset()
-        BisqFirebaseMessagingService.fetchFcmToken {
+        fetchFcmToken {
             invokeCount++
         }
         assertNull(Device.instance.key)
@@ -93,7 +95,7 @@ class BisqFirebaseMessagingServiceTest {
     fun testFetchFcmTokenSuccessfulWithoutOnComplete() {
         FirebaseMock.mockFirebaseTokenSuccessful()
         Device.instance.reset()
-        BisqFirebaseMessagingService.fetchFcmToken()
+        fetchFcmToken()
         assertEquals(
             "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
                 "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
@@ -110,7 +112,69 @@ class BisqFirebaseMessagingServiceTest {
 
         FirebaseMock.mockFirebaseTokenSuccessful()
         Device.instance.reset()
-        BisqFirebaseMessagingService.fetchFcmToken {
+        fetchFcmToken {
+            invokeCount++
+        }
+        assertEquals(
+            "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
+                "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
+                "QDD7UlnVB-giAI",
+            Device.instance.token
+        )
+        assertNotNull(Device.instance.key)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+
+        assertEquals(1, invokeCount)
+    }
+
+    @Test
+    fun testRefreshFcmTokenUnsuccessfulWithoutOnComplete() {
+        FirebaseMock.mockFirebaseTokenUnsuccessful()
+        Device.instance.reset()
+        refreshFcmToken()
+        assertNull(Device.instance.key)
+        assertNull(Device.instance.token)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+    }
+
+    @Test
+    fun testRefreshFcmTokenUnsuccessfulWithOnComplete() {
+        var invokeCount = 0
+
+        FirebaseMock.mockFirebaseTokenUnsuccessful()
+        Device.instance.reset()
+        refreshFcmToken {
+            invokeCount++
+        }
+        assertNull(Device.instance.key)
+        assertNull(Device.instance.token)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+
+        assertEquals(1, invokeCount)
+    }
+
+    @Test
+    fun testRefreshFcmTokenSuccessfulWithoutOnComplete() {
+        FirebaseMock.mockFirebaseTokenSuccessful()
+        Device.instance.reset()
+        refreshFcmToken()
+        assertEquals(
+            "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
+                "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
+                "QDD7UlnVB-giAI",
+            Device.instance.token
+        )
+        assertNotNull(Device.instance.key)
+        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+    }
+
+    @Test
+    fun testRefreshFcmTokenSuccessfulWithOnComplete() {
+        var invokeCount = 0
+
+        FirebaseMock.mockFirebaseTokenSuccessful()
+        Device.instance.reset()
+        refreshFcmToken {
             invokeCount++
         }
         assertEquals(

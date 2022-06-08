@@ -68,21 +68,23 @@ class WelcomeActivity : UnpairedBaseActivity() {
             return
         }
 
-        if (Device.instance.status == DeviceStatus.NEEDS_REPAIR) {
-            Toast.makeText(
-                this, getString(R.string.pairing_erased_new_token),
-                Toast.LENGTH_LONG
-            ).show()
-            Device.instance.reset()
-        } else if (Device.instance.status == DeviceStatus.ERASED) {
-            Toast.makeText(
-                this, getString(R.string.pairing_erased),
-                Toast.LENGTH_LONG
-            ).show()
-            Device.instance.reset()
+        when (Device.instance.status) {
+            DeviceStatus.NEEDS_REPAIR -> {
+                Toast.makeText(
+                    this, getString(R.string.pairing_erased_new_token),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            DeviceStatus.ERASED -> {
+                Toast.makeText(
+                    this, getString(R.string.pairing_erased),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            else -> {
+                fetchFcmToken()
+            }
         }
-
-        fetchFcmToken()
     }
 
     private fun initView() {

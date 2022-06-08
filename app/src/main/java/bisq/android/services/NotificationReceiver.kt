@@ -56,18 +56,6 @@ class NotificationReceiver : BroadcastReceiver() {
                 )
                 context.sendBroadcast(broadcastIntent)
             }
-            // The following will prevent notifications being shown after the app has been unpaired
-            //
-            // If the app had been unpaired, when a notification was received using the
-            // old pairing token while the app is in the foreground, it would show a
-            // toast message indicating it failed to process the notification.
-            //
-            // However, if the app was in the background, it would still show the push
-            // notification decrypted correctly.
-            //
-            // I assume the notification receiver was still processing notifications
-            // using the old key so was able to decrypt them.
-            abortBroadcast()
             return
         }
 
