@@ -36,6 +36,10 @@ import bisq.android.services.BisqFirebaseMessagingService.Companion.isFirebaseMe
 import bisq.android.ui.notification.NotificationTableActivity
 import bisq.android.ui.settings.SettingsActivity
 import bisq.android.ui.welcome.WelcomeActivity
+import org.awaitility.Durations.TEN_SECONDS
+import org.awaitility.kotlin.atMost
+import org.awaitility.kotlin.await
+import org.awaitility.kotlin.untilNotNull
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
@@ -71,6 +75,7 @@ class SettingsTest : BaseTest() {
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.resetButton.click()
             intended(IntentMatchers.hasComponent(WelcomeActivity::class.java.name))
+            await atMost TEN_SECONDS untilNotNull { Device.instance.key }
             assertNotNull(Device.instance.key)
             assertNotEquals(key, Device.instance.key)
             assertNotNull(Device.instance.token)

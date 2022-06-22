@@ -27,14 +27,18 @@ import bisq.android.util.CryptoUtil.Companion.generateKey
 import java.io.IOException
 
 class Device private constructor() {
-
     companion object {
         private const val TAG = "Device"
+        private const val BISQ_SHARED_PREFERENCE_FILE = "preferences.txt"
+        private const val BISQ_SHARED_PREFERENCE_PAIRING_TOKEN = "pairingToken"
+        private const val PAIRING_TOKEN_SEGMENTS = 4
+        private const val PAIRING_TOKEN_MAGIC_INDEX = 0
+        private const val PAIRING_TOKEN_KEY_INDEX = 2
+        private const val PAIRING_TOKEN_TOKEN_INDEX = 3
+        private const val TOKEN_LENGTH = 32
         const val DEVICE_MAGIC_ANDROID = "android"
         const val DEVICE_SEPARATOR = "|"
         const val DEVICE_SEPARATOR_ESCAPED = "\\|"
-        const val BISQ_SHARED_PREFERENCE_FILE = "pairingToken.txt"
-        const val BISQ_SHARED_PREFERENCE_PAIRING_TOKEN = "pairingToken"
         val instance: Device by lazy {
             Holder.INSTANCE
         }
@@ -70,9 +74,9 @@ class Device private constructor() {
 
     fun readFromPreferences(context: Context): Boolean {
         val prefs = context.getSharedPreferences(BISQ_SHARED_PREFERENCE_FILE, MODE_PRIVATE)
-        val deviceString = prefs.getString(BISQ_SHARED_PREFERENCE_PAIRING_TOKEN, null)
-        if (deviceString != null) {
-            return fromString(deviceString)
+        val pairingToken = prefs.getString(BISQ_SHARED_PREFERENCE_PAIRING_TOKEN, null)
+        if (pairingToken != null) {
+            return fromString(pairingToken)
         }
         return false
     }
@@ -89,26 +93,36 @@ class Device private constructor() {
         editor.apply()
     }
 
+    @Suppress("ThrowsCount")
     fun fromString(s: String): Boolean {
         val a = s.split(DEVICE_SEPARATOR_ESCAPED.toRegex())
             .dropLastWhile { it.isEmpty() }
             .toTypedArray()
         try {
-            if (a.size != 4) {
-                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format")
+            if (a.size != PAIRING_TOKEN_SEGMENTS) {
+                throw IOException(
+                    "Invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format"
+                )
             }
-            if (a[2].length != KEY_LENGTH) {
-                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format; incorrect key value")
+            if (a[PAIRING_TOKEN_KEY_INDEX].length != KEY_LENGTH) {
+                throw IOException(
+                    "Invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format; incorrect key value"
+                )
             }
-            if (a[3].length < 32) {
-                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format; incorrect token value")
+            if (a[PAIRING_TOKEN_TOKEN_INDEX].length < TOKEN_LENGTH) {
+                throw IOException(
+                    "Invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format; incorrect token value"
+                )
             }
-            if (a[0] != DEVICE_MAGIC_ANDROID) {
-                throw IOException("invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format; incorrect device magic value")
+            if (a[PAIRING_TOKEN_MAGIC_INDEX] != DEVICE_MAGIC_ANDROID) {
+                throw IOException(
+                    "Invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format;" +
+                        " incorrect device magic value"
+                )
             }
-            key = a[2]
-            token = a[3]
-            status = DeviceStatus.UNPAIRED
+            key = a[PAIRING_TOKEN_KEY_INDEX]
+            token = a[PAIRING_TOKEN_TOKEN_INDEX]
+            status = DeviceStatus.PAIRED
             return true
         } catch (e: IOException) {
             Log.w(TAG, e.message.toString())

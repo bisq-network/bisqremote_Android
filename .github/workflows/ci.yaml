@@ -41,9 +41,8 @@ jobs:
             -   name: Check code style
                 run: ./gradlew ktlintCheck
 
-            # TODO: Re-enable code quality check once the issues are resolved or suppressed
-            # -   name: Check code quality
-            #     run: ./gradlew detekt
+            -   name: Check code quality
+                run: ./gradlew detekt
 
             # TODO: Add test coverage checks
             # See https://medium.com/jamf-engineering/android-kotlin-code-coverage-with-jacoco-sonar-and-gradle-plugin-6-x-3933ed503a6e
@@ -111,8 +110,7 @@ jobs:
         strategy:
             fail-fast: true
             matrix:
-                api-level: [ 21, 31 ]
-                target: [ default ]
+                api-level: [ 21, 32 ]
         steps:
             -   name: Checkout the code
                 uses: actions/checkout@v3

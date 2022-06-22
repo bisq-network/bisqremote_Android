@@ -18,21 +18,24 @@
 package bisq.android.ui.settings
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import bisq.android.Application
 import bisq.android.BISQ_MOBILE_URL
 import bisq.android.BISQ_NETWORK_URL
 import bisq.android.R
 import bisq.android.database.BisqNotification
 import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.model.NotificationType
+import bisq.android.services.BisqFirebaseMessagingService.Companion.refreshFcmToken
 import bisq.android.ui.PairedBaseActivity
 import bisq.android.ui.notification.NotificationViewModel
 import bisq.android.ui.welcome.WelcomeActivity
+import bisq.android.util.TextUtil.truncateSensitiveText
 import java.util.Date
 
 class SettingsActivity : PairedBaseActivity() {
@@ -91,18 +94,18 @@ class SettingsActivity : PairedBaseActivity() {
         }
 
         versionTextView = bind(R.id.settingsVersionTextView)
-        versionTextView.text = getString(R.string.version, getAppVersion())
+        versionTextView.text = getString(R.string.version, Application.getAppVersion())
 
         keyTextView = bind(R.id.settingsKeyTextView)
         keyTextView.text = getString(
             R.string.key,
-            Device.instance.key?.substring(0, 10) + "..."
+            truncateSensitiveText(Device.instance.key)
         )
 
         tokenTextView = bind(R.id.settingsTokenTextView)
         tokenTextView.text = getString(
             R.string.token,
-            Device.instance.token?.substring(0, 10) + "..."
+            truncateSensitiveText(Device.instance.token)
         )
     }
 
@@ -130,22 +133,15 @@ class SettingsActivity : PairedBaseActivity() {
     }
 
     private fun onRegisterAgainButtonClick() {
-        viewModel.nukeTable()
         Device.instance.reset()
         Device.instance.clearPreferences(this)
+        viewModel.nukeTable()
+        Device.instance.status = DeviceStatus.ERASED
+        refreshFcmToken()
         startActivity(Intent(this, WelcomeActivity::class.java))
     }
 
-    private fun getAppVersion(): String {
-        val version = try {
-            val pInfo = this.packageManager.getPackageInfo(packageName, 0)
-            pInfo.versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            R.string.unknown
-        }
-        return version.toString()
-    }
-
+    @Suppress("MagicNumber")
     private fun addExampleNotifications() {
         for (counter in 1..5) {
             val now = Date()

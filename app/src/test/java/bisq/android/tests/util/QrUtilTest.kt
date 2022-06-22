@@ -68,7 +68,7 @@ class QrUtilTest {
         val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val stringLength = 10000
         val randomString = (1000..stringLength)
-            .map { _ -> kotlin.random.Random.nextInt(0, charPool.size) }
+            .map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
             .joinToString("")
         QrUtil.createQrImage(randomString)

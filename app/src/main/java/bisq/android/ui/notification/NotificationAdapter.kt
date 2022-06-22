@@ -35,7 +35,8 @@ class NotificationAdapter(
 ) : RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder>() {
 
     companion object {
-        var font: Typeface? = null
+        var iconTypeface: Typeface? = null
+        var iconTextSize: Float = 33F
     }
 
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
@@ -103,16 +104,16 @@ class NotificationAdapter(
         }
 
         init {
-            if (font == null) {
-                font = Typeface.createFromAsset(
+            if (iconTypeface == null) {
+                iconTypeface = Typeface.createFromAsset(
                     view.context.assets,
                     "Font Awesome 5 Free-Solid-900.otf"
                 )
             }
 
             this.icon = view.findViewById(R.id.notification_cell_image) as TextView
-            this.icon.typeface = font
-            this.icon.textSize = 33F
+            this.icon.typeface = iconTypeface
+            this.icon.textSize = iconTextSize
             this.title = view.findViewById<View>(R.id.notification_cell_title) as TextView
             this.time = view.findViewById<View>(R.id.notification_cell_time) as TextView
         }

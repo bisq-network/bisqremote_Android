@@ -21,5 +21,6 @@ enum class DeviceStatus {
     UNPAIRED,
     PAIRED,
     ERASED,
+    REMOTE_ERASED,
     NEEDS_REPAIR
 }

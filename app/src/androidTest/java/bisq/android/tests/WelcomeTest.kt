@@ -60,6 +60,22 @@ class WelcomeTest : BaseTest() {
 
     @Test
     @SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
+    fun testClickPairButtonWhenGooglePlayServicesUnavailableShowsPrompt() {
+        FirebaseMock.mockGooglePlayServicesNotAvailable()
+        ActivityScenario.launch(WelcomeActivity::class.java).use {
+            welcomeScreen.pairButton.click()
+            assertTrue(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
+
+            welcomeScreen.alertDialogGooglePlayServicesUnavailable.button.click()
+            assertFalse(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
+
+            welcomeScreen.pairButton.click()
+            assertTrue(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
+        }
+    }
+
+    @Test
+    @SdkSuppress(minSdkVersion = Build.VERSION_CODES.P)
     fun clickPairButtonAfterReceivingFcmTokenLoadsPairingScanActivity() {
         FirebaseMock.mockFirebaseTokenSuccessful()
         ActivityScenario.launch(WelcomeActivity::class.java).use {

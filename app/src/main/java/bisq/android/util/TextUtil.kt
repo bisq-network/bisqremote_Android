@@ -15,12 +15,15 @@
  * along with Bisq. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bisq.android.screens.dialogs
+package bisq.android.util
 
-import android.R
-import bisq.android.screens.elements.ButtonElement
+object TextUtil {
+    private const val TRUNCATE_AFTER = 10
 
-class ChoicePromptDialog(message: String) : Dialog(message) {
-    val positiveButton = ButtonElement(R.id.button1)
-    val negativeButton = ButtonElement(R.id.button2)
+    fun truncateSensitiveText(text: String?): String {
+        if (text == null) {
+            return ""
+        }
+        return text.substring(0, TRUNCATE_AFTER) + "..."
+    }
 }

@@ -21,11 +21,6 @@
                     android:startColor="@color/primary"
                     android:type="sweep"
                     android:useLevel="false" />
-                <rotate
-                    android:fromDegrees="0"
-                    android:pivotX="50%"
-                    android:pivotY="50%"
-                    android:toDegrees="360" />
             </shape>
         </rotate>
     </item>

@@ -18,9 +18,7 @@
 package bisq.android.ui
 
 import android.app.Activity
-import android.app.NotificationManager
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.media.RingtoneManager
@@ -31,17 +29,16 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import bisq.android.R
-import bisq.android.model.Device
-import bisq.android.services.BisqNotificationReceiver
-import bisq.android.ui.welcome.WelcomeActivity
+import bisq.android.services.IntentReceiver
+import bisq.android.services.NotificationReceiver
 
 open class BaseActivity : AppCompatActivity() {
-
     companion object {
         private const val TAG = "BaseActivity"
+        private var notificationReceiver: NotificationReceiver? = null
     }
 
-    private var receiver: BisqNotificationReceiver? = null
+    private var intentReceiver: IntentReceiver? = null
 
     fun <T : View> Activity.bind(@IdRes res: Int): T {
         @Suppress("UNCHECKED_CAST")
@@ -50,34 +47,72 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (!Device.instance.readFromPreferences(this) && this is PairedBaseActivity) {
-            startActivity(Intent(this, WelcomeActivity::class.java))
-        }
-        clearNotifications()
-        registerBroadcastReceiver()
+        registerIntentReceiver()
     }
 
     override fun onStop() {
         super.onStop()
-        unregisterReceiver(receiver)
-        receiver = null
+        unregisterIntentReceiver()
     }
 
-    private fun clearNotifications() {
-        val nManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        nManager.cancelAll()
-    }
-
-    private fun registerBroadcastReceiver() {
-        if (receiver == null) {
-            receiver = BisqNotificationReceiver(this)
+    protected fun registerNotificationReceiver() {
+        Log.i(TAG, "Registering notification receiver")
+        if (notificationReceiver != null) {
+            Log.i(TAG, "Notification receiver already registered")
+            return
         }
+        notificationReceiver = NotificationReceiver()
         val filter = IntentFilter()
-        filter.addAction("bisqNotification")
-        registerReceiver(receiver, filter)
+        filter.addAction(getString(R.string.notification_receiver_action))
+        registerReceiver(notificationReceiver, filter)
+        Log.i(TAG, "Notification receiver registered")
+    }
+
+    protected fun unregisterNotificationReceiver() {
+        Log.i(TAG, "Unregistering notification receiver")
+        if (notificationReceiver == null) {
+            Log.i(TAG, "Notification receiver already unregistered")
+            return
+        }
+        try {
+            unregisterReceiver(notificationReceiver)
+        } catch (ignored: IllegalArgumentException) {
+            // Receiver not registered, do nothing
+        }
+        notificationReceiver = null
+        Log.i(TAG, "Notification receiver unregistered")
+    }
+
+    protected fun registerIntentReceiver() {
+        Log.i(TAG, "Registering intent receiver")
+        if (intentReceiver != null) {
+            Log.i(TAG, "Intent receiver already registered")
+            return
+        }
+        intentReceiver = IntentReceiver(this)
+        val filter = IntentFilter()
+        filter.addAction(getString(R.string.intent_receiver_action))
+        registerReceiver(intentReceiver, filter)
+        Log.i(TAG, "Intent receiver registered")
+    }
+
+    protected fun unregisterIntentReceiver() {
+        Log.i(TAG, "Unregistering intent receiver")
+        if (intentReceiver == null) {
+            Log.i(TAG, "Intent receiver already unregistered")
+            return
+        }
+        try {
+            unregisterReceiver(intentReceiver)
+        } catch (ignored: IllegalArgumentException) {
+            // Receiver not registered, do nothing
+        }
+        intentReceiver = null
+        Log.i(TAG, "Intent receiver unregistered")
     }
 
     protected fun playTone() {
+        @Suppress("TooGenericExceptionCaught")
         try {
             val notificationTone =
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -94,7 +129,7 @@ open class BaseActivity : AppCompatActivity() {
             { _, _ ->
                 try {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri)))
-                } catch (e: ActivityNotFoundException) {
+                } catch (ignored: ActivityNotFoundException) {
                     Toast.makeText(
                         this, getString(R.string.cannot_launch_browser), Toast.LENGTH_LONG
                     ).show()

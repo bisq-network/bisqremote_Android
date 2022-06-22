@@ -28,14 +28,14 @@ interface BisqNotificationDao {
     @get:Query("SELECT * FROM BisqNotification ORDER BY sentDate DESC")
     val all: LiveData<List<BisqNotification>>
 
+    @Query("SELECT * FROM BisqNotification ORDER BY sentDate DESC")
+    suspend fun getAll(): List<BisqNotification>
+
     @Query("SELECT * FROM BisqNotification WHERE uid=:uid")
     suspend fun getFromUid(uid: Int): BisqNotification
 
     @Insert
-    suspend fun insert(bisqNotification: BisqNotification)
-
-    @Insert
-    suspend fun insertAll(vararg bisqNotification: BisqNotification)
+    suspend fun insert(bisqNotification: BisqNotification): Long
 
     @Delete
     suspend fun delete(bisqNotification: BisqNotification)
@@ -43,9 +43,9 @@ interface BisqNotificationDao {
     @Query("DELETE FROM BisqNotification")
     suspend fun deleteAll()
 
-    @Query("UPDATE BisqNotification SET read=:readValue")
-    suspend fun markAllAsRead(readValue: Boolean)
+    @Query("UPDATE BisqNotification SET read=1")
+    suspend fun markAllAsRead()
 
-    @Query("UPDATE BisqNotification SET read=:readValue WHERE uid=:uid")
-    suspend fun markAsRead(uid: Int, readValue: Boolean)
+    @Query("UPDATE BisqNotification SET read=1 WHERE uid=:uid")
+    suspend fun markAsRead(uid: Int)
 }
