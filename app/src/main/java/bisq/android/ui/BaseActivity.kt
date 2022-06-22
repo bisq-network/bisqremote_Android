@@ -29,18 +29,15 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import bisq.android.R
-import bisq.android.model.Device
 import bisq.android.services.IntentReceiver
 import bisq.android.services.NotificationReceiver
-import bisq.android.ui.welcome.WelcomeActivity
 
 open class BaseActivity : AppCompatActivity() {
-
     companion object {
         private const val TAG = "BaseActivity"
+        private var notificationReceiver: NotificationReceiver? = null
     }
 
-    private var notificationReceiver: NotificationReceiver? = null
     private var intentReceiver: IntentReceiver? = null
 
     fun <T : View> Activity.bind(@IdRes res: Int): T {
@@ -50,55 +47,68 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (!Device.instance.readFromPreferences(this) && this is PairedBaseActivity) {
-            startActivity(Intent(this, WelcomeActivity::class.java))
-        }
-        registerNotificationReceiver()
         registerIntentReceiver()
-        maybeProcessOpenedNotification()
     }
 
     override fun onStop() {
         super.onStop()
-        unregisterReceiver(notificationReceiver)
-        unregisterReceiver(intentReceiver)
-        notificationReceiver = null
-        intentReceiver = null
+        unregisterIntentReceiver()
     }
 
-    private fun registerNotificationReceiver() {
-        if (notificationReceiver == null) {
-            notificationReceiver = NotificationReceiver()
+    protected fun registerNotificationReceiver() {
+        Log.i(TAG, "Registering notification receiver")
+        if (notificationReceiver != null) {
+            Log.i(TAG, "Notification receiver already registered")
+            return
         }
+        notificationReceiver = NotificationReceiver()
         val filter = IntentFilter()
         filter.addAction(getString(R.string.notification_receiver_action))
         registerReceiver(notificationReceiver, filter)
+        Log.i(TAG, "Notification receiver registered")
     }
 
-    private fun registerIntentReceiver() {
-        if (intentReceiver == null) {
-            intentReceiver = IntentReceiver(this)
+    protected fun unregisterNotificationReceiver() {
+        Log.i(TAG, "Unregistering notification receiver")
+        if (notificationReceiver == null) {
+            Log.i(TAG, "Notification receiver already unregistered")
+            return
         }
+        try {
+            unregisterReceiver(notificationReceiver)
+        } catch (ignored: IllegalArgumentException) {
+            // Receiver not registered, do nothing
+        }
+        notificationReceiver = null
+        Log.i(TAG, "Notification receiver unregistered")
+    }
+
+    protected fun registerIntentReceiver() {
+        Log.i(TAG, "Registering intent receiver")
+        if (intentReceiver != null) {
+            Log.i(TAG, "Intent receiver already registered")
+            return
+        }
+        intentReceiver = IntentReceiver(this)
         val filter = IntentFilter()
         filter.addAction(getString(R.string.intent_receiver_action))
         registerReceiver(intentReceiver, filter)
+        Log.i(TAG, "Intent receiver registered")
     }
 
-    private fun maybeProcessOpenedNotification() {
-        val bundle = intent.extras
-        if (bundle != null) {
-            Log.i(TAG, "Processing opened notification")
-            val notificationMessage = bundle.get("encrypted")
-            if (notificationMessage != null) {
-                Log.i(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
-                Intent().also { broadcastIntent ->
-                    broadcastIntent.action = getString(R.string.notification_receiver_action)
-                    broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
-                    broadcastIntent.putExtra("encrypted", notificationMessage as String)
-                    sendBroadcast(broadcastIntent)
-                }
-            }
+    protected fun unregisterIntentReceiver() {
+        Log.i(TAG, "Unregistering intent receiver")
+        if (intentReceiver == null) {
+            Log.i(TAG, "Intent receiver already unregistered")
+            return
         }
+        try {
+            unregisterReceiver(intentReceiver)
+        } catch (ignored: IllegalArgumentException) {
+            // Receiver not registered, do nothing
+        }
+        intentReceiver = null
+        Log.i(TAG, "Intent receiver unregistered")
     }
 
     protected fun playTone() {

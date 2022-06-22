@@ -55,7 +55,10 @@ class NotificationTableActivity : PairedBaseActivity() {
         viewModel = ViewModelProvider(this)[NotificationViewModel::class.java]
 
         initView()
+    }
 
+    override fun onStart() {
+        super.onStart()
         viewModel.bisqNotifications.observe(this) { bisqNotifications ->
             updateView(
                 bisqNotifications!!

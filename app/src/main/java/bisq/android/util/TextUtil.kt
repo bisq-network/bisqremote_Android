@@ -15,12 +15,15 @@
  * along with Bisq. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bisq.android.model
+package bisq.android.util
 
-enum class DeviceStatus {
-    UNPAIRED,
-    PAIRED,
-    ERASED,
-    REMOTE_ERASED,
-    NEEDS_REPAIR
+object TextUtil {
+    private const val TRUNCATE_AFTER = 10
+
+    fun truncateSensitiveText(text: String?): String {
+        if (text == null) {
+            return ""
+        }
+        return text.substring(0, TRUNCATE_AFTER) + "..."
+    }
 }

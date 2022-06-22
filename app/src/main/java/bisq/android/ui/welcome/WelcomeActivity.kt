@@ -34,6 +34,7 @@ import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.services.BisqFirebaseMessagingService
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isGooglePlayServicesAvailable
+import bisq.android.services.BisqFirebaseMessagingService.Companion.isTokenBeingFetched
 import bisq.android.ui.DialogBuilder
 import bisq.android.ui.UnpairedBaseActivity
 import bisq.android.ui.notification.NotificationTableActivity
@@ -41,7 +42,6 @@ import bisq.android.ui.pairing.PairingScanActivity
 
 @Suppress("TooManyFunctions")
 class WelcomeActivity : UnpairedBaseActivity() {
-
     private lateinit var learnMoreButton: Button
     private lateinit var pairButton: Button
     private lateinit var progressBar: ProgressBar
@@ -57,48 +57,70 @@ class WelcomeActivity : UnpairedBaseActivity() {
 
         initView()
 
-        if (!isGooglePlayServicesAvailable(this)) {
-            pairButton.setOnClickListener {
-                promptGooglePlayServicesUnavailable()
-            }
-            return
-        }
+        registerNotificationReceiver()
 
         if (Device.instance.readFromPreferences(this)) {
-            startActivity(Intent(this, NotificationTableActivity::class.java))
             return
         }
 
+        if (isGooglePlayServicesAvailable(this) && !isTokenBeingFetched()) {
+            fetchFcmToken()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        maybeProcessOpenedNotification()
+
         when (Device.instance.status) {
+            DeviceStatus.PAIRED -> {
+                startActivity(Intent(this, NotificationTableActivity::class.java))
+            }
             DeviceStatus.NEEDS_REPAIR -> {
                 Toast.makeText(
-                    this, getString(R.string.pairing_erased_new_token),
+                    this,
+                    getString(R.string.pairing_erased_new_token),
                     Toast.LENGTH_LONG
                 ).show()
+                Device.instance.status = DeviceStatus.UNPAIRED
             }
-            DeviceStatus.ERASED -> {
+            DeviceStatus.REMOTE_ERASED -> {
                 Toast.makeText(
-                    this, getString(R.string.pairing_erased),
+                    this,
+                    getString(R.string.pairing_erased),
                     Toast.LENGTH_LONG
                 ).show()
+                Device.instance.status = DeviceStatus.UNPAIRED
             }
             else -> {
-                fetchFcmToken()
+                // Do nothing
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterNotificationReceiver()
     }
 
     private fun initView() {
         setContentView(R.layout.activity_welcome)
 
         pairButton = bind(R.id.pairButton)
-        pairButton.setOnClickListener {
-            onPairButtonClick()
+        if (isGooglePlayServicesAvailable(this)) {
+            pairButton.setOnClickListener {
+                maybeProceedToPairingScanActivity()
+            }
+        } else {
+            pairButton.setOnClickListener {
+                promptGooglePlayServicesUnavailable()
+            }
         }
 
         learnMoreButton = bind(R.id.learnMoreButton)
         learnMoreButton.setOnClickListener {
-            onLearnMoreButtonClick()
+            loadWebPage(BISQ_MOBILE_URL)
         }
 
         progressBar = bind(R.id.circularProgressbar)
@@ -122,14 +144,6 @@ class WelcomeActivity : UnpairedBaseActivity() {
                 }
             }
         }.start()
-    }
-
-    private fun onPairButtonClick() {
-        maybeProceedToPairingScanActivity()
-    }
-
-    private fun onLearnMoreButtonClick() {
-        loadWebPage(BISQ_MOBILE_URL)
     }
 
     private fun fetchFcmToken(onFetchFcmTokenComplete: () -> Unit = {}) {
@@ -177,7 +191,24 @@ class WelcomeActivity : UnpairedBaseActivity() {
                 )
             )
         }
-        promptIfMissingFcmToken { onPairButtonClick() }
+        promptIfMissingFcmToken { maybeProceedToPairingScanActivity() }
+    }
+
+    private fun maybeProcessOpenedNotification() {
+        val extras = intent.extras
+        if (extras != null) {
+            Log.i(TAG, "Processing opened notification")
+            val notificationMessage = extras.get("encrypted")
+            if (notificationMessage != null) {
+                Log.i(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
+                Intent().also { broadcastIntent ->
+                    broadcastIntent.action = getString(R.string.notification_receiver_action)
+                    broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
+                    broadcastIntent.putExtra("encrypted", notificationMessage as String)
+                    sendBroadcast(broadcastIntent)
+                }
+            }
+        }
     }
 
     private fun enablePairButton() {

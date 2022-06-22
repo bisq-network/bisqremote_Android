@@ -21,6 +21,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -41,9 +42,14 @@ class PairingScanActivity : UnpairedBaseActivity() {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    companion object {
+        private const val TAG = "PairingScanActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        Log.i(TAG, "Pairing token: ${Device.instance.pairingToken()}")
     }
 
     private fun initView() {

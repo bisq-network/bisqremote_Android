@@ -58,7 +58,7 @@ object NotificationHandler {
                 Device.instance.reset()
                 Device.instance.clearPreferences(context)
                 notificationRepository.deleteAll()
-                Device.instance.status = DeviceStatus.ERASED
+                Device.instance.status = DeviceStatus.REMOTE_ERASED
                 refreshFcmToken()
                 Log.i(TAG, "Pairing erased")
             }

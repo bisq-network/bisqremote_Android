@@ -19,17 +19,26 @@ package bisq.android.ui
 
 import android.content.Intent
 import android.widget.Toast
+import bisq.android.model.Device
+import bisq.android.model.DeviceStatus
 import bisq.android.ui.welcome.WelcomeActivity
 
 open class PairedBaseActivity : BaseActivity() {
 
+    override fun onStart() {
+        super.onStart()
+        if (Device.instance.status != DeviceStatus.PAIRED) {
+            startActivity(Intent(this, WelcomeActivity::class.java))
+        }
+    }
+
     fun pairingRemoved(toastMessage: String) {
         this.runOnUiThread {
             playTone()
-            startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
             Toast.makeText(
                 this, toastMessage, Toast.LENGTH_LONG
             ).show()
+            startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
         }
     }
 }

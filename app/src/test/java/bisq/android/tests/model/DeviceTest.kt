@@ -79,7 +79,7 @@ class DeviceTest {
         assertTrue(result)
         assertEquals(token, Device.instance.token)
         assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertEquals(DeviceStatus.PAIRED, Device.instance.status)
     }
 
     @Test

@@ -35,6 +35,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
 
     companion object {
         private const val TAG = "FirebaseMsgSvc"
+        private var tokenBeingFetched: Boolean = false
 
         fun isGooglePlayServicesAvailable(context: Context): Boolean {
             val googleApiAvailability = GoogleApiAvailability.getInstance()
@@ -51,31 +52,49 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             return true
         }
 
+        fun isTokenBeingFetched(): Boolean {
+            return tokenBeingFetched
+        }
+
         fun fetchFcmToken(onComplete: () -> Unit = {}) {
             if (!isFirebaseMessagingInitialized()) {
                 Log.e(TAG, "FirebaseMessaging is not initialized")
                 onComplete()
                 return
             }
-            FirebaseMessaging.getInstance().token.addOnCompleteListener(
-                OnCompleteListener { getTokenTask ->
-                    if (!getTokenTask.isSuccessful) {
-                        Log.e(TAG, "Fetching FCM token failed: ${getTokenTask.exception}")
+            tokenBeingFetched = true
+            FirebaseMessaging.getInstance().apply {
+                token.addOnCompleteListener(
+                    OnCompleteListener { getTokenTask ->
+                        if (!getTokenTask.isSuccessful) {
+                            Log.e(TAG, "Fetching FCM token failed: ${getTokenTask.exception}")
+                            Device.instance.token = null
+                            onComplete()
+                            tokenBeingFetched = false
+                            return@OnCompleteListener
+                        }
+                        val token: String? = getTokenTask.result
+                        if (token == null) {
+                            Log.e(TAG, "FCM token is null")
+                            Device.instance.token = null
+                            onComplete()
+                            tokenBeingFetched = false
+                            return@OnCompleteListener
+                        }
+                        if (Device.instance.token == token) {
+                            Log.i(TAG, "FCM token has already been fetched")
+                            onComplete()
+                            tokenBeingFetched = false
+                            return@OnCompleteListener
+                        }
+                        Device.instance.newToken(token)
+                        Log.i(TAG, "New FCM token: $token")
+                        Log.i(TAG, "Pairing token: ${Device.instance.pairingToken()}")
                         onComplete()
-                        return@OnCompleteListener
+                        tokenBeingFetched = false
                     }
-                    val token: String? = getTokenTask.result
-                    if (token == null) {
-                        Log.e(TAG, "FCM token is null")
-                        onComplete()
-                        return@OnCompleteListener
-                    }
-                    Device.instance.newToken(token)
-                    Log.i(TAG, "FCM token: $token")
-                    Log.i(TAG, "Pairing token: ${Device.instance.pairingToken()}")
-                    onComplete()
-                }
-            )
+                )
+            }
         }
 
         @Suppress("ForbiddenComment")

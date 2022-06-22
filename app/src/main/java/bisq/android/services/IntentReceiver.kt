@@ -56,15 +56,21 @@ class IntentReceiver(private val activity: Activity? = null) : BroadcastReceiver
             return
         }
 
-        if (intent.hasExtra("type")) {
-            val type = intent.getStringExtra("type")
-            Log.i(TAG, "Handling $type notification")
-            if (type == NotificationType.SETUP_CONFIRMATION.name && activity is UnpairedBaseActivity) {
-                activity.pairingConfirmed()
-            } else if (type == NotificationType.ERASE.name && activity is PairedBaseActivity) {
-                Device.instance.status = DeviceStatus.UNPAIRED
-                activity.pairingRemoved(context.getString(R.string.pairing_erased))
-            }
+        if (!intent.hasExtra("type")) {
+            Log.i(TAG, "Ignoring intent, missing notification type")
+            return
+        }
+
+        val type = intent.getStringExtra("type")
+        if (type == NotificationType.SETUP_CONFIRMATION.name && activity is UnpairedBaseActivity) {
+            Log.i(TAG, "Pairing confirmed")
+            activity.pairingConfirmed()
+        } else if (type == NotificationType.ERASE.name && activity is PairedBaseActivity) {
+            Log.i(TAG, "Pairing removed")
+            Device.instance.status = DeviceStatus.UNPAIRED
+            activity.pairingRemoved(context.getString(R.string.pairing_erased))
+        } else {
+            Log.i(TAG, "Ignoring $type notification")
         }
     }
 }
