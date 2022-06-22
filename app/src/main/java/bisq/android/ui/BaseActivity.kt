@@ -102,6 +102,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun playTone() {
+        @Suppress("TooGenericExceptionCaught")
         try {
             val notificationTone =
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -118,7 +119,7 @@ open class BaseActivity : AppCompatActivity() {
             { _, _ ->
                 try {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri)))
-                } catch (e: ActivityNotFoundException) {
+                } catch (ignored: ActivityNotFoundException) {
                     Toast.makeText(
                         this, getString(R.string.cannot_launch_browser), Toast.LENGTH_LONG
                     ).show()

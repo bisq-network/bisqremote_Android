@@ -27,7 +27,6 @@ import bisq.android.ext.goAsync
 import bisq.android.model.Device
 
 class NotificationReceiver : BroadcastReceiver() {
-
     companion object {
         private const val TAG = "NotificationReceiver"
     }
@@ -46,7 +45,7 @@ class NotificationReceiver : BroadcastReceiver() {
             bisqNotification = NotificationProcessor.processNotification(
                 intent.extras?.get("encrypted").toString()
             )
-        } catch (e: Exception) {
+        } catch (e: ProcessingException) {
             e.message?.let { Log.e(TAG, it) }
             Intent().also { broadcastIntent ->
                 broadcastIntent.action = context.getString(R.string.intent_receiver_action)

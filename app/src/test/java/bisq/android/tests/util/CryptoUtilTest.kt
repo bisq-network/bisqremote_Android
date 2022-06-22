@@ -54,7 +54,7 @@ class CryptoUtilTest {
     fun testEncryptDecryptRandomString() {
         val charPool: List<Char> = (' '..'~').toList()
         val valueToEncrypt = (1..kotlin.random.Random.nextInt(10, 256))
-            .map { _ -> kotlin.random.Random.nextInt(0, charPool.size) }
+            .map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
             .joinToString("")
             .trim()
@@ -132,7 +132,7 @@ class CryptoUtilTest {
     private fun generateInvalidKey(): String {
         val charPool: List<Char> = ('0'..'9') + ('a'..'z') + ('A'..'Z') + '/' + '+'
         return (1..kotlin.random.Random.nextInt(0, 31))
-            .map { _ -> kotlin.random.Random.nextInt(0, charPool.size) }
+            .map { kotlin.random.Random.nextInt(0, charPool.size) }
             .map(charPool::get)
             .joinToString("")
     }

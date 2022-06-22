@@ -20,6 +20,6 @@ package bisq.android.screens.dialogs
 import android.R
 import bisq.android.screens.elements.ButtonElement
 
-class PromptDialog(private val message: String) : Dialog(message) {
+class PromptDialog(message: String) : Dialog(message) {
     val button = ButtonElement(R.id.button1)
 }

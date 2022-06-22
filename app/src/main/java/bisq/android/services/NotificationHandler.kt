@@ -32,6 +32,7 @@ object NotificationHandler {
 
     private const val TAG = "NotificationHandler"
 
+    @Suppress("ReturnCount")
     suspend fun handleNotification(bisqNotification: BisqNotification, context: Context) {
         val notificationRepository = NotificationRepository(context)
 

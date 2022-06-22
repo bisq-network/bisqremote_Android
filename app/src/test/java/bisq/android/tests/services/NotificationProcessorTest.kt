@@ -21,6 +21,8 @@ import bisq.android.database.BisqNotification
 import bisq.android.model.Device
 import bisq.android.model.NotificationMessage.Companion.BISQ_MESSAGE_ANDROID_MAGIC
 import bisq.android.model.NotificationType
+import bisq.android.services.DecryptingException
+import bisq.android.services.DeserializationException
 import bisq.android.services.NotificationProcessor
 import bisq.android.util.CryptoUtil
 import bisq.android.util.DateUtil
@@ -64,17 +66,23 @@ class NotificationProcessorTest {
 
     @Test(expected = ParseException::class)
     fun testParseNotificationContentInUnexpectedFormatRaisesException() {
-        NotificationProcessor.parseNotificationContent("this is not the format you are looking for")
+        NotificationProcessor.parseNotificationContent(
+            "this is not the format you are looking for"
+        )
     }
 
     @Test(expected = ParseException::class)
     fun testParseInvalidMagicValueRaisesException() {
-        NotificationProcessor.parseNotificationContent("magicValue|initializationVector|encryptedPayload")
+        NotificationProcessor.parseNotificationContent(
+            "magicValue|initializationVector|encryptedPayload"
+        )
     }
 
     @Test(expected = ParseException::class)
     fun testParseInvalidInitializationVectorLengthRaisesException() {
-        NotificationProcessor.parseNotificationContent("$BISQ_MESSAGE_ANDROID_MAGIC|initializationVector|encryptedPayload")
+        NotificationProcessor.parseNotificationContent(
+            "$BISQ_MESSAGE_ANDROID_MAGIC|initializationVector|encryptedPayload"
+        )
     }
 
     @Test
@@ -89,18 +97,18 @@ class NotificationProcessorTest {
         assertEquals(payload, decryptedPayload)
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = DecryptingException::class)
     fun testDecryptFailureRaisesException() {
         NotificationProcessor.decryptNotificationPayload("encryptedPayload", iv)
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = DecryptingException::class)
     fun testDecryptWithNoDeviceKeyRaisesException() {
         Device.instance.key = null
         NotificationProcessor.decryptNotificationPayload("encryptedPayload", iv)
     }
 
-    @Test(expected = Exception::class)
+    @Test(expected = DeserializationException::class)
     fun testDeserializeFailureRaisesException() {
         NotificationProcessor.deserializeNotificationPayload("decryptedPayload")
     }

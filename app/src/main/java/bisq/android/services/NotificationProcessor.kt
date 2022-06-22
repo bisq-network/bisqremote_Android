@@ -32,56 +32,80 @@ import java.util.Date
 object NotificationProcessor {
 
     private const val TAG = "NotificationProcessor"
+    private const val NOTIFICATION_CONTENT_SEGMENTS = 3
 
+    @Throws(ProcessingException::class)
     fun processNotification(notificationContent: String?): BisqNotification {
-        val notificationMessage = parseNotificationContent(notificationContent)
-        val decryptedNotificationPayload = decryptNotificationPayload(
-            notificationMessage.encryptedPayload, notificationMessage.initializationVector
-        )
-        val bisqNotification = deserializeNotificationPayload(decryptedNotificationPayload)
-        bisqNotification.receivedDate = Date().time
-        return bisqNotification
-    }
-
-    fun parseNotificationContent(notificationContent: String?): NotificationMessage {
+        @Suppress("TooGenericExceptionCaught")
         try {
-            val array = notificationContent?.split("\\|".toRegex())?.dropLastWhile { it.isEmpty() }
-                ?.toTypedArray()
-            if (array == null || array.size != 3) {
-                throw ParseException("Invalid format", 0)
+            val notificationMessage = parseNotificationContent(notificationContent)
+            val decryptedNotificationPayload = decryptNotificationPayload(
+                notificationMessage.encryptedPayload, notificationMessage.initializationVector
+            )
+            val bisqNotification = deserializeNotificationPayload(decryptedNotificationPayload)
+            bisqNotification.receivedDate = Date().time
+            return bisqNotification
+        } catch (e: Throwable) {
+            when (e) {
+                is ParseException, is DecryptingException, is DeserializationException -> {
+                    val message = "Failed to process notification; ${e.message}"
+                    Log.e(TAG, message)
+                    throw ProcessingException(message)
+                }
+                else -> throw e
             }
-            val magicValue = array[0]
-            val initializationVector = array[1]
-            val encryptedPayload = array[2]
-            if (magicValue != BISQ_MESSAGE_ANDROID_MAGIC) {
-                throw ParseException("Invalid magic value", 0)
-            }
-            if (initializationVector.length != CryptoUtil.IV_LENGTH) {
-                throw ParseException(
-                    "Invalid initialization vector; must be ${CryptoUtil.IV_LENGTH} characters",
-                    0
-                )
-            }
-            return NotificationMessage(magicValue, initializationVector, encryptedPayload)
-        } catch (e: ParseException) {
-            val message = "Failed to parse notification; ${e.message}"
-            Log.e(TAG, message)
-            throw ParseException(message, e.errorOffset)
         }
     }
 
+    @Throws(ParseException::class)
+    @Suppress("ThrowsCount")
+    fun parseNotificationContent(notificationContent: String?): NotificationMessage {
+        val array = notificationContent?.split("\\|".toRegex())?.dropLastWhile { it.isEmpty() }
+            ?.toTypedArray()
+        if (array == null || array.size != NOTIFICATION_CONTENT_SEGMENTS) {
+            throw ParseException("Invalid format", 0)
+        }
+        val magicValue = array[0]
+        val initializationVector = array[1]
+        val encryptedPayload = array[2]
+        if (magicValue != BISQ_MESSAGE_ANDROID_MAGIC) {
+            throw ParseException("Invalid magic value", 0)
+        }
+        if (initializationVector.length != CryptoUtil.IV_LENGTH) {
+            throw ParseException(
+                "Invalid initialization vector; must be ${CryptoUtil.IV_LENGTH} characters",
+                0
+            )
+        }
+        return NotificationMessage(magicValue, initializationVector, encryptedPayload)
+    }
+
+    @Throws(DecryptingException::class)
+    @Suppress("ThrowsCount")
     fun decryptNotificationPayload(encryptedPayload: String, initializationVector: String): String {
+        @Suppress("TooGenericExceptionCaught")
         try {
+            if (Device.instance.key == null) {
+                throw IllegalStateException("Device key is null")
+            }
             return CryptoUtil(Device.instance.key!!).decrypt(
                 encryptedPayload, initializationVector
             )
-        } catch (e: Exception) {
-            val message = "Failed to decrypt notification payload"
-            Log.e(TAG, "$message: $encryptedPayload")
-            throw Exception(message)
+        } catch (e: Throwable) {
+            when (e) {
+                is IllegalStateException,
+                is IllegalArgumentException,
+                is CryptoUtil.Companion.CryptoException -> {
+                    val message = "Failed to decrypt notification payload"
+                    Log.e(TAG, "$message: $encryptedPayload")
+                    throw DecryptingException(message)
+                }
+                else -> throw e
+            }
         }
     }
 
+    @Throws(DeserializationException::class)
     fun deserializeNotificationPayload(decryptedPayload: String): BisqNotification {
         val gsonBuilder = GsonBuilder()
         gsonBuilder.registerTypeAdapter(Date::class.java, DateUtil())
@@ -91,7 +115,11 @@ object NotificationProcessor {
         } catch (e: JsonSyntaxException) {
             val message = "Failed to deserialize notification payload"
             Log.e(TAG, "$message: $decryptedPayload")
-            throw Exception(message)
+            throw DeserializationException(message)
         }
     }
 }
+
+class ProcessingException(message: String) : Exception(message)
+class DecryptingException(message: String) : Exception(message)
+class DeserializationException(message: String) : Exception(message)

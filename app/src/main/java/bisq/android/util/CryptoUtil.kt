@@ -59,7 +59,7 @@ class CryptoUtil(private val key: String) {
         class CryptoException(message: String) : Exception(message)
     }
 
-    @Throws(IllegalArgumentException::class)
+    @Throws(IllegalArgumentException::class, CryptoException::class)
     fun encrypt(valueToEncrypt: String, iv: String): String {
         if (iv.length != IV_LENGTH) {
             throw IllegalArgumentException("Initialization vector is not $IV_LENGTH characters")
@@ -74,7 +74,7 @@ class CryptoUtil(private val key: String) {
         return String(encryptedBase64, Charset.forName("UTF-8"))
     }
 
-    @Throws(IllegalArgumentException::class)
+    @Throws(IllegalArgumentException::class, CryptoException::class)
     fun decrypt(valueToDecrypt: String, iv: String): String {
         if (iv.length != IV_LENGTH) {
             throw IllegalArgumentException("Initialization vector is not $IV_LENGTH characters")
@@ -84,12 +84,13 @@ class CryptoUtil(private val key: String) {
         return String(decryptedBytes!!)
     }
 
-    @Throws(IllegalArgumentException::class)
+    @Throws(IllegalArgumentException::class, CryptoException::class)
     private fun encryptInternal(text: String?, ivSpec: IvParameterSpec): ByteArray? {
         if (text == null || text.isEmpty()) {
             throw IllegalArgumentException("Empty string")
         }
         val encrypted: ByteArray?
+        @Suppress("SwallowedException", "TooGenericExceptionCaught")
         try {
             cipher!!.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec)
             encrypted = cipher!!.doFinal(text.toByteArray())
@@ -99,12 +100,13 @@ class CryptoUtil(private val key: String) {
         return encrypted
     }
 
-    @Throws(IllegalArgumentException::class)
+    @Throws(IllegalArgumentException::class, CryptoException::class)
     private fun decryptInternal(codeBase64: String?, ivSpec: IvParameterSpec): ByteArray? {
         if (codeBase64 == null || codeBase64.isEmpty()) {
             throw IllegalArgumentException("Empty string")
         }
         val decrypted: ByteArray?
+        @Suppress("SwallowedException", "TooGenericExceptionCaught")
         try {
             cipher!!.init(Cipher.DECRYPT_MODE, keySpec, ivSpec)
             val code = Base64.decode(codeBase64, Base64.DEFAULT)

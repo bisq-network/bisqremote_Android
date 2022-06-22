@@ -39,6 +39,7 @@ import bisq.android.ui.UnpairedBaseActivity
 import bisq.android.ui.notification.NotificationTableActivity
 import bisq.android.ui.pairing.PairingScanActivity
 
+@Suppress("TooManyFunctions")
 class WelcomeActivity : UnpairedBaseActivity() {
 
     private lateinit var learnMoreButton: Button
@@ -107,12 +108,13 @@ class WelcomeActivity : UnpairedBaseActivity() {
             var progress = progressBar.progress
             while (true) {
                 try {
+                    @Suppress("MagicNumber")
                     Thread.sleep(10)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
                 progress += 1
-                if (progress > 100) {
+                if (progress > progressBar.max) {
                     progress = 0
                 }
                 mainHandler.post {

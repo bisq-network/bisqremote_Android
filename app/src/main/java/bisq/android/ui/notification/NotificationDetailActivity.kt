@@ -72,7 +72,7 @@ class NotificationDetailActivity : PairedBaseActivity() {
             message.visibility = View.GONE
         }
 
-        if (notification.actionRequired != null && notification.actionRequired!!.count() > 0) {
+        if (notification.actionRequired != null && notification.actionRequired!!.isNotEmpty()) {
             action.text = notification.actionRequired
         } else {
             action.visibility = View.GONE

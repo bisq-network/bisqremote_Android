@@ -39,6 +39,7 @@ import bisq.android.database.BisqNotification
 import bisq.android.ui.PairedBaseActivity
 import bisq.android.ui.settings.SettingsActivity
 
+@Suppress("TooManyFunctions")
 class NotificationTableActivity : PairedBaseActivity() {
 
     private lateinit var viewModel: NotificationViewModel

@@ -70,11 +70,12 @@ class PairingScanActivity : UnpairedBaseActivity() {
             if (Device.instance.pairingToken() == null) {
                 return@post
             }
+            @Suppress("TooGenericExceptionCaught")
             try {
                 val bmp = QrUtil.createQrImage(Device.instance.pairingToken()!!)
                 qrImage.setImageBitmap(bmp)
                 qrText.visibility = View.INVISIBLE
-            } catch (e: Exception) {
+            } catch (ignored: Exception) {
                 Toast.makeText(
                     this, getString(R.string.cannot_generate_qr_code),
                     Toast.LENGTH_LONG

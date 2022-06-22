@@ -45,7 +45,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         fun isFirebaseMessagingInitialized(): Boolean {
             try {
                 FirebaseMessaging.getInstance()
-            } catch (e: IllegalStateException) {
+            } catch (ignored: IllegalStateException) {
                 return false
             }
             return true
@@ -78,24 +78,34 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             )
         }
 
+        @Suppress("ForbiddenComment")
         fun refreshFcmToken(onComplete: () -> Unit = {}) {
             if (!isFirebaseMessagingInitialized()) {
                 Log.e(TAG, "FirebaseMessaging is not initialized")
                 onComplete()
                 return
             }
-            FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(
-                OnCompleteListener { deleteTokenTask ->
-                    if (!deleteTokenTask.isSuccessful) {
-                        Log.e(TAG, "Deleting FCM token failed: ${deleteTokenTask.exception}")
-                        onComplete()
-                        return@OnCompleteListener
-                    }
-                    Log.i(TAG, "FCM token deleted")
-
-                    fetchFcmToken(onComplete)
-                }
-            )
+            // TODO: This works on an emulator, but not on a Pixel 3a running CalyxOS with Android 12
+            //  Deleting the FCM token encounters IOException: SERVICE_NOT_AVAILABLE
+            //  And fetching the FCM token returns the same token
+            //  And trying to use that same token then gets rejected by the FCM gateway -
+            //  Requested entity was not found. (UNREGISTERED)
+            //  The only way to recover is to uninstall the app or perhaps clear app data
+            //  It's possible that this is an issue only with CalyxOS, but leaving this commented
+            //  out for now is best until it can be confirmed if it works on a non-CalyxOS device
+            //  Ref: https://stackoverflow.com/questions/43193215/firebase-cloud-messaging-handling-logout
+//            tokenBeingFetched = true
+//            FirebaseMessaging.getInstance().apply {
+//                deleteToken().addOnCompleteListener { deleteTokenTask ->
+//                    if (!deleteTokenTask.isSuccessful) {
+//                        Log.e(TAG, "Deleting FCM token failed: ${deleteTokenTask.exception}")
+//                    } else {
+//                        Log.i(TAG, "FCM token deleted")
+//                    }
+//                    fetchFcmToken(onComplete)
+//                    tokenBeingFetched = false
+//                }
+//            }
         }
     }
 

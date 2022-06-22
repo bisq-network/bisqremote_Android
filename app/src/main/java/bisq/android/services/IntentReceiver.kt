@@ -31,11 +31,11 @@ import bisq.android.ui.PairedBaseActivity
 import bisq.android.ui.UnpairedBaseActivity
 
 class IntentReceiver(private val activity: Activity? = null) : BroadcastReceiver() {
-
     companion object {
         private const val TAG = "IntentReceiver"
     }
 
+    @Suppress("ReturnCount")
     override fun onReceive(context: Context, intent: Intent) {
         Log.i(TAG, "Intent received")
 
