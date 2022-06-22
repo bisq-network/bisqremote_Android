@@ -23,14 +23,27 @@ Feature: Notifications
         Then the notification will appear in the system notification area
         And it will not appear in the app until clicked on
 
-    Scenario: Notifications are not shown if the app is not paired and running in the foreground
-        Given the app has reset its pairing
-        And the app is running in the foreground
-        When a notification is received using the old pairing token
-        Then nothing will appear in the app
+    Scenario: Notifications are shown if clicked on while the app is running in the foreground
+        Given the app is running in the background or is closed
+        When a notification is received
+        And the app is opened
+        And the notification is clicked on within the system notification area
+        Then the notification will be shown within the app
 
-    Scenario: Notifications are not shown if the app is not paired and running in the background or is closed
+    Scenario: Multiple notifications are shown in the system notification area
+        Given the app is running in the background or is closed
+        When multiple notifications are received
+        Then each notification will appear in the system notification area
+
+    Scenario: Notifications are shown in system notification area when the app is not paired and not running in the foreground
         Given the app has reset its pairing
         And the app is running in the background or is closed
         When a notification is received using the old pairing token
-        Then no notification will appear in the system notification area
+        Then the notification will appear in the system notification area
+        And opening the notification will show a toast message indicating it failed to process the notification
+
+    Scenario: Toast message is shown when receiving a notification if the app is not paired and running in the foreground
+        Given the app has reset its pairing
+        And the app is running in the foreground
+        When a notification is received using the old pairing token
+        Then a toast message is shown indicating it failed to process the notification

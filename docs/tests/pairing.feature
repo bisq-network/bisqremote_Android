@@ -16,7 +16,7 @@ Feature: Pairing
         And the app is running in the background or is closed
         When clicking the erase button in either the Bisq client or bisqremote tool
         Then a notification will be shown in the system notification area
-        And upon opening the app it will load the Welcome view
+        And upon clicking the notification it will load the Welcome view
         And show a toast message indicating the app was unpaired remotely
 
     Scenario: Erase pairing removes existing notifications
@@ -25,3 +25,11 @@ Feature: Pairing
         When clicking the erase button in either the Bisq client or bisqremote tool
         And following the process to pair the app again
         Then all previously received notifications will not exist
+
+    Scenario: Pairing after the app has been put in the background then foreground
+        Given the app is not paired
+        And the pairing token has been scanned or transferred
+        And the app is placed in the background
+        And the app is placed in the foreground
+        When the pairing process is performed
+        Then the app is paired successfully
