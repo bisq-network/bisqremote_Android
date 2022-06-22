@@ -41,9 +41,8 @@ jobs:
             -   name: Check code style
                 run: ./gradlew ktlintCheck
 
-            # TODO: Re-enable code quality check once the issues are resolved or suppressed
-            # -   name: Check code quality
-            #     run: ./gradlew detekt
+            -   name: Check code quality
+                run: ./gradlew detekt
 
             # TODO: Add test coverage checks
             # See https://medium.com/jamf-engineering/android-kotlin-code-coverage-with-jacoco-sonar-and-gradle-plugin-6-x-3933ed503a6e
