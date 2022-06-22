@@ -1,12 +1,15 @@
 name: 'Get AVD Info'
-description: 'Get the AVD info based on its API level.'
+description: 'Get the Android Virtual Device (AVD) info based on its API level.'
 inputs:
     api-level:
+        description: The API level for which to retrieve AVD info
         required: true
 outputs:
     arch:
+        description: The architecture used by the AVD
         value: ${{ steps.get-avd-arch.outputs.arch }}
     target:
+        description: The target location of the AVD
         value: ${{ steps.get-avd-target.outputs.target }}
 runs:
     using: "composite"
