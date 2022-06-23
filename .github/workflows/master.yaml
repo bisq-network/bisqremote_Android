@@ -12,6 +12,8 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         timeout-minutes: 10
+        outputs:
+            new_tag: ${{ steps.bump_version.outputs.new_tag }}
         steps:
             -   name: Checkout the code
                 uses: actions/checkout@v3
@@ -21,6 +23,8 @@ jobs:
                 uses: oflynned/Android-Semantic-Release@master
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    build_number: ${{ github.sha }}
 
             -   name: Create google-services.json from secrets
                 env:
@@ -120,7 +124,7 @@ jobs:
         name: Upload to Firebase
         runs-on: ubuntu-latest
         timeout-minutes: 10
-        needs: sign
+        needs: [ build, sign ]
         steps:
             -   name: Download signed APK
                 uses: actions/download-artifact@v3
@@ -139,39 +143,45 @@ jobs:
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     token: ${{ secrets.FIREBASE_TOKEN }}
-                    file: ${{ steps.sign_apk.outputs.signedReleaseFile }}
+                    file: app/build/outputs/apk/release/release-signed.apk
 
             -   name: Upload signed AAB to Firebase App Distribution
                 uses: wzieba/Firebase-Distribution-Github-Action@v1
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     token: ${{ secrets.FIREBASE_TOKEN }}
-                    file: ${{ steps.sign_aab.outputs.signedReleaseFile }}
+                    file: app/build/outputs/bundle/release/release-signed.aab
 
     create_release:
         name: Create release
         runs-on: ubuntu-latest
         timeout-minutes: 10
-        needs: sign
+        needs: [ build, sign ]
         steps:
+            -   name: Download signed APK
+                uses: actions/download-artifact@v3
+                with:
+                    name: release-signed.apk
+                    path: app/build/outputs/apk/release
+
             -   name: Create release
                 id: create_release
                 uses: actions/create-release@v1
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
-                    tag_name: ${{ steps.bump_version.outputs.new_tag }}
-                    release_name: ${{ steps.bump_version.outputs.new_tag }}
+                    tag_name: ${{ needs.build.outputs.new_tag }}
+                    release_name: ${{ needs.build.outputs.new_tag }}
                     draft: false
                     prerelease: false
 
-            -   name: Upload Release APK
+            -   name: Upload signed APK to release
                 id: upload_release_asset
                 uses: actions/upload-release-asset@v1.0.1
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     upload_url: ${{ steps.create_release.outputs.upload_url }}
-                    asset_path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
-                    asset_name: app.apk
+                    asset_path: app/build/outputs/apk/release/release-signed.apk
+                    asset_name: ${{ needs.build.outputs.new_tag }}.apk
                     asset_content_type: application/zip
