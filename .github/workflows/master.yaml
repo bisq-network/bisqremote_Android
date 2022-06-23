@@ -50,17 +50,43 @@ jobs:
                 uses: gradle/wrapper-validation-action@v1
 
             -   name: Build the app
-                run: ./gradlew assembleRelease
+                run: ./gradlew assembleRelease bundleRelease
 
-    sign_and_upload:
-        name: Sign and upload
+            -   name: Upload unsigned APK
+                uses: actions/upload-artifact@v2
+                with:
+                    name: release-unsigned.apk
+                    path: app/build/outputs/apk/release/*.apk
+                    if-no-files-found: error
+
+            -   name: Upload unsigned AAB
+                uses: actions/upload-artifact@v2
+                with:
+                    name: release-unsigned.aab
+                    path: app/build/outputs/bundle/release/*.aab
+                    if-no-files-found: error
+
+    sign:
+        name: Sign
         runs-on: ubuntu-latest
         timeout-minutes: 10
         needs: build
         steps:
+            -   name: Download unsigned APK
+                uses: actions/download-artifact@v3
+                with:
+                    name: release-unsigned.apk
+                    path: app/build/outputs/apk/release
+
+            -   name: Download unsigned AAB
+                uses: actions/download-artifact@v3
+                with:
+                    name: release-unsigned.aab
+                    path: app/build/outputs/bundle/release
+
             -   name: Sign APK
                 uses: r0adkll/sign-android-release@v1
-                id: sign
+                id: sign_apk
                 with:
                     releaseDirectory: app/build/outputs/apk/release
                     signingKeyBase64: ${{ secrets.SIGNING_KEY }}
@@ -68,19 +94,66 @@ jobs:
                     keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
                     keyPassword: ${{ secrets.KEY_PASSWORD }}
 
-            -   name: Upload APK
+            -   name: Sign AAB
+                uses: r0adkll/sign-android-release@v1
+                id: sign_aab
+                with:
+                    releaseDirectory: app/build/outputs/bundle/release
+                    signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+                    alias: ${{ secrets.KEY_ALIAS }}
+                    keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+                    keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+            -   name: Upload signed APK
                 uses: actions/upload-artifact@v2
                 with:
-                    name: release apk
-                    path: ${{ steps.sign.outputs.signedReleaseFile }}
+                    name: release-signed.apk
+                    path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
 
-            -   name: Upload artifact to Firebase App Distribution
+            -   name: Upload signed AAB
+                uses: actions/upload-artifact@v2
+                with:
+                    name: release-signed.aab
+                    path: ${{ steps.sign_aab.outputs.signedReleaseFile }}
+
+    upload_to_firebase:
+        name: Upload to Firebase
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        needs: sign
+        steps:
+            -   name: Download signed APK
+                uses: actions/download-artifact@v3
+                with:
+                    name: release-signed.apk
+                    path: app/build/outputs/apk/release
+
+            -   name: Download signed AAB
+                uses: actions/download-artifact@v3
+                with:
+                    name: release-signed.aab
+                    path: app/build/outputs/bundle/release
+
+            -   name: Upload signed APK to Firebase App Distribution
                 uses: wzieba/Firebase-Distribution-Github-Action@v1
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     token: ${{ secrets.FIREBASE_TOKEN }}
-                    file: ${{ steps.sign.outputs.signedReleaseFile }}
+                    file: ${{ steps.sign_apk.outputs.signedReleaseFile }}
 
+            -   name: Upload signed AAB to Firebase App Distribution
+                uses: wzieba/Firebase-Distribution-Github-Action@v1
+                with:
+                    appId: ${{ secrets.FIREBASE_APP_ID }}
+                    token: ${{ secrets.FIREBASE_TOKEN }}
+                    file: ${{ steps.sign_aab.outputs.signedReleaseFile }}
+
+    create_release:
+        name: Create release
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        needs: sign
+        steps:
             -   name: Create release
                 id: create_release
                 uses: actions/create-release@v1
@@ -99,6 +172,6 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     upload_url: ${{ steps.create_release.outputs.upload_url }}
-                    asset_path: ${{ steps.sign.outputs.signedReleaseFile }}
-                    asset_name: signed-app.apk
+                    asset_path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
+                    asset_name: app.apk
                     asset_content_type: application/zip
