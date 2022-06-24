@@ -45,12 +45,14 @@ android {
     namespace 'bisq.android'
     compileSdkVersion 32
     defaultConfig {
+        applicationId "bisq.android"
         versionCode getVersionCode()
         versionName getVersionName()
-        applicationId "bisq.android"
         minSdkVersion 21
         targetSdkVersion 32
         multiDexEnabled true
+        setProperty("archivesBaseName", "bisq")
+
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         // The following argument makes the Android Test Orchestrator run its
@@ -66,6 +68,14 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        applicationVariants.all{
+            variant ->
+                variant.outputs.each{
+                    output->
+                        def name = "bisq-${variant.name}.apk"
+                        output.outputFileName = name
+                }
         }
     }
     sourceSets {
