@@ -52,6 +52,8 @@ jobs:
 
             # TODO: Add dependency scanning
             # See https://snyk.io/blog/gradle-plugin-by-snyk-gradle-dependencies-scanning/
+            # While at it, should also consider enabling dependency verification:
+            # https://docs.gradle.org/current/userguide/dependency_verification.html
             # -   name: Check dependencies
             #     run: ./gradlew snyk-test
 
