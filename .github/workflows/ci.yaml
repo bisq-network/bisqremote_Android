@@ -55,7 +55,7 @@ jobs:
             #     run: ./gradlew snyk-test
 
             -   name: Upload reports
-                uses: actions/upload-artifact@v2
+                uses: actions/upload-artifact@v3
                 with:
                     name: Test-Reports
                     path: app/build/reports
@@ -96,7 +96,7 @@ jobs:
                 run: ./gradlew testDebugUnitTest
 
             -   name: Upload reports
-                uses: actions/upload-artifact@v2
+                uses: actions/upload-artifact@v3
                 with:
                     name: Test-Reports
                     path: app/build/reports
@@ -181,7 +181,7 @@ jobs:
                     script: mv .github/debug.keystore ~/.android; ./gradlew connectedDebugAndroidTest
 
             -   name: Upload reports
-                uses: actions/upload-artifact@v2
+                uses: actions/upload-artifact@v3
                 with:
                     name: Test-Reports
                     path: app/build/reports

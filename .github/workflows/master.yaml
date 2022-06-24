@@ -55,14 +55,14 @@ jobs:
                 run: ./gradlew assembleRelease bundleRelease
 
             -   name: Upload unsigned APK
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@v3
                 with:
                     name: release-unsigned.apk
                     path: app/build/outputs/apk/release/*.apk
                     if-no-files-found: error
 
             -   name: Upload unsigned AAB
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@v3
                 with:
                     name: release-unsigned.aab
                     path: app/build/outputs/bundle/release/*.aab
@@ -107,13 +107,13 @@ jobs:
                     keyPassword: ${{ secrets.KEY_PASSWORD }}
 
             -   name: Upload signed APK
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@v3
                 with:
                     name: release-signed.apk
                     path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
 
             -   name: Upload signed AAB
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@v3
                 with:
                     name: release-signed.aab
                     path: ${{ steps.sign_aab.outputs.signedReleaseFile }}
