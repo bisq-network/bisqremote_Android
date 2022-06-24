@@ -23,8 +23,6 @@ jobs:
                 uses: oflynned/Android-Semantic-Release@master
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                with:
-                    build_number: ${{ github.sha }}
 
             -   name: Create google-services.json from secrets
                 env:
@@ -126,6 +124,9 @@ jobs:
         timeout-minutes: 10
         needs: [ build, sign ]
         steps:
+            -   name: Checkout the code
+                uses: actions/checkout@v3
+
             -   name: Download signed APK
                 uses: actions/download-artifact@v3
                 with:
@@ -151,37 +152,3 @@ jobs:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     token: ${{ secrets.FIREBASE_TOKEN }}
                     file: app/build/outputs/bundle/release/release-signed.aab
-
-    create_release:
-        name: Create release
-        runs-on: ubuntu-latest
-        timeout-minutes: 10
-        needs: [ build, sign ]
-        steps:
-            -   name: Download signed APK
-                uses: actions/download-artifact@v3
-                with:
-                    name: release-signed.apk
-                    path: app/build/outputs/apk/release
-
-            -   name: Create release
-                id: create_release
-                uses: actions/create-release@v1
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                with:
-                    tag_name: ${{ needs.build.outputs.new_tag }}
-                    release_name: ${{ needs.build.outputs.new_tag }}
-                    draft: false
-                    prerelease: false
-
-            -   name: Upload signed APK to release
-                id: upload_release_asset
-                uses: actions/upload-release-asset@v1.0.1
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                with:
-                    upload_url: ${{ steps.create_release.outputs.upload_url }}
-                    asset_path: app/build/outputs/apk/release/release-signed.apk
-                    asset_name: ${{ needs.build.outputs.new_tag }}.apk
-                    asset_content_type: application/zip
