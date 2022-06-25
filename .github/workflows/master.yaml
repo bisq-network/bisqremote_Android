@@ -25,6 +25,10 @@ jobs:
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+            -   name: Write version to file for use in other workflows
+                run: |
+                    echo ${{ steps.bump_version.outputs.new_tag }} > VERSION
+
             -   name: Create google-services.json from secrets
                 env:
                     GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
@@ -54,6 +58,13 @@ jobs:
 
             -   name: Build the app
                 run: ./gradlew assembleRelease bundleRelease
+
+            -   name: Upload VERSION
+                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                with:
+                    name: VERSION
+                    path: VERSION
+                    if-no-files-found: error
 
             -   name: Upload unsigned APK
                 uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
