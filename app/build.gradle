@@ -65,14 +65,17 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        applicationVariants.all{
+        applicationVariants.all {
             variant ->
-                variant.outputs.each{
-                    output->
+                variant.outputs.each {
+                    output ->
                         def name = "bisq-${variant.name}.apk"
                         output.outputFileName = name
                 }
@@ -86,11 +89,6 @@ android {
             java.srcDirs += "$projectDir/src/testCommon/java"
         }
     }
-}
-
-detekt {
-    buildUponDefaultConfig = true
-    allRules = false
 }
 
 dependencies {

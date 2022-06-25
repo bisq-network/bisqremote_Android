@@ -1,7 +1,8 @@
 .gradle/
 .idea/
-app/google-services.json
 app/build/
 app/release/
+app/google-services.json
 build/
 local.properties
+snyk
