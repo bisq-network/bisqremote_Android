@@ -18,8 +18,14 @@
 package bisq.android.tests
 
 import android.content.Context
+import android.util.Log
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.base.DefaultFailureHandler
 import androidx.test.espresso.intent.Intents
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.screens.NotificationDetailScreen
@@ -31,8 +37,13 @@ import bisq.android.screens.SettingsScreen
 import bisq.android.screens.WelcomeScreen
 import org.junit.After
 import org.junit.Before
+import java.util.Locale
 
 abstract class BaseTest {
+    companion object {
+        private const val TAG = "BaseTest"
+        private const val MAX_ANR_COUNT = 3
+    }
 
     protected val applicationContext: Context = ApplicationProvider.getApplicationContext()
 
@@ -44,9 +55,47 @@ abstract class BaseTest {
     protected val notificationDetailScreen = NotificationDetailScreen()
     protected val notificationTableScreen = NotificationTableScreen()
 
+    // Running count of the number of Android Not Responding dialogs to prevent endless dismissal
+    private var anrCount = 0
+
+    // `RootViewWithoutFocusException` class is private, need to match the message (instead of using
+    // type matching)
+    private val rootViewWithoutFocusExceptionMsg = java.lang.String.format(
+        Locale.ROOT,
+        "Waited for the root of the view hierarchy to have " +
+            "window focus and not request layout for 10 seconds. If you specified a non " +
+            "default root matcher, it may be picking a root that never takes focus. " +
+            "Root:"
+    )
+
     @Before
     open fun setup() {
+        Espresso.setFailureHandler { error, viewMatcher ->
+            if (error.message!!.contains(rootViewWithoutFocusExceptionMsg) &&
+                anrCount < MAX_ANR_COUNT
+            ) {
+                Log.i(TAG, "Handling Android Not Responding dialog")
+                anrCount++
+                handleAnrDialog()
+            } else {
+                Log.w(
+                    TAG,
+                    "Handled too many Android Not Responding dialogs, passing off to the " +
+                        "default espresso handler"
+                )
+                DefaultFailureHandler(applicationContext).handle(error, viewMatcher)
+            }
+        }
         Intents.init()
+    }
+
+    private fun handleAnrDialog() {
+        val device = UiDevice.getInstance(getInstrumentation())
+        // Assumes the device is running in English locale
+        val waitButton = device.findObject(UiSelector().textContains("wait"))
+        if (waitButton.exists()) {
+            waitButton.click()
+        }
     }
 
     @After
