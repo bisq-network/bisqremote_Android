@@ -19,7 +19,7 @@ jobs:
 
             -   name: Read VERSION file
                 id: get_version
-                run: echo "::set-output name=version::$(cat VERSION)"
+                run: echo "::set-output name=version::$(cat VERSION/VERSION)"
 
             -   name: Create release
                 id: create_release
@@ -39,6 +39,6 @@ jobs:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 with:
                     upload_url: ${{ steps.create_release.outputs.upload_url }}
-                    asset_path: ./
+                    asset_path: bisq-release-signed.apk
                     asset_name: bisq-release-signed.apk
                     asset_content_type: application/zip
