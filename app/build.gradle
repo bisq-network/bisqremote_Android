@@ -45,7 +45,7 @@ android {
     namespace 'bisq.android'
     compileSdkVersion 32
     defaultConfig {
-        applicationId "bisq.android"
+        applicationId "com.joachimneumann.bisq"
         versionCode getVersionCode()
         versionName getVersionName()
         minSdkVersion 21
