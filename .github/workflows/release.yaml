@@ -1,0 +1,44 @@
+name: Release
+
+on:
+    # Allows for running this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    create_release:
+        name: Create release
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            -   name: Download artifacts from latest master workflow
+                uses: dawidd6/action-download-artifact@6765a42d86407a3d532749069ac03705ad82ebc6
+                with:
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    workflow: master.yaml
+                    workflow_conclusion: success
+
+            -   name: Read VERSION file
+                id: get_version
+                run: echo "::set-output name=version::$(cat VERSION)"
+
+            -   name: Create release
+                id: create_release
+                uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    tag_name: ${{ steps.get_version.outputs.version }}
+                    release_name: ${{ steps.get_version.outputs.version }}
+                    draft: false
+                    prerelease: false
+
+            -   name: Upload signed APK to release
+                id: upload_release_asset
+                uses: actions/upload-release-asset@e8f9f06c4b078e705bd2ea027f0926603fc9b4d5
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                with:
+                    upload_url: ${{ steps.create_release.outputs.upload_url }}
+                    asset_path: ./
+                    asset_name: bisq-release-signed.apk
+                    asset_content_type: application/zip

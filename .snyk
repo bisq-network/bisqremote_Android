@@ -1,0 +1,5 @@
+ignore:
+ SNYK-JAVA-COMGOOGLECODEGSON-1730327:
+    - androidx.room:room-compiler@2.4.2 > androidx.room:room-migration@2.4.2 > com.google.code.gson:gson@2.8.0:
+        reason: 'Currently no direct upgrade or patch'
+        expires: '2022-10-01T00:00:00.000Z'

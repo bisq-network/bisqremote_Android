@@ -45,12 +45,14 @@ android {
     namespace 'bisq.android'
     compileSdkVersion 32
     defaultConfig {
+        applicationId "bisq.android"
         versionCode getVersionCode()
         versionName getVersionName()
-        applicationId "bisq.android"
         minSdkVersion 21
         targetSdkVersion 32
         multiDexEnabled true
+        setProperty("archivesBaseName", "bisq")
+
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         // The following argument makes the Android Test Orchestrator run its
@@ -63,9 +65,20 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        applicationVariants.all {
+            variant ->
+                variant.outputs.each {
+                    output ->
+                        def name = "bisq-${variant.name}.apk"
+                        output.outputFileName = name
+                }
         }
     }
     sourceSets {
@@ -78,12 +91,8 @@ android {
     }
 }
 
-detekt {
-    buildUponDefaultConfig = true
-    allRules = false
-}
-
 dependencies {
+    implementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.20.0")
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -134,6 +143,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
     androidTestImplementation "androidx.test.espresso:espresso-intents:3.4.0"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:3.4.0"
+    androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
     androidTestImplementation "io.mockk:mockk-android:1.12.3"
     androidTestImplementation 'org.awaitility:awaitility-kotlin:4.2.0'

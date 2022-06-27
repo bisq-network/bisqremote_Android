@@ -10,6 +10,7 @@ on:
 jobs:
     build:
         name: Build
+        if: ${{ github.actor != 'dependabot[bot]' }}
         runs-on: ubuntu-latest
         timeout-minutes: 10
         outputs:
@@ -23,6 +24,10 @@ jobs:
                 uses: oflynned/Android-Semantic-Release@b9f6de7f8bdf25de3f695843265debf7c3919272
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            -   name: Write version to file for use in other workflows
+                run: |
+                    echo ${{ steps.bump_version.outputs.new_tag }} > VERSION
 
             -   name: Create google-services.json from secrets
                 env:
@@ -54,18 +59,25 @@ jobs:
             -   name: Build the app
                 run: ./gradlew assembleRelease bundleRelease
 
+            -   name: Upload VERSION
+                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                with:
+                    name: VERSION
+                    path: VERSION
+                    if-no-files-found: error
+
             -   name: Upload unsigned APK
                 uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
                 with:
-                    name: release-unsigned.apk
-                    path: app/build/outputs/apk/release/*.apk
+                    name: bisq-release.apk
+                    path: app/build/outputs/apk/release/bisq-release.apk
                     if-no-files-found: error
 
             -   name: Upload unsigned AAB
                 uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
                 with:
-                    name: release-unsigned.aab
-                    path: app/build/outputs/bundle/release/*.aab
+                    name: bisq-release.aab
+                    path: app/build/outputs/bundle/release/bisq-release.aab
                     if-no-files-found: error
 
     sign:
@@ -77,13 +89,13 @@ jobs:
             -   name: Download unsigned APK
                 uses: actions/download-artifact@076f0f7dd036d87e8e04f5f00d614e790308961b
                 with:
-                    name: release-unsigned.apk
+                    name: bisq-release.apk
                     path: app/build/outputs/apk/release
 
             -   name: Download unsigned AAB
                 uses: actions/download-artifact@076f0f7dd036d87e8e04f5f00d614e790308961b
                 with:
-                    name: release-unsigned.aab
+                    name: bisq-release.aab
                     path: app/build/outputs/bundle/release
 
             -   name: Sign APK
@@ -109,13 +121,13 @@ jobs:
             -   name: Upload signed APK
                 uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
                 with:
-                    name: release-signed.apk
+                    name: bisq-release-signed.apk
                     path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
 
             -   name: Upload signed AAB
                 uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
                 with:
-                    name: release-signed.aab
+                    name: bisq-release-signed.aab
                     path: ${{ steps.sign_aab.outputs.signedReleaseFile }}
 
     upload_to_firebase:
@@ -130,13 +142,13 @@ jobs:
             -   name: Download signed APK
                 uses: actions/download-artifact@076f0f7dd036d87e8e04f5f00d614e790308961b
                 with:
-                    name: release-signed.apk
+                    name: bisq-release-signed.apk
                     path: app/build/outputs/apk/release
 
             -   name: Download signed AAB
                 uses: actions/download-artifact@076f0f7dd036d87e8e04f5f00d614e790308961b
                 with:
-                    name: release-signed.aab
+                    name: bisq-release-signed.aab
                     path: app/build/outputs/bundle/release
 
             -   name: Upload signed APK to Firebase App Distribution
@@ -144,11 +156,11 @@ jobs:
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     token: ${{ secrets.FIREBASE_TOKEN }}
-                    file: app/build/outputs/apk/release/release-signed.apk
+                    file: app/build/outputs/apk/release/bisq-release-signed.apk
 
             -   name: Upload signed AAB to Firebase App Distribution
                 uses: wzieba/Firebase-Distribution-Github-Action@9bc1d48a99c3447060a8facc22f078e1e40ed464
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     token: ${{ secrets.FIREBASE_TOKEN }}
-                    file: app/build/outputs/bundle/release/release-signed.aab
+                    file: app/build/outputs/bundle/release/bisq-release.aab
