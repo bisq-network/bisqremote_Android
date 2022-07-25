@@ -43,7 +43,7 @@ class DateUtil : JsonDeserializer<Date> {
             pattern: String = PATTERN
         ): String? {
             val formatter = SimpleDateFormat(pattern, locale)
-            formatter.timeZone = TimeZone.getTimeZone("UTC")
+            formatter.timeZone = TimeZone.getDefault()
             return formatter.format(date)
         }
     }
@@ -66,7 +66,7 @@ class DateUtil : JsonDeserializer<Date> {
     ): Date? {
         val date = element.asString
         val formatter = SimpleDateFormat(PATTERN, LOCALE)
-        formatter.timeZone = TimeZone.getTimeZone("UTC")
+        formatter.timeZone = TimeZone.getDefault()
 
         return try {
             formatter.parse(date)
