@@ -22,9 +22,12 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assume.assumeFalse
+import org.junit.Assume.assumeTrue
 import org.junit.Test
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 class DateUtilTest {
 
@@ -32,17 +35,31 @@ class DateUtilTest {
 
     @Test
     fun testDefaultFormatReturnsFormattedString() {
-        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L))
+        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L, timezone = TimeZone.getTimeZone("UTC")))
     }
 
     @Test
     fun testFormatWithSpecifiedLocaleReturnsFormattedString() {
-        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L, Locale.GERMAN))
+        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L, Locale.GERMAN, timezone = TimeZone.getTimeZone("UTC")))
     }
 
     @Test
     fun testFormatWithSpecifiedPatternReturnsFormattedString() {
-        assertEquals("08/05/2022", DateUtil.format(1651974403000L, Locale.US, "dd/MM/yyyy"))
+        assertEquals("08/05/2022", DateUtil.format(1651974403000L, pattern = "dd/MM/yyyy", timezone = TimeZone.getTimeZone("UTC")))
+    }
+
+    @Test
+    fun testFormatWithSpecifiedTimezoneReturnsFormattedString() {
+        val tz = TimeZone.getTimeZone("Pacific/Galapagos") // UTC-6 always
+        assumeFalse(tz.inDaylightTime(Date()))
+        assertEquals("2022-05-07 19:46:43", DateUtil.format(1651974403000L, timezone = tz))
+    }
+
+    @Test
+    fun testFormatWithSpecifiedTimezoneDSTReturnsFormattedString() {
+        val tz = TimeZone.getTimeZone("Europe/Helsinki") // UTC+3 when DST in effect
+        assumeTrue(tz.inDaylightTime(Date()))
+        assertEquals("2022-05-08 04:46:43", DateUtil.format(1651974403000L, timezone = tz))
     }
 
     @Test
