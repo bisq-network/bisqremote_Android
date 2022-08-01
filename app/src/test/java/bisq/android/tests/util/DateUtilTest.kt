@@ -24,6 +24,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assume.assumeFalse
 import org.junit.Assume.assumeTrue
+import org.junit.BeforeClass
 import org.junit.Test
 import java.util.Date
 import java.util.Locale
@@ -33,19 +34,27 @@ class DateUtilTest {
 
     private val dateUtil = DateUtil()
 
+    companion object {
+        @BeforeClass
+        @JvmStatic
+        fun init() {
+            TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
+        }
+    }
+
     @Test
     fun testDefaultFormatReturnsFormattedString() {
-        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L, timezone = TimeZone.getTimeZone("UTC")))
+        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L))
     }
 
     @Test
     fun testFormatWithSpecifiedLocaleReturnsFormattedString() {
-        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L, Locale.GERMAN, timezone = TimeZone.getTimeZone("UTC")))
+        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L, Locale.GERMAN))
     }
 
     @Test
     fun testFormatWithSpecifiedPatternReturnsFormattedString() {
-        assertEquals("08/05/2022", DateUtil.format(1651974403000L, pattern = "dd/MM/yyyy", timezone = TimeZone.getTimeZone("UTC")))
+        assertEquals("08/05/2022", DateUtil.format(1651974403000L, pattern = "dd/MM/yyyy"))
     }
 
     @Test
