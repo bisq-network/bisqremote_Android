@@ -46,7 +46,7 @@ jobs:
                     mv ~/.gradle ~/.invalid || true
 
             -   name: Cache dependencies
-                uses: actions/cache@afc669e7fce1370457d4c97e4ce71cd7b277760f
+                uses: actions/cache@0865c47f36e68161719c5b124609996bb5c40129
                 with:
                     path: |
                         ~/.gradle/caches
