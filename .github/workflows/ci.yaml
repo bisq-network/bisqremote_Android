@@ -165,7 +165,7 @@ jobs:
             # Create a new emulator snapshot if it isn't present in the cache
             -   name: Create AVD snapshot
                 if: steps.avd-cache.outputs.cache-hit != 'true'
-                uses: reactivecircus/android-emulator-runner@e790971012b979513b4e2fe70d4079bc0ca8a1ae
+                uses: reactivecircus/android-emulator-runner@b390b0e1166697ae57c242a0a33c29ca9f5ae078
                 with:
                     api-level: ${{ matrix.api-level }}
                     arch: ${{ steps.avd-info.outputs.arch }}
@@ -177,7 +177,7 @@ jobs:
                     script: echo "Generated AVD snapshot"
 
             -   name: Run instrumentation tests
-                uses: reactivecircus/android-emulator-runner@e790971012b979513b4e2fe70d4079bc0ca8a1ae
+                uses: reactivecircus/android-emulator-runner@b390b0e1166697ae57c242a0a33c29ca9f5ae078
                 with:
                     api-level: ${{ matrix.api-level }}
                     arch: ${{ steps.avd-info.outputs.arch }}
