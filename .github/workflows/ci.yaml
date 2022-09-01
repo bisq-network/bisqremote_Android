@@ -29,7 +29,7 @@ jobs:
                     mv ~/.gradle ~/.invalid || true
 
             -   name: Cache dependencies
-                uses: actions/cache@afc669e7fce1370457d4c97e4ce71cd7b277760f
+                uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
                 with:
                     path: |
                         ~/.gradle/caches
@@ -88,7 +88,7 @@ jobs:
                     mv ~/.gradle ~/.invalid || true
 
             -   name: Cache dependencies
-                uses: actions/cache@afc669e7fce1370457d4c97e4ce71cd7b277760f
+                uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
                 with:
                     path: |
                         ~/.gradle/caches
@@ -135,7 +135,7 @@ jobs:
                     mv ~/.gradle ~/.invalid || true
 
             -   name: Cache dependencies
-                uses: actions/cache@afc669e7fce1370457d4c97e4ce71cd7b277760f
+                uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
                 with:
                     path: |
                         ~/.gradle/caches
@@ -154,7 +154,7 @@ jobs:
 
             # Retrieve the cached emulator snapshot
             -   name: Retrieve cached emulator snapshot
-                uses: actions/cache@afc669e7fce1370457d4c97e4ce71cd7b277760f
+                uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77
                 id: avd-cache
                 with:
                     path: |
