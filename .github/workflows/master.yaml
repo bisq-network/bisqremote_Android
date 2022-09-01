@@ -99,7 +99,7 @@ jobs:
                     path: app/build/outputs/bundle/release
 
             -   name: Sign APK
-                uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407
+                uses: r0adkll/sign-android-release@dbeba6b98a60b0fd540c02443c7f428cdedf0e7f
                 id: sign_apk
                 with:
                     releaseDirectory: app/build/outputs/apk/release
@@ -109,7 +109,7 @@ jobs:
                     keyPassword: ${{ secrets.KEY_PASSWORD }}
 
             -   name: Sign AAB
-                uses: r0adkll/sign-android-release@349ebdef58775b1e0d8099458af0816dc79b6407
+                uses: r0adkll/sign-android-release@dbeba6b98a60b0fd540c02443c7f428cdedf0e7f
                 id: sign_aab
                 with:
                     releaseDirectory: app/build/outputs/bundle/release
