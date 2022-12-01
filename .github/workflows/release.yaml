@@ -11,7 +11,7 @@ jobs:
         timeout-minutes: 10
         steps:
             -   name: Download artifacts from latest master workflow
-                uses: dawidd6/action-download-artifact@7847792dd435a50521b8e3bd3576dae7459d1fa8
+                uses: dawidd6/action-download-artifact@e6e25ac3a2b93187502a8be1ef9e9603afc34925
                 with:
                     github_token: ${{ secrets.GITHUB_TOKEN }}
                     workflow: master.yaml
