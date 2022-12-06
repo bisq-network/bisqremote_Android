@@ -61,7 +61,7 @@ jobs:
             #         sarif_file: snyk.sarif
 
             -   name: Upload reports
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
                 with:
                     name: Test-Reports
                     path: app/build/reports
@@ -104,7 +104,7 @@ jobs:
                 run: ./gradlew testDebugUnitTest
 
             -   name: Upload reports
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
                 with:
                     name: Test-Reports
                     path: app/build/reports
@@ -189,7 +189,7 @@ jobs:
                     script: mv .github/debug.keystore ~/.android; ./gradlew connectedDebugAndroidTest
 
             -   name: Upload reports
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
                 with:
                     name: Test-Reports
                     path: app/build/reports

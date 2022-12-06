@@ -60,21 +60,21 @@ jobs:
                 run: ./gradlew assembleRelease bundleRelease
 
             -   name: Upload VERSION
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
                 with:
                     name: VERSION
                     path: VERSION
                     if-no-files-found: error
 
             -   name: Upload unsigned APK
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
                 with:
                     name: bisq-release.apk
                     path: app/build/outputs/apk/release/bisq-release.apk
                     if-no-files-found: error
 
             -   name: Upload unsigned AAB
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
                 with:
                     name: bisq-release.aab
                     path: app/build/outputs/bundle/release/bisq-release.aab
@@ -119,13 +119,13 @@ jobs:
                     keyPassword: ${{ secrets.KEY_PASSWORD }}
 
             -   name: Upload signed APK
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
                 with:
                     name: bisq-release-signed.apk
                     path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
 
             -   name: Upload signed AAB
-                uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+                uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
                 with:
                     name: bisq-release-signed.aab
                     path: ${{ steps.sign_aab.outputs.signedReleaseFile }}
