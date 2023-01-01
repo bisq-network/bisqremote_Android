@@ -54,7 +54,7 @@ jobs:
                     key: ${{ runner.os }}-gradle-${{ env.CACHE_VERSION }}-${{ hashFiles('**/**.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
 
             -   name: Check Gradle wrapper
-                uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+                uses: gradle/wrapper-validation-action@55e685c48d84285a5b0418cd094606e199cca3b6
 
             -   name: Build the app
                 run: ./gradlew assembleRelease bundleRelease
