@@ -23,7 +23,7 @@ repositories {
     mavenCentral()
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
 
@@ -31,7 +31,7 @@ allprojects { project ->
     dependencyLocking {
         lockAllConfigurations()
     }
-    task resolveAndLockAll {
+    tasks.register('resolveAndLockAll') {
         doFirst {
             assert gradle.startParameter.writeDependencyLocks
         }
@@ -41,6 +41,15 @@ allprojects { project ->
                 it.canBeResolved
             }.each { it.resolve() }
         }
+    }
+}
+
+subprojects {
+    tasks.withType(Test).configureEach {
+        jvmArgs = jvmArgs + [
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/java.util=ALL-UNNAMED'
+        ]
     }
 }
 

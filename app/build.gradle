@@ -13,8 +13,8 @@ repositories {
 // This is primarily to be able to run unit and instrumented tests in GitHub workflows,
 // since google-services.json is unavailable and will cause the GoogleServices task to fail
 if (!project.file('google-services.json').exists()) {
-    android.applicationVariants.all { variant ->
-        def googleTask = tasks.findByName("process${variant.name.capitalize()}GoogleServices")
+    android.applicationVariants.configureEach { variant ->
+        def googleTask = tasks.named("process${variant.name.capitalize()}GoogleServices")
         googleTask.enabled = false
     }
 }
@@ -61,10 +61,18 @@ android {
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
+
     testOptions {
         animationsDisabled = true
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+
+        packagingOptions {
+            jniLibs {
+                useLegacyPackaging true
+            }
+        }
     }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -81,6 +89,15 @@ android {
                         output.outputFileName = name
                 }
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
