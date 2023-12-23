@@ -81,14 +81,6 @@ android {
                 }
         }
     }
-    sourceSets {
-        androidTest {
-            java.srcDirs += "$projectDir/src/testCommon/java"
-        }
-        test {
-            java.srcDirs += "$projectDir/src/testCommon/java"
-        }
-    }
 }
 
 dependencies {
@@ -135,6 +127,7 @@ dependencies {
     testImplementation 'org.powermock:powermock:1.6.5'
     testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
+    testImplementation(project(":testCommon"))
 
     androidTestImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test:core-ktx:1.4.0"

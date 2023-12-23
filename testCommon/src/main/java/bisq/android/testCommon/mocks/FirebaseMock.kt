@@ -15,7 +15,7 @@
  * along with Bisq. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bisq.android.mocks
+package bisq.android.testCommon.mocks
 
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -65,7 +65,7 @@ object FirebaseMock {
     fun mockFirebaseNotInitialized() {
         mockkStatic("com.google.firebase.messaging.FirebaseMessaging")
 
-        every { FirebaseMessaging.getInstance() } throws IllegalStateException()
+        every { FirebaseMessaging.getInstance() } throws IllegalStateException("")
     }
 
     fun mockGooglePlayServicesAvailable() {
