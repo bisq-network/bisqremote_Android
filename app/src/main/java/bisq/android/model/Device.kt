@@ -50,14 +50,15 @@ class Device private constructor() {
     var status: DeviceStatus = DeviceStatus.UNPAIRED
 
     private object Holder {
-        var INSTANCE = Device()
+        val INSTANCE = Device()
     }
 
     fun pairingToken(): String? {
-        return if (key != null) {
-            DEVICE_MAGIC_ANDROID + DEVICE_SEPARATOR + descriptor + DEVICE_SEPARATOR + key +
-                DEVICE_SEPARATOR + token
-        } else null
+        return if (token != null) {
+            DEVICE_MAGIC_ANDROID + DEVICE_SEPARATOR + descriptor + DEVICE_SEPARATOR + key + DEVICE_SEPARATOR + token
+        } else {
+            null
+        }
     }
 
     fun newToken(token: String) {
@@ -67,8 +68,7 @@ class Device private constructor() {
     }
 
     fun reset() {
-        key = null
-        token = null
+        key = generateKey()
         status = DeviceStatus.UNPAIRED
     }
 
