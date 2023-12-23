@@ -31,7 +31,6 @@ import java.util.Locale
 import java.util.TimeZone
 
 class DateUtilTest {
-
     private val dateUtil = DateUtil()
 
     companion object {

@@ -51,7 +51,7 @@ object QrUtil {
         for (y in 0 until bitMatrix.height) {
             val offset = y * bitMatrix.width
             for (x in 0 until bitMatrix.width) {
-                pixels[offset + x] = if (bitMatrix.get(x, y)) Color.BLACK else Color.WHITE
+                pixels[offset + x] = if (bitMatrix[x, y]) Color.BLACK else Color.WHITE
             }
         }
         return pixels

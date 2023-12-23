@@ -23,7 +23,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class StringExtTest {
-
     @Test
     fun testHexStringToByteArray() {
         val hexString = "ace24f2c3e0848bd9e57f6b415ca08df6ec7c22692bd48a296fe4044759e5eff"
