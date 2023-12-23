@@ -36,13 +36,13 @@ class PairingSuccessActivity : PairedBaseActivity() {
     private fun initView() {
         setContentView(R.layout.activity_pairing_success)
 
-        pairingCompleteButton = bind(R.id.pairing_complete_button)
+        pairingCompleteButton = bind(R.id.pairing_scan_pairing_complete_button)
         pairingCompleteButton.setOnClickListener {
-            onPairingCompleteButtonClick()
+            onPairingComplete()
         }
     }
 
-    private fun onPairingCompleteButtonClick() {
+    private fun onPairingComplete() {
         startActivity(Intent(Intent(this, NotificationTableActivity::class.java)))
     }
 }

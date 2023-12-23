@@ -43,7 +43,8 @@ object DialogBuilder {
         builder.setPositiveButton(positiveButtonText, positiveActionListener)
         if (negativeActionListener != null) {
             builder.setNegativeButton(
-                negativeButtonText, negativeActionListener
+                negativeButtonText,
+                negativeActionListener
             )
         } else {
             builder.setNegativeButton(
@@ -78,7 +79,8 @@ object DialogBuilder {
         builder.setCancelable(false)
         if (actionListener != null) {
             builder.setPositiveButton(
-                buttonText, actionListener
+                buttonText,
+                actionListener
             )
         } else {
             builder.setPositiveButton(

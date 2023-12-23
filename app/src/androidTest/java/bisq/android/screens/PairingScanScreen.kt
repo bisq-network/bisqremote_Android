@@ -21,6 +21,5 @@ import bisq.android.R
 import bisq.android.screens.elements.ButtonElement
 
 class PairingScanScreen : Screen() {
-
-    val noWebcamButton = ButtonElement(R.id.noWebcamButton)
+    val noWebcamButton = ButtonElement(R.id.pairing_scan_no_webcam_button)
 }

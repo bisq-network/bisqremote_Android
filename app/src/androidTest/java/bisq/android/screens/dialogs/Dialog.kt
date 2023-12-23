@@ -17,6 +17,8 @@
 
 package bisq.android.screens.dialogs
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -24,7 +26,8 @@ import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withText
 
-open class Dialog(private val message: String) {
+abstract class Dialog(private val message: String) {
+    protected val applicationContext: Context = ApplicationProvider.getApplicationContext()
 
     fun isDisplayed(): Boolean {
         return try {

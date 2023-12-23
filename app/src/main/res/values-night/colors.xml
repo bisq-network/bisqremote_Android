@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#25B135</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#00530F</color>
+    <color name="on_primary_container">#FFFFFF</color>
+    <color name="primary_accent">#DDDDDD</color>
+    <color name="primary_dark">#25B135</color>
+    <color name="primary_disabled">#A2DA8D</color>
+
+    <color name="secondary">#BACCB3</color>
+    <color name="on_secondary">#253423</color>
+    <color name="secondary_container">#2B2B2B</color>
+    <color name="on_secondary_container">#CBCBCB</color>
+    <color name="secondary_accent">#DDDDDD</color>
+    <color name="secondary_disabled">#8E8E8E</color>
+
+    <color name="background">#262626</color>
+    <color name="on_background">#F2F2F2</color>
+    <color name="on_background_subtle">#585858</color>
+
+    <color name="surface">#262626</color>
+    <color name="on_surface">#F2F2F2</color>
+
+    <color name="error">#FFB4AB</color>
+    <color name="on_error">#690005</color>
+    <color name="error_container">#93000A</color>
+    <color name="on_error_container">#FFDAD6</color>
+
+    <color name="unread_notification">#FFFFFF</color>
+    <color name="read_notification">#808080</color>
+</resources>

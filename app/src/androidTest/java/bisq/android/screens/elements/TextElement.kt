@@ -26,8 +26,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import org.hamcrest.Matcher
 
-class TextElement(private val id: Int) : Element(id) {
-
+class TextElement(private val id: Int) : ElementById(id) {
     fun getText(): String {
         var text = String()
         Espresso.onView(ViewMatchers.withId(id)).perform(object : ViewAction {

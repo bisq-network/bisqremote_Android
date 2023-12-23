@@ -1,4 +1,26 @@
 <resources>
+    <string name="app_name">Bisq</string>
+
+    <string name="theme">Theme</string>
+
+    <string name="theme_preferences_key">theme_preferences_key</string>
+    <string name="reset_pairing_preferences_key">reset_pairing_preferences_key</string>
+    <string name="scan_pairing_token_preferences_key">scan_pairing_token_preferences_key</string>
+    <string name="about_bisq_preferences_key">about_bisq_preferences_key</string>
+    <string name="about_app_preferences_key">about_app_preferences_key</string>
+    <string name="version_preferences_key">version_preferences_key</string>
+
+    <string name="dark_theme_preference_value">0</string>
+    <string name="light_theme_preference_value">1</string>
+    <string name="system_theme_preference_value">2</string>
+
+    <string name="dark_theme">Dark</string>
+    <string name="light_theme">Light</string>
+    <string name="system_theme">System default</string>
+
+    <string name="dark_theme_description">Dark mode</string>
+    <string name="light_theme_description">Light mode</string>
+    <string name="system_theme_description">System default</string>
 
     <string name="default_notification_channel_id">bisq.notification</string>
     <string name="notification_receiver_action">bisq.notification</string>
@@ -12,11 +34,17 @@
     <string name="button_learn_more">Learn more</string>
     <string name="button_reset_pair_again">Reset and pair again</string>
     <string name="button_show_notifications">Show notifications</string>
-    <string name="button_about_this_app">About this application</string>
-    <string name="button_about_bisq">About Bisq</string>
+
     <string name="button_add_example_notifications">Add example notifications</string>
     <string name="button_mark_as_read">Mark all as read</string>
     <string name="button_delete_notifications">Delete all notifications</string>
+    <string name="button_delete_notification">Delete</string>
+
+    <string name="reset_pairing">Reset Pairing</string>
+    <string name="reset_and_pair_again">Reset and pair the application again</string>
+    <string name="pairing_token">Pairing Token</string>
+    <string name="about_this_app">About this application</string>
+    <string name="about_bisq">About Bisq</string>
 
     <string name="icon_unknown">\uf059</string>
     <string name="icon_trade">\uf362</string>
@@ -37,12 +65,13 @@
     <string name="notifications">Notifications</string>
     <string name="settings">Settings</string>
     <string name="unknown">Unknown</string>
+    <string name="confirm">Confirm</string>
 
-    <string name="welcome_text">Since Bisq is a desktop-based application, this app enables you to receive important notifications such as trade updates and offer alerts when you are not near your computer.\n\nThe first step is to pair this app to your Bisq desktop application…</string>
+    <string name="welcome_text">Receive important notifications from your Bisq desktop application, such as trade updates and offer alerts.\n\nYou must first pair this app to your Bisq desktop application…</string>
     <string name="scan_pairing_instructions_text">In order to pair this app, you need to scan the above QR code, which contains your pairing token, from your Bisq desktop application using a webcam.\n\nIn Bisq, select Account -&gt; Notifications and press "Scan QR code".</string>
-    <string name="send_pairing_token">Send Pairing Token</string>
+    <string name="scan_pairing_token">Scan Pairing Token</string>
     <string name="send_pairing_subject">Bisq pairing token</string>
-    <string name="send_pairing_instructions_text">If you are unable to scan the QR code, you can instead send the pairing token to yourself (e.g. via email).\n\nMake sure to keep the pairing token private. It contains your encryption key (AES/CBC/NOPadding with initialization vector) which is used by the Bisq desktop application to encrypt notifications and a token from Google that identifies this device.\n\nOnce you have the token, open the Bisq desktop application and go to Account -&gt; Notifications. Then paste/enter the token into the pairing token field. This app will then be paired and take you to the success screen.</string>
+    <string name="send_pairing_instructions_text">If you are unable to scan the QR code, you can instead send the pairing token to yourself (e.g. via email).\n\nMake sure to keep the pairing token private. It contains your encryption key (AES/CBC/NOPadding with initialization vector) which is used by the Bisq desktop application to encrypt notifications and a token from Google that identifies this device.\n\nOnce you have the token, open the Bisq desktop application and go to Account -&gt; Notifications. Then paste/enter the token into the pairing token field. Upon entering the token, this app should then be paired and progress to the next screen automatically.</string>
     <string name="pairing_success_text">Success!\n\nThis app is now paired to your Bisq desktop application.</string>
 
     <string name="google_play_services_unavailable">Google Play services are unavailable. This app will not work without it.</string>
@@ -51,8 +80,11 @@
 
     <string name="qr_placeholder_text">-- QR Code --</string>
 
-    <string name="load_web_page_text">This will load %1$s. Do you want to proceed?</string>
+    <string name="load_web_page_confirmation">The following web page will be loaded. Do you want to proceed?\n\n%1$s</string>
     <string name="cannot_launch_browser">Unable to launch web browser</string>
+
+    <string name="register_again_confirmation">Are you sure you want to reset and pair again? This will delete all notifications.</string>
+    <string name="delete_all_notifications_confirmation">Are you sure you want to delete all notifications?</string>
 
     <string name="key">Key %1$s</string>
     <string name="token">Token %1$s</string>
