@@ -43,13 +43,14 @@ def getVersionName = { ->
 
 android {
     namespace 'bisq.android'
-    compileSdkVersion 32
+    compileSdk 34
+
     defaultConfig {
         applicationId "com.joachimneumann.bisq"
         versionCode getVersionCode()
         versionName getVersionName()
-        minSdkVersion 21
-        targetSdkVersion 32
+        minSdkVersion 23
+        targetSdkVersion 34
         multiDexEnabled true
         setProperty("archivesBaseName", "bisq")
 
