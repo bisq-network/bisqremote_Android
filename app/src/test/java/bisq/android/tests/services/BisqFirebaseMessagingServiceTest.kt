@@ -17,14 +17,16 @@
 
 package bisq.android.tests.services
 
-import bisq.android.mocks.FirebaseMock
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.services.BisqFirebaseMessagingService.Companion.fetchFcmToken
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isFirebaseMessagingInitialized
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isGooglePlayServicesAvailable
 import bisq.android.services.BisqFirebaseMessagingService.Companion.refreshFcmToken
+import bisq.android.testCommon.mocks.FirebaseMock
 import io.mockk.mockk
+import org.hamcrest.MatcherAssert
+import org.hamcrest.Matchers
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -35,7 +37,6 @@ import org.junit.Ignore
 import org.junit.Test
 
 class BisqFirebaseMessagingServiceTest {
-
     @After
     fun cleanup() {
         FirebaseMock.unmockFirebaseMessaging()
@@ -70,7 +71,7 @@ class BisqFirebaseMessagingServiceTest {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
         Device.instance.reset()
         fetchFcmToken()
-        assertNull(Device.instance.key)
+        MatcherAssert.assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
         assertNull(Device.instance.token)
         assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
@@ -84,7 +85,7 @@ class BisqFirebaseMessagingServiceTest {
         fetchFcmToken {
             invokeCount++
         }
-        assertNull(Device.instance.key)
+        MatcherAssert.assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
         assertNull(Device.instance.token)
         assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
 

@@ -23,20 +23,19 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.UUID
 
 class DeviceTest {
-
     private var token = generateToken()
 
     @Test
     fun testResetDevice() {
+        Device.instance.newToken(token)
         Device.instance.reset()
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
+        assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
+        assertEquals(token, Device.instance.token)
         assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
@@ -61,9 +60,15 @@ class DeviceTest {
     }
 
     @Test
-    fun testGetEmptyPairingToken() {
+    fun testGetPairingTokenAfterReset() {
         Device.instance.reset()
-        assertNull(Device.instance.pairingToken())
+        assertEquals(
+            Device.DEVICE_MAGIC_ANDROID +
+                Device.DEVICE_SEPARATOR + Device.instance.descriptor +
+                Device.DEVICE_SEPARATOR + Device.instance.key +
+                Device.DEVICE_SEPARATOR + Device.instance.token,
+            Device.instance.pairingToken()
+        )
     }
 
     @Test
@@ -85,9 +90,11 @@ class DeviceTest {
     @Test
     fun testFromInvalidString() {
         Device.instance.newToken(token)
-        assertFalse(Device.instance.fromString("android|Manufacturer Model|invalidKey|invalidToken"))
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
+        assertFalse(
+            Device.instance.fromString("android|Manufacturer Model|invalidKey|invalidToken")
+        )
+        assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
+        assertEquals(token, Device.instance.token)
         assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
@@ -95,8 +102,8 @@ class DeviceTest {
     fun testFromEmptyString() {
         Device.instance.newToken(token)
         assertFalse(Device.instance.fromString(""))
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
+        assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
+        assertEquals(token, Device.instance.token)
         assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
     }
 
