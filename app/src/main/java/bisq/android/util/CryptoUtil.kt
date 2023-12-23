@@ -37,9 +37,7 @@ class CryptoUtil(private val key: String) {
     private var cipher: Cipher? = null
 
     init {
-        if (key.length != KEY_LENGTH) {
-            throw IllegalArgumentException("Key is not $KEY_LENGTH characters")
-        }
+        require(key.length == KEY_LENGTH) { "Key is not $KEY_LENGTH characters" }
         cipher = Cipher.getInstance("AES/CBC/NOPadding")
     }
 
@@ -61,9 +59,7 @@ class CryptoUtil(private val key: String) {
 
     @Throws(IllegalArgumentException::class, CryptoException::class)
     fun encrypt(valueToEncrypt: String, iv: String): String {
-        if (iv.length != IV_LENGTH) {
-            throw IllegalArgumentException("Initialization vector is not $IV_LENGTH characters")
-        }
+        require(iv.length == IV_LENGTH) { "Initialization vector is not $IV_LENGTH characters" }
         var paddedValueToEncrypt = valueToEncrypt
         while (paddedValueToEncrypt.length % IV_LENGTH != 0) {
             paddedValueToEncrypt = "$paddedValueToEncrypt "
@@ -76,9 +72,7 @@ class CryptoUtil(private val key: String) {
 
     @Throws(IllegalArgumentException::class, CryptoException::class)
     fun decrypt(valueToDecrypt: String, iv: String): String {
-        if (iv.length != IV_LENGTH) {
-            throw IllegalArgumentException("Initialization vector is not $IV_LENGTH characters")
-        }
+        require(iv.length == IV_LENGTH) { "Initialization vector is not $IV_LENGTH characters" }
         ivSpec = IvParameterSpec(iv.toByteArray())
         val decryptedBytes = decryptInternal(valueToDecrypt, ivSpec!!)
         return String(decryptedBytes!!)
@@ -86,9 +80,7 @@ class CryptoUtil(private val key: String) {
 
     @Throws(IllegalArgumentException::class, CryptoException::class)
     private fun encryptInternal(text: String?, ivSpec: IvParameterSpec): ByteArray? {
-        if (text == null || text.isEmpty()) {
-            throw IllegalArgumentException("Empty string")
-        }
+        require(!text.isNullOrEmpty()) { "Empty string" }
         val encrypted: ByteArray?
         @Suppress("SwallowedException", "TooGenericExceptionCaught")
         try {
@@ -102,9 +94,7 @@ class CryptoUtil(private val key: String) {
 
     @Throws(IllegalArgumentException::class, CryptoException::class)
     private fun decryptInternal(codeBase64: String?, ivSpec: IvParameterSpec): ByteArray? {
-        if (codeBase64 == null || codeBase64.isEmpty()) {
-            throw IllegalArgumentException("Empty string")
-        }
+        require(!codeBase64.isNullOrEmpty()) { "Empty string" }
         val decrypted: ByteArray?
         @Suppress("SwallowedException", "TooGenericExceptionCaught")
         try {

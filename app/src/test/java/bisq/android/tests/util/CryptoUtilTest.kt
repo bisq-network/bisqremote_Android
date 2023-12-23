@@ -28,7 +28,6 @@ import org.junit.Test
 import java.util.UUID
 
 class CryptoUtilTest {
-
     private var key = generateKey()
     private var iv = generateValidIV()
     private var crypto = CryptoUtil(key)
@@ -53,11 +52,12 @@ class CryptoUtilTest {
     @Test
     fun testEncryptDecryptRandomString() {
         val charPool: List<Char> = (' '..'~').toList()
-        val valueToEncrypt = (1..kotlin.random.Random.nextInt(10, 256))
-            .map { kotlin.random.Random.nextInt(0, charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
-            .trim()
+        val valueToEncrypt =
+            (1..kotlin.random.Random.nextInt(10, 256))
+                .map { kotlin.random.Random.nextInt(0, charPool.size) }
+                .map(charPool::get)
+                .joinToString("")
+                .trim()
         var expectedDecryptedValue = valueToEncrypt
         while (expectedDecryptedValue.length % 16 != 0) {
             expectedDecryptedValue = "$expectedDecryptedValue "

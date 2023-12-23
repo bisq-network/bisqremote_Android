@@ -36,7 +36,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(BitmapFactory::class, Bitmap::class)
 class QrUtilTest {
-
     @Mock
     private val bitmap: Bitmap? = null
 
@@ -67,10 +66,11 @@ class QrUtilTest {
     fun testCreateQrImageWithTooLongContents() {
         val charPool: List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
         val stringLength = 10000
-        val randomString = (1000..stringLength)
-            .map { kotlin.random.Random.nextInt(0, charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
+        val randomString =
+            (1000..stringLength)
+                .map { kotlin.random.Random.nextInt(0, charPool.size) }
+                .map(charPool::get)
+                .joinToString("")
         QrUtil.createQrImage(randomString)
     }
 }

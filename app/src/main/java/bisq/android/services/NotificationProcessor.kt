@@ -40,7 +40,8 @@ object NotificationProcessor {
         try {
             val notificationMessage = parseNotificationContent(notificationContent)
             val decryptedNotificationPayload = decryptNotificationPayload(
-                notificationMessage.encryptedPayload, notificationMessage.initializationVector
+                notificationMessage.encryptedPayload,
+                notificationMessage.initializationVector
             )
             val bisqNotification = deserializeNotificationPayload(decryptedNotificationPayload)
             bisqNotification.receivedDate = Date().time
@@ -69,7 +70,7 @@ object NotificationProcessor {
         val initializationVector = array[1]
         val encryptedPayload = array[2]
         if (magicValue != BISQ_MESSAGE_ANDROID_MAGIC) {
-            throw ParseException("Invalid magic value", 0)
+            throw ParseException("Invalid magic value [$magicValue]", 0)
         }
         if (initializationVector.length != CryptoUtil.IV_LENGTH) {
             throw ParseException(
@@ -85,11 +86,10 @@ object NotificationProcessor {
     fun decryptNotificationPayload(encryptedPayload: String, initializationVector: String): String {
         @Suppress("TooGenericExceptionCaught")
         try {
-            if (Device.instance.key == null) {
-                throw IllegalStateException("Device key is null")
-            }
+            checkNotNull(Device.instance.key) { "Device key is null" }
             return CryptoUtil(Device.instance.key!!).decrypt(
-                encryptedPayload, initializationVector
+                encryptedPayload,
+                initializationVector
             )
         } catch (e: Throwable) {
             when (e) {

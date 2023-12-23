@@ -95,8 +95,7 @@ class Device private constructor() {
 
     @Suppress("ThrowsCount")
     fun fromString(s: String): Boolean {
-        val a = s.split(DEVICE_SEPARATOR_ESCAPED.toRegex())
-            .dropLastWhile { it.isEmpty() }
+        val a = s.split(DEVICE_SEPARATOR_ESCAPED.toRegex()).dropLastWhile { it.isEmpty() }
             .toTypedArray()
         try {
             if (a.size != PAIRING_TOKEN_SEGMENTS) {
@@ -116,8 +115,7 @@ class Device private constructor() {
             }
             if (a[PAIRING_TOKEN_MAGIC_INDEX] != DEVICE_MAGIC_ANDROID) {
                 throw IOException(
-                    "Invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format;" +
-                        " incorrect device magic value"
+                    "Invalid $BISQ_SHARED_PREFERENCE_PAIRING_TOKEN format;" + " incorrect device magic value"
                 )
             }
             key = a[PAIRING_TOKEN_KEY_INDEX]
@@ -136,22 +134,33 @@ class Device private constructor() {
         val model = Build.MODEL
         return if (model.startsWith(manufacturer)) {
             model.capitalizeEachWord()
-        } else manufacturer.capitalizeEachWord() + " " + model
+        } else {
+            manufacturer.capitalizeEachWord() + " " + model
+        }
     }
 
     fun isEmulator(): Boolean {
         val emulatorHardware = listOf(
-            "goldfish", "ranchu"
+            "goldfish",
+            "ranchu"
         )
         val emulatorModels = listOf(
-            "google_sdk", "Emulator", "Android SDK built for x86"
+            "google_sdk",
+            "Emulator",
+            "Android SDK built for x86"
         )
         val emulatorManufacturers = listOf(
             "Genymotion"
         )
         val emulatorProducts = listOf(
-            "sdk_google", "google_sdk", "sdk", "sdk_x86", "sdk_gphone64_arm64",
-            "vbox86p", "emulator", "simulator"
+            "sdk_google",
+            "google_sdk",
+            "sdk",
+            "sdk_x86",
+            "sdk_gphone64_arm64",
+            "vbox86p",
+            "emulator",
+            "simulator"
         )
         return (
             Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic") ||

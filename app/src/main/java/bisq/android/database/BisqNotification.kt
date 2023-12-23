@@ -17,7 +17,6 @@
 
 package bisq.android.database
 
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -27,7 +26,6 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class BisqNotification(
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     @SerializedName("uid")
     var uid: Int = 0,
 

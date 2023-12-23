@@ -35,7 +35,6 @@ import java.util.Date
 import java.util.UUID
 
 class NotificationProcessorTest {
-
     private var token = generateToken()
     private var iv = generateValidIV()
 
@@ -46,9 +45,10 @@ class NotificationProcessorTest {
 
     @Test
     fun testParseValidNotificationContent() {
-        val notificationMessage = NotificationProcessor.parseNotificationContent(
-            "$BISQ_MESSAGE_ANDROID_MAGIC|$iv|encryptedPayload"
-        )
+        val notificationMessage =
+            NotificationProcessor.parseNotificationContent(
+                "$BISQ_MESSAGE_ANDROID_MAGIC|$iv|encryptedPayload"
+            )
         assertEquals(BISQ_MESSAGE_ANDROID_MAGIC, notificationMessage.magicValue)
         assertEquals(iv, notificationMessage.initializationVector)
         assertEquals("encryptedPayload", notificationMessage.encryptedPayload)
