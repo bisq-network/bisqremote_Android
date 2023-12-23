@@ -29,7 +29,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class PairingSuccessTest : BaseTest() {
-
     @Before
     override fun setup() {
         super.setup()

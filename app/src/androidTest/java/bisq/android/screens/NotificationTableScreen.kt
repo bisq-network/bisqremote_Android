@@ -18,11 +18,21 @@
 package bisq.android.screens
 
 import bisq.android.R
-import bisq.android.screens.elements.ButtonElement
+import bisq.android.screens.dialogs.ChoicePromptDialog
+import bisq.android.screens.elements.MenuItemElement
 import bisq.android.screens.elements.RecyclerViewElement
 
 class NotificationTableScreen : Screen() {
-
-    val settingsButton = ButtonElement(R.id.action_settings)
-    val notificationRecylerView = RecyclerViewElement(R.id.notification_recycler_view)
+    val addExampleNotificationsMenuItem =
+        MenuItemElement(applicationContext.resources.getString(R.string.button_add_example_notifications))
+    val markAllAsReadMenuItem =
+        MenuItemElement(applicationContext.resources.getString(R.string.button_mark_as_read))
+    val deleteAllMenuItem =
+        MenuItemElement(applicationContext.resources.getString(R.string.button_delete_notifications))
+    val settingsMenuItem =
+        MenuItemElement(applicationContext.resources.getString(R.string.settings))
+    val notificationRecylerView = RecyclerViewElement(R.id.notification_table_recycler_view)
+    val alertDialogDeleteAll = ChoicePromptDialog(
+        applicationContext.resources.getString(R.string.delete_all_notifications_confirmation)
+    )
 }

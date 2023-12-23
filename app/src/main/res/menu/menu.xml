@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="200"
-        android:title="@string/settings"
-        app:showAsAction="ifRoom" />
+    <group android:id="@+id/debug">
+        <item
+            android:id="@+id/action_add_example_notifications"
+            android:title="@string/button_add_example_notifications" />
+    </group>
+    <group android:id="@+id/notifications">
+        <item
+            android:id="@+id/action_mark_all_read"
+            android:title="@string/button_mark_as_read" />
+        <item
+            android:id="@+id/action_delete_all"
+            android:title="@string/button_delete_notifications" />
+    </group>
+    <group android:id="@+id/settings">
+        <item
+            android:id="@+id/action_settings"
+            android:title="@string/settings" />
+    </group>
 </menu>

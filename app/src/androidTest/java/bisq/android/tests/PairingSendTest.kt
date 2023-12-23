@@ -31,11 +31,11 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class PairingSendTest : BaseTest() {
-
     @Test
     fun clickSendPairingTokenButton() {
         Device.instance.newToken(
-            "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEpLHGbLSFBN3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_"
+            "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEp" +
+                "LHGbLSFBN3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_"
         )
         ActivityScenario.launch(PairingSendActivity::class.java).use {
             pairingSendScreen.sendPairingTokenButton.click()

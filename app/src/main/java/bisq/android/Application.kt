@@ -19,7 +19,9 @@ package bisq.android
 
 import android.content.Context
 import android.content.pm.PackageManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
+import bisq.android.ui.ThemeProvider
 
 class Application : MultiDexApplication() {
     init {
@@ -44,5 +46,11 @@ class Application : MultiDexApplication() {
             }
             return version.toString()
         }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        val theme = ThemeProvider(this).getThemeFromPreferences()
+        AppCompatDelegate.setDefaultNightMode(theme)
     }
 }

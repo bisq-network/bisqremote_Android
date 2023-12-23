@@ -28,7 +28,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class PairingScanTest : BaseTest() {
-
     @Test
     fun clickNoWebcamButtonLoadsPairingSendActivity() {
         ActivityScenario.launch(PairingScanActivity::class.java).use {

@@ -18,14 +18,10 @@
 package bisq.android.ui
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.content.IntentFilter
 import android.media.RingtoneManager
-import android.net.Uri
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import bisq.android.R
@@ -41,7 +37,6 @@ open class BaseActivity : AppCompatActivity() {
     private var intentReceiver: IntentReceiver? = null
 
     fun <T : View> Activity.bind(@IdRes res: Int): T {
-        @Suppress("UNCHECKED_CAST")
         return findViewById(res)
     }
 
@@ -120,21 +115,5 @@ open class BaseActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e(TAG, "Unable to play notification tone", e)
         }
-    }
-
-    protected fun loadWebPage(uri: String) {
-        DialogBuilder.choicePrompt(
-            this, getString(R.string.warning), getString(R.string.load_web_page_text, uri),
-            getString(R.string.yes), getString(R.string.no),
-            { _, _ ->
-                try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri)))
-                } catch (ignored: ActivityNotFoundException) {
-                    Toast.makeText(
-                        this, getString(R.string.cannot_launch_browser), Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        ).show()
     }
 }

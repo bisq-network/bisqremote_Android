@@ -30,14 +30,19 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import bisq.android.R
 import bisq.android.database.BisqNotification
+import bisq.android.model.Device
+import bisq.android.model.NotificationType
+import bisq.android.ui.DialogBuilder
 import bisq.android.ui.PairedBaseActivity
 import bisq.android.ui.settings.SettingsActivity
+import java.util.Date
 
 @Suppress("TooManyFunctions")
 class NotificationTableActivity : PairedBaseActivity() {
@@ -69,10 +74,10 @@ class NotificationTableActivity : PairedBaseActivity() {
     private fun initView() {
         setContentView(R.layout.activity_notification_table)
 
-        toolbar = bind(R.id.bisq_toolbar)
+        toolbar = bind(R.id.notification_table_toolbar)
         setSupportActionBar(toolbar)
 
-        recyclerView = bind(R.id.notification_recycler_view)
+        recyclerView = bind(R.id.notification_table_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val swipeHandler = object : SwipeToDeleteCallback(this) {
@@ -105,22 +110,50 @@ class NotificationTableActivity : PairedBaseActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        val a = Intent(Intent.ACTION_MAIN)
-        a.addCategory(Intent.CATEGORY_HOME)
-        a.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(a)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+        MenuCompat.setGroupDividerEnabled(menu, true)
+        if (Device.instance.isEmulator()) {
+            menu.setGroupVisible(R.id.debug, true)
+        } else {
+            menu.setGroupVisible(R.id.debug, false)
+        }
+        viewModel.bisqNotifications.observe(this) { bisqNotifications ->
+            if (bisqNotifications.isEmpty()) {
+                menu.setGroupEnabled(R.id.notifications, false)
+            } else {
+                menu.setGroupEnabled(R.id.notifications, true)
+            }
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.action_settings) {
-            startActivity(Intent(this, SettingsActivity::class.java))
+        when (item.itemId) {
+            R.id.action_add_example_notifications -> {
+                addExampleNotifications()
+            }
+
+            R.id.action_mark_all_read -> {
+                viewModel.markAllAsRead()
+            }
+
+            R.id.action_delete_all -> {
+                DialogBuilder.choicePrompt(
+                    this,
+                    getString(R.string.confirm),
+                    getString(R.string.delete_all_notifications_confirmation),
+                    getString(R.string.yes),
+                    getString(R.string.no),
+                    { _, _ ->
+                        viewModel.nukeTable()
+                    }
+                ).show()
+            }
+
+            R.id.action_settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
+            }
         }
         return true
     }
@@ -138,6 +171,54 @@ class NotificationTableActivity : PairedBaseActivity() {
         val llm = recyclerView.layoutManager as LinearLayoutManager
         scrollFirstVisibleItemPosition = llm.findFirstVisibleItemPosition()
         scrollLastVisibleItemPosition = llm.findLastVisibleItemPosition()
+    }
+
+    @Suppress("MagicNumber")
+    private fun addExampleNotifications() {
+        for (counter in 1..5) {
+            val now = Date()
+            val bisqNotification = BisqNotification()
+            bisqNotification.receivedDate = now.time + counter * 1000
+            bisqNotification.sentDate = bisqNotification.receivedDate - 1000 * 30
+            when (counter) {
+                1 -> {
+                    bisqNotification.type = NotificationType.TRADE.name
+                    bisqNotification.title = "Trade confirmed"
+                    bisqNotification.message = "The trade with ID 38765384 is confirmed."
+                }
+
+                2 -> {
+                    bisqNotification.type = NotificationType.OFFER.name
+                    bisqNotification.title = "Offer taken"
+                    bisqNotification.message = "Your offer with ID 39847534 was taken"
+                }
+
+                3 -> {
+                    bisqNotification.type = NotificationType.DISPUTE.name
+                    bisqNotification.title = "Dispute message"
+                    bisqNotification.actionRequired = "Please contact the arbitrator"
+                    bisqNotification.message =
+                        "You received a dispute message for trade with ID 34059340"
+                    bisqNotification.txId = "34059340"
+                }
+
+                4 -> {
+                    bisqNotification.type = NotificationType.PRICE.name
+                    bisqNotification.title = "Price alert for United States Dollar"
+                    bisqNotification.message = "Your price alert got triggered. The current" +
+                        " United States Dollar price is 35351.08 BTC/USD"
+                }
+
+                5 -> {
+                    bisqNotification.type = NotificationType.MARKET.name
+                    bisqNotification.title = "New offer"
+                    bisqNotification.message = "A new offer offer with price 36000 USD" +
+                        " (1% above market price) and payment method Zelle was published to" +
+                        " the Bisq offerbook.\nThe offer ID is 34534"
+                }
+            }
+            viewModel.insert(bisqNotification)
+        }
     }
 }
 

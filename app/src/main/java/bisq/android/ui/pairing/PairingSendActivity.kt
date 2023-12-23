@@ -38,19 +38,19 @@ class PairingSendActivity : UnpairedBaseActivity() {
     private fun initView() {
         setContentView(R.layout.activity_pairing_send)
 
-        sendPairingTokenInstructions = bind(R.id.sendPairingTokenInstructions)
+        sendPairingTokenInstructions = bind(R.id.pairing_send_pairing_token_instructions)
 
-        sendPairingTokenButton = bind(R.id.sendPairingTokenButton)
+        sendPairingTokenButton = bind(R.id.pairing_send_pairing_token_button)
         sendPairingTokenButton.setOnClickListener {
-            onSendPairingTokenButtonClick()
+            onSendPairingToken()
         }
     }
 
-    private fun onSendPairingTokenButtonClick() {
+    private fun onSendPairingToken() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/html"
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.send_pairing_subject))
         intent.putExtra(Intent.EXTRA_TEXT, Device.instance.pairingToken())
-        startActivity(Intent.createChooser(intent, getString(R.string.send_pairing_token)))
+        startActivity(Intent.createChooser(intent, getString(R.string.scan_pairing_token)))
     }
 }

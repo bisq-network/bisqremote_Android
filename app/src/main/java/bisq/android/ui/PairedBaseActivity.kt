@@ -36,7 +36,9 @@ open class PairedBaseActivity : BaseActivity() {
         this.runOnUiThread {
             playTone()
             Toast.makeText(
-                this, toastMessage, Toast.LENGTH_LONG
+                this,
+                toastMessage,
+                Toast.LENGTH_LONG
             ).show()
             startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
         }

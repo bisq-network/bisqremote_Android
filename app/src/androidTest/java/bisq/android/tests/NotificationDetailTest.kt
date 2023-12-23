@@ -32,7 +32,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class NotificationDetailTest : BaseTest() {
-
     @Before
     override fun setup() {
         super.setup()
@@ -42,11 +41,10 @@ class NotificationDetailTest : BaseTest() {
     @Test
     fun notificationDetailsArePopulatedCorrectly() {
         ActivityScenario.launch(NotificationTableActivity::class.java).use {
-            notificationTableScreen.settingsButton.click()
-            settingsScreen.addExampleNotificationsButton.click()
+            notificationTableScreen.addExampleNotificationsMenuItem.click()
             notificationTableScreen.notificationRecylerView.clickAtPosition(2)
             Intents.intended(IntentMatchers.hasComponent(NotificationDetailActivity::class.java.name))
-            assertEquals("(example) Dispute message", notificationDetailScreen.title.getText())
+            assertEquals("Dispute message", notificationDetailScreen.title.getText())
             assertEquals(
                 "You received a dispute message for trade with ID 34059340",
                 notificationDetailScreen.message.getText()
@@ -60,6 +58,19 @@ class NotificationDetailTest : BaseTest() {
                 notificationDetailScreen.receivedTime.getText(),
                 matchesPattern("Event received: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
             )
+        }
+    }
+
+    @Test
+    fun clickDeleteButtonDeletesNotification() {
+        ActivityScenario.launch(NotificationTableActivity::class.java).use {
+            notificationTableScreen.addExampleNotificationsMenuItem.click()
+            val countBeforeSwipe = notificationTableScreen.notificationRecylerView.getItemCount()
+            notificationTableScreen.notificationRecylerView.clickAtPosition(0)
+            Intents.intended(IntentMatchers.hasComponent(NotificationDetailActivity::class.java.name))
+            notificationDetailScreen.deleteButton.click()
+            val countAfterDelete = notificationTableScreen.notificationRecylerView.getItemCount()
+            assertEquals(countBeforeSwipe - 1, countAfterDelete)
         }
     }
 }

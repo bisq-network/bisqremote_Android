@@ -22,8 +22,11 @@ import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import bisq.android.ui.notification.NotificationAdapter
 import bisq.android.ui.notification.NotificationDetailActivity
 import bisq.android.ui.notification.NotificationTableActivity
+import bisq.android.ui.settings.SettingsActivity
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -31,7 +34,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class NotificationTableTest : BaseTest() {
-
     @Before
     override fun setup() {
         super.setup()
@@ -41,8 +43,7 @@ class NotificationTableTest : BaseTest() {
     @Test
     fun clickNotificationLoadsNotificationDetailActivity() {
         ActivityScenario.launch(NotificationTableActivity::class.java).use {
-            notificationTableScreen.settingsButton.click()
-            settingsScreen.addExampleNotificationsButton.click()
+            notificationTableScreen.addExampleNotificationsMenuItem.click()
             notificationTableScreen.notificationRecylerView.clickAtPosition(0)
             Intents.intended(IntentMatchers.hasComponent(NotificationDetailActivity::class.java.name))
         }
@@ -51,15 +52,13 @@ class NotificationTableTest : BaseTest() {
     @Test
     fun viewedNotificationIsMarkedAsRead() {
         ActivityScenario.launch(NotificationTableActivity::class.java).use {
-            notificationTableScreen.settingsButton.click()
-            settingsScreen.addExampleNotificationsButton.click()
-            var readState =
-                notificationTableScreen.notificationRecylerView.getReadStateAtPosition(0)
+            notificationTableScreen.addExampleNotificationsMenuItem.click()
+            var readState = getContentAtPosition(0).read
             assertEquals(false, readState)
             notificationTableScreen.notificationRecylerView.clickAtPosition(0)
             Intents.intended(IntentMatchers.hasComponent(NotificationDetailActivity::class.java.name))
             pressBack()
-            readState = notificationTableScreen.notificationRecylerView.getReadStateAtPosition(0)
+            readState = getContentAtPosition(0).read
             assertEquals(true, readState)
         }
     }
@@ -67,10 +66,9 @@ class NotificationTableTest : BaseTest() {
     @Test
     fun swipeToDeleteNotificationDeletesNotification() {
         ActivityScenario.launch(NotificationTableActivity::class.java).use {
-            notificationTableScreen.settingsButton.click()
-            settingsScreen.addExampleNotificationsButton.click()
+            notificationTableScreen.addExampleNotificationsMenuItem.click()
             val countBeforeSwipe = notificationTableScreen.notificationRecylerView.getItemCount()
-            notificationTableScreen.notificationRecylerView.swipeToDeleteAtPosition(0)
+            notificationTableScreen.notificationRecylerView.swipeRightToLeftAtPosition(0)
             val countAfterSwipe = notificationTableScreen.notificationRecylerView.getItemCount()
             assertEquals(countBeforeSwipe - 1, countAfterSwipe)
         }
@@ -80,8 +78,7 @@ class NotificationTableTest : BaseTest() {
     fun scrollPositionIsRetainedWhenNavigatingBack() {
         ActivityScenario.launch(NotificationTableActivity::class.java).use {
             for (counter in 1..5) {
-                notificationTableScreen.settingsButton.click()
-                settingsScreen.addExampleNotificationsButton.click()
+                notificationTableScreen.addExampleNotificationsMenuItem.click()
             }
             notificationTableScreen.notificationRecylerView.scrollToPosition(
                 notificationTableScreen.notificationRecylerView.getItemCount() - 1
@@ -98,5 +95,73 @@ class NotificationTableTest : BaseTest() {
                 notificationTableScreen.notificationRecylerView.getScrollPosition()
             )
         }
+    }
+
+    @Test
+    fun clickDeleteAllNotificationsMenuItemAndNotAcceptingConfirmationDoesNotDeleteNotifications() {
+        ActivityScenario.launch(NotificationTableActivity::class.java).use {
+            notificationTableScreen.addExampleNotificationsMenuItem.click()
+
+            val itemCount = notificationTableScreen.notificationRecylerView.getItemCount()
+
+            Assert.assertTrue(itemCount > 0)
+
+            notificationTableScreen.deleteAllMenuItem.click()
+            Assert.assertTrue(notificationTableScreen.alertDialogDeleteAll.isDisplayed())
+
+            notificationTableScreen.alertDialogDeleteAll.negativeButton.click()
+
+            assertEquals(itemCount, notificationTableScreen.notificationRecylerView.getItemCount())
+        }
+    }
+
+    @Test
+    fun clickDeleteAllNotificationsMenuItemAndAcceptingConfirmationDeletesAllNotifications() {
+        ActivityScenario.launch(NotificationTableActivity::class.java).use {
+            notificationTableScreen.addExampleNotificationsMenuItem.click()
+
+            Assert.assertTrue(notificationTableScreen.notificationRecylerView.getItemCount() > 0)
+
+            notificationTableScreen.deleteAllMenuItem.click()
+            Assert.assertTrue(notificationTableScreen.alertDialogDeleteAll.isDisplayed())
+
+            notificationTableScreen.alertDialogDeleteAll.positiveButton.click()
+
+            Assert.assertTrue(notificationTableScreen.notificationRecylerView.getItemCount() == 0)
+        }
+    }
+
+    @Test
+    fun clickMarkAsReadMenuItemMarksAllNotificationsAsRead() {
+        ActivityScenario.launch(NotificationTableActivity::class.java).use {
+            notificationTableScreen.addExampleNotificationsMenuItem.click()
+
+            val count = notificationTableScreen.notificationRecylerView.getItemCount()
+            for (position in 0 until count - 1) {
+                val readState = getContentAtPosition(position).read
+                assertEquals(false, readState)
+            }
+
+            notificationTableScreen.markAllAsReadMenuItem.click()
+
+            for (position in 0 until count - 1) {
+                val readState = getContentAtPosition(position).read
+                assertEquals(true, readState)
+            }
+        }
+    }
+
+    @Test
+    fun clickSettingsMenuItemLoadsSettingsActivity() {
+        ActivityScenario.launch(NotificationTableActivity::class.java).use {
+            notificationTableScreen.settingsMenuItem.click()
+            Intents.intended(IntentMatchers.hasComponent(SettingsActivity::class.java.name))
+        }
+    }
+
+    private fun getContentAtPosition(position: Int): NotificationAdapter.NotificationViewHolder {
+        val viewHolder =
+            notificationTableScreen.notificationRecylerView.getContentAtPosition(position)
+        return viewHolder as NotificationAdapter.NotificationViewHolder
     }
 }
