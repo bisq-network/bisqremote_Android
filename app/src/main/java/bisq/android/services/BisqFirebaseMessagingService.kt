@@ -207,7 +207,9 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             Device.instance.clearPreferences(this)
             Device.instance.status = DeviceStatus.NEEDS_REPAIR
             Device.instance.newToken(newToken)
-            startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
+            val intent = Intent(this, WelcomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
         }
     }
 }

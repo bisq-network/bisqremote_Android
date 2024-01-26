@@ -117,7 +117,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 viewModel.nukeTable()
                 Device.instance.status = DeviceStatus.ERASED
                 BisqFirebaseMessagingService.refreshFcmToken()
-                startActivity(Intent(context, WelcomeActivity::class.java))
+                val intent = Intent(context, WelcomeActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
             }
         ).show()
     }

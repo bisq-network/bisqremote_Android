@@ -28,7 +28,9 @@ open class PairedBaseActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         if (Device.instance.status != DeviceStatus.PAIRED) {
-            startActivity(Intent(this, WelcomeActivity::class.java))
+            val intent = Intent(this, WelcomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
         }
     }
 
@@ -40,7 +42,9 @@ open class PairedBaseActivity : BaseActivity() {
                 toastMessage,
                 Toast.LENGTH_LONG
             ).show()
-            startActivity(Intent(Intent(this, WelcomeActivity::class.java)))
+            val intent = Intent(this, WelcomeActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
         }
     }
 }
