@@ -18,6 +18,7 @@
 package bisq.android.tests
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
@@ -33,9 +34,11 @@ import bisq.android.screens.NotificationTableScreen
 import bisq.android.screens.PairingScanScreen
 import bisq.android.screens.PairingSendScreen
 import bisq.android.screens.PairingSuccessScreen
+import bisq.android.screens.RequestNotificationPermissionScreen
 import bisq.android.screens.SettingsScreen
 import bisq.android.screens.WelcomeScreen
 import org.junit.After
+import org.junit.Assume
 import org.junit.Before
 import java.util.Locale
 
@@ -52,6 +55,7 @@ abstract class BaseTest {
     protected val pairingScanScreen = PairingScanScreen()
     protected val pairingSendScreen = PairingSendScreen()
     protected val pairingSuccessScreen = PairingSuccessScreen()
+    protected val requestNotificationPermissionScreen = RequestNotificationPermissionScreen()
     protected val notificationDetailScreen = NotificationDetailScreen()
     protected val notificationTableScreen = NotificationTableScreen()
 
@@ -103,12 +107,26 @@ abstract class BaseTest {
         Intents.release()
     }
 
-    fun pairDevice() {
+    protected fun pairDevice() {
         val token =
             "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEpLHGbLSFBN" +
                 "3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_"
         Device.instance.newToken(token)
         Device.instance.status = DeviceStatus.PAIRED
         Device.instance.saveToPreferences(applicationContext)
+    }
+
+    protected fun assumeMaxApiLevel(apiLevel: Int) {
+        Assume.assumeTrue(
+            "API level $apiLevel or older is required",
+            Build.VERSION.SDK_INT < apiLevel
+        )
+    }
+
+    protected fun assumeMinApiLevel(apiLevel: Int) {
+        Assume.assumeTrue(
+            "API level $apiLevel or newer is required",
+            Build.VERSION.SDK_INT >= apiLevel
+        )
     }
 }

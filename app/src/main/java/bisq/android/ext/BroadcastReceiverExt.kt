@@ -34,7 +34,7 @@ fun BroadcastReceiver.goAsync(
             block()
         } finally {
             // Always call finish(), even if the coroutineScope was cancelled
-            result.finish()
+            result?.finish()
         }
     }
 }

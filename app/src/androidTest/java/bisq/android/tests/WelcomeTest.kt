@@ -127,7 +127,6 @@ class WelcomeTest : BaseTest() {
 
     @Test
     fun clickLearnMoreButtonAndNotAcceptingConfirmationDoesNotLoadBisqMobileWebpage() {
-        FirebaseMock.mockFirebaseTokenSuccessful()
         intending(hasAction(Intent.ACTION_VIEW)).respondWith(
             Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
         )
@@ -155,7 +154,6 @@ class WelcomeTest : BaseTest() {
 
     @Test
     fun clickLearnMoreButtonAndAcceptingConfirmationLoadsBisqMobileWebpage() {
-        FirebaseMock.mockFirebaseTokenSuccessful()
         intending(hasAction(Intent.ACTION_VIEW)).respondWith(
             Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
         )

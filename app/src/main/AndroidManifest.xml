@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".Application"
         android:allowBackup="true"
@@ -20,10 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="bisq.android.ui.pairing.PairingSendActivity" />
         <activity android:name="bisq.android.ui.pairing.PairingScanActivity" />
-        <activity android:name="bisq.android.ui.settings.SettingsActivity" />
+        <activity android:name="bisq.android.ui.pairing.PairingSendActivity" />
         <activity android:name="bisq.android.ui.pairing.PairingSuccessActivity" />
+        <activity android:name="bisq.android.ui.pairing.RequestNotificationPermissionActivity" />
+        <activity android:name="bisq.android.ui.settings.SettingsActivity" />
         <activity android:name="bisq.android.ui.notification.NotificationTableActivity" />
         <activity android:name="bisq.android.ui.notification.NotificationDetailActivity" />
 
@@ -52,7 +55,6 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
-
     </application>
 
 </manifest>
