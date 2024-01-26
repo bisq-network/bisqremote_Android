@@ -17,12 +17,15 @@
 
 package bisq.android.services
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import bisq.android.Application
 import bisq.android.R
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
+import bisq.android.ui.notification.NotificationSender
 import bisq.android.ui.welcome.WelcomeActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -128,17 +131,58 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
+    /*
+     * Firebase notifications behave differently depending on the foreground/background state of the receiving app
+     * and whether the message contains notification data or not.
+     * For more details, see https://firebase.google.com/docs/cloud-messaging/android/receive.
+     */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Log.i(TAG, "Message received")
         super.onMessageReceived(remoteMessage)
-        val notificationMessage = remoteMessage.data["encrypted"]
-        if (notificationMessage != null) {
-            Log.i(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
+
+        val encryptedData = remoteMessage.data["encrypted"]
+        if (encryptedData == null) {
+            Log.w(TAG, "Message does not contain encrypted data; ${remoteMessage.data}")
+            return
+        }
+
+        if (remoteMessage.notification != null) {
+            // If the message contains notification data, then this method is only called while the app is in
+            // the foreground. Since the app is running and the NotificationReceiver should be registered, only
+            // need to broadcast the notification so the NotificationReceiver can process it.
+            Log.i(
+                TAG,
+                "Notification message received, broadcasting " + getString(R.string.notification_receiver_action)
+            )
             Intent().also { broadcastIntent ->
                 broadcastIntent.action = getString(R.string.notification_receiver_action)
                 broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
-                broadcastIntent.putExtra("encrypted", notificationMessage)
+                broadcastIntent.putExtra("encrypted", encryptedData)
                 sendBroadcast(broadcastIntent)
+            }
+        } else {
+            // Otherwise, if the message does not contain notification data, then this method is called when the app
+            // is in the foreground or background. The NotificationReceiver may not be registered if the app is in the
+            // background, so cannot simply broadcast the notification. Instead, send it directly to the
+            // NotificationReceiver.
+            Log.i(TAG, "Data message received")
+
+            Intent().also { notificationIntent ->
+                notificationIntent.putExtra(
+                    "encrypted",
+                    encryptedData
+                )
+                NotificationReceiver().onReceive(Application.applicationContext(), notificationIntent)
+            }
+
+            // Since this is a data-only message, will need to show a notification if the app is not in the foreground
+            val myProcess = ActivityManager.RunningAppProcessInfo()
+            ActivityManager.getMyMemoryState(myProcess)
+            val isInBackground = myProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+            if (isInBackground) {
+                // TODO show relevant message details for the title and text
+                //  (will need to decrypt the data)
+                NotificationSender.sendNotification(getString(R.string.you_have_received_notification), null)
             }
         }
     }

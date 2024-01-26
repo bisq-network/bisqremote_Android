@@ -17,6 +17,7 @@
 
 package bisq.android.testCommon.mocks
 
+import android.os.Build
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.tasks.OnCompleteListener
@@ -27,8 +28,11 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkStatic
+import org.junit.Assume.assumeTrue
 
 object FirebaseMock {
+    private const val FIREBASE_MESSAGING_CLASS = "com.google.firebase.messaging.FirebaseMessaging"
+    private const val GOOGLE_API_AVAILABILITY_CLASS = "com.google.android.gms.common.GoogleApiAvailability"
 
     fun mockFirebaseTokenSuccessful() {
         val firebaseMessagingMock = mockFirebaseMessaging()
@@ -63,13 +67,17 @@ object FirebaseMock {
     }
 
     fun mockFirebaseNotInitialized() {
-        mockkStatic("com.google.firebase.messaging.FirebaseMessaging")
+        checkStaticMockingSupport()
+
+        mockkStatic(FIREBASE_MESSAGING_CLASS)
 
         every { FirebaseMessaging.getInstance() } throws IllegalStateException("")
     }
 
     fun mockGooglePlayServicesAvailable() {
-        mockkStatic("com.google.android.gms.common.GoogleApiAvailability")
+        checkStaticMockingSupport()
+
+        mockkStatic(GOOGLE_API_AVAILABILITY_CLASS)
 
         val googleApiAvailabilityMock = mockk<GoogleApiAvailability>()
         every { GoogleApiAvailability.getInstance() } returns googleApiAvailabilityMock
@@ -78,7 +86,9 @@ object FirebaseMock {
     }
 
     fun mockGooglePlayServicesNotAvailable() {
-        mockkStatic("com.google.android.gms.common.GoogleApiAvailability")
+        checkStaticMockingSupport()
+
+        mockkStatic(GOOGLE_API_AVAILABILITY_CLASS)
 
         val googleApiAvailabilityMock = mockk<GoogleApiAvailability>()
         every { GoogleApiAvailability.getInstance() } returns googleApiAvailabilityMock
@@ -87,12 +97,13 @@ object FirebaseMock {
     }
 
     fun unmockFirebaseMessaging() {
-        unmockkStatic("com.google.firebase.messaging.FirebaseMessaging")
-        unmockkStatic("com.google.android.gms.common.GoogleApiAvailability")
+        unmockkStatic(FIREBASE_MESSAGING_CLASS, GOOGLE_API_AVAILABILITY_CLASS)
     }
 
     private fun mockFirebaseMessaging(): FirebaseMessaging {
-        mockkStatic("com.google.firebase.messaging.FirebaseMessaging")
+        checkStaticMockingSupport()
+
+        mockkStatic(FIREBASE_MESSAGING_CLASS)
 
         val firebaseMessagingMock = mockk<FirebaseMessaging>()
         every { FirebaseMessaging.getInstance() } returns firebaseMessagingMock
@@ -104,7 +115,9 @@ object FirebaseMock {
         mockGetTokenTask: Task<String>,
         mockDeleteTokenTask: Task<Void>
     ) {
-        mockkStatic("com.google.firebase.messaging.FirebaseMessaging")
+        checkStaticMockingSupport()
+
+        mockkStatic(FIREBASE_MESSAGING_CLASS)
 
         val slotGetTokenListener = slot<OnCompleteListener<String>>()
         val slotDeleteTokenListener = slot<OnCompleteListener<Void>>()
@@ -121,5 +134,12 @@ object FirebaseMock {
             slotDeleteTokenListener.captured.onComplete(mockDeleteTokenTask)
             mockDeleteTokenTask
         }
+    }
+
+    private fun checkStaticMockingSupport() {
+        assumeTrue(
+            "API level 28 or newer is required for static mocking",
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        )
     }
 }

@@ -37,6 +37,8 @@ import org.junit.Ignore
 import org.junit.Test
 
 class BisqFirebaseMessagingServiceTest {
+    // TODO add tests for notification vs data messages
+
     @After
     fun cleanup() {
         FirebaseMock.unmockFirebaseMessaging()

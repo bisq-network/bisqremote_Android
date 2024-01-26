@@ -62,6 +62,7 @@ class NotificationTableActivity : PairedBaseActivity() {
         initView()
     }
 
+    // TODO perhaps should close all data-only notifications
     override fun onStart() {
         super.onStart()
         viewModel.bisqNotifications.observe(this) { bisqNotifications ->

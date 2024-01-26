@@ -15,15 +15,14 @@
  * along with Bisq. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bisq.android.util
+package bisq.android.screens
 
-object TextUtil {
-    private const val TRUNCATE_AFTER = 10
+import bisq.android.R
+import bisq.android.screens.dialogs.PermissionPrompt
+import bisq.android.screens.elements.ButtonElement
 
-    fun truncateSensitiveText(text: String?): String {
-        if (text == null) {
-            return ""
-        }
-        return text.substring(0, TRUNCATE_AFTER) + "..."
-    }
+class RequestNotificationPermissionScreen : Screen() {
+    val enableNotificationsButton = ButtonElement(R.id.request_notification_permission_button)
+    val skipPermissionButton = ButtonElement(R.id.skip_request_notification_permission_button)
+    val permissionPrompt = PermissionPrompt()
 }

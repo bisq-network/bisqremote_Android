@@ -69,6 +69,8 @@ class WelcomeActivity : UnpairedBaseActivity() {
         }
     }
 
+    // TODO determine if this should check/request post notifications permission
+    //  in particular to handle the scenario where the app was updated while already paired
     override fun onStart() {
         super.onStart()
 
@@ -78,6 +80,7 @@ class WelcomeActivity : UnpairedBaseActivity() {
             DeviceStatus.PAIRED -> {
                 startActivity(Intent(this, NotificationTableActivity::class.java))
             }
+
             DeviceStatus.NEEDS_REPAIR -> {
                 Toast.makeText(
                     this,
@@ -86,6 +89,7 @@ class WelcomeActivity : UnpairedBaseActivity() {
                 ).show()
                 Device.instance.status = DeviceStatus.UNPAIRED
             }
+
             DeviceStatus.REMOTE_ERASED -> {
                 Toast.makeText(
                     this,
@@ -94,6 +98,7 @@ class WelcomeActivity : UnpairedBaseActivity() {
                 ).show()
                 Device.instance.status = DeviceStatus.UNPAIRED
             }
+
             else -> {
                 // Do nothing
             }
@@ -196,6 +201,8 @@ class WelcomeActivity : UnpairedBaseActivity() {
     }
 
     private fun maybeProcessOpenedNotification() {
+        // TODO ensure the corresponding notification detail activity is loaded
+        //  for both notification and data messages
         val extras = intent.extras
         if (extras != null) {
             Log.i(TAG, "Processing opened notification")

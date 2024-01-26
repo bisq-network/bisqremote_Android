@@ -13,10 +13,9 @@ android {
     compileSdk 34
 
     defaultConfig {
-        minSdk 23
+        minSdk 26
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -43,4 +42,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.4.0'
 
     implementation "io.mockk:mockk:1.12.3"
+    implementation 'junit:junit:4.13.2'
 }
