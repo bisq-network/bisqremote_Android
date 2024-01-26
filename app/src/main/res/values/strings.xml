@@ -79,6 +79,7 @@
 
     <string name="welcome_text">Receive important notifications from your Bisq desktop application, such as trade updates and offer alerts.\n\nYou must first pair this app to your Bisq desktop application…</string>
     <string name="scan_pairing_instructions_text">In order to pair this app, you need to scan the above QR code, which contains your pairing token, from your Bisq desktop application using a webcam.\n\nIn Bisq, select Account -&gt; Notifications and press "Scan QR code".</string>
+    <string name="send_pairing_token">Send Pairing Token</string>
     <string name="scan_pairing_token">Scan Pairing Token</string>
     <string name="send_pairing_subject">Bisq pairing token</string>
     <string name="send_pairing_instructions_text">If you are unable to scan the QR code, you can instead send the pairing token to yourself (e.g. via email).\n\nMake sure to keep the pairing token private. It contains your encryption key (AES/CBC/NOPadding with initialization vector) which is used by the Bisq desktop application to encrypt notifications and a token from Google that identifies this device.\n\nOnce you have the token, open the Bisq desktop application and go to Account -&gt; Notifications. Then paste/enter the token into the pairing token field. Upon entering the token, this app should then be paired and progress to the next screen automatically.</string>
