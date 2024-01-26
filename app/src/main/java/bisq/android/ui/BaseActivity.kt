@@ -19,6 +19,7 @@ package bisq.android.ui
 
 import android.app.Activity
 import android.content.IntentFilter
+import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.util.Log
 import android.view.View
@@ -111,7 +112,7 @@ open class BaseActivity : AppCompatActivity() {
         try {
             val notificationTone =
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            RingtoneManager.getRingtone(applicationContext, notificationTone).play()
+            MediaPlayer.create(applicationContext, notificationTone).start()
         } catch (e: Exception) {
             Log.e(TAG, "Unable to play notification tone", e)
         }
