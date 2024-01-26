@@ -87,7 +87,7 @@
     <string name="pairing_request_notification_permission_text">Get notified!\n\nDon\'t miss an update by allowing the app to send you notifications.</string>
 
     <string name="google_play_services_unavailable">Google Play services are unavailable. This app will not work without it.</string>
-    <string name="cannot_retrieve_fcm_token">Unable to retrieve FCM token. Are you connected to the internet?</string>
+    <string name="cannot_retrieve_fcm_token">Unable to retrieve FCM token. Ensure network access is not blocked and an internet connection is available before trying again.</string>
     <string name="cannot_generate_qr_code">Failed to generate QR code</string>
 
     <string name="qr_placeholder_text">-- QR Code --</string>
