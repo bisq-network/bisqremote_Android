@@ -58,7 +58,7 @@ class PairingScanActivity : UnpairedBaseActivity() {
         }
 
         simulatePairingButton = bind(R.id.pairing_scan_simulate_pairing_button)
-        if (Device.instance.isEmulator() && Device.instance.status == DeviceStatus.UNPAIRED) {
+        if (Device.instance.isEmulator() && Device.instance.status != DeviceStatus.PAIRED) {
             simulatePairingButton.visibility = View.VISIBLE
         }
         simulatePairingButton.setOnClickListener {
