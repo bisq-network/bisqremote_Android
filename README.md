@@ -11,19 +11,18 @@ In order to pair the app and receive notifications, you will need to obtain an a
 [firebase documentation](https://firebase.google.com/docs/android/setup#add-config-file)
 for more information.
 
-## Updating Gradle Dependency Locks and Verification Metadata
+## Updating Dependencies
 
-Whenever dependencies are changed, it is necessary to update the following:
+Whenever dependencies are updated/changed, it is necessary to update the following:
 
-- `gradle/verification-metadata.xml` - this can be updated using the following command:
+- [gradle/verification-metadata.xml](gradle/verification-metadata.xml) - can be updated using the
+  following command:
 
 ```shell
-./gradlew --write-verification-metadata sha256 build :app:connectedDebugAndroidTest
+./gradlew --write-verification-metadata sha256 build :app:processDebugResources :app:connectedDebugAndroidTest
 ```
 
-> Using the `:app:connectedDebugAndroidTest` task ensures that all dependencies are updated.
-
-- `gradle.lockfile` - this can be updated using the following command:
+- [gradle.lockfile](gradle.lockfile) - can be updated using the following command:
 
 ```shell
 ./gradlew dependencies --write-locks
