@@ -10,15 +10,6 @@ repositories {
     mavenCentral()
 }
 
-// This is primarily to be able to run unit and instrumented tests in GitHub workflows,
-// since google-services.json is unavailable and will cause the GoogleServices task to fail
-if (!project.file('google-services.json').exists()) {
-    android.applicationVariants.configureEach { variant ->
-        def googleTask = tasks.named("process${variant.name.capitalize()}GoogleServices")
-        googleTask.enabled = false
-    }
-}
-
 Properties props = new Properties()
 props.load(new FileInputStream("$project.rootDir/version.properties"))
 props.each { prop ->
@@ -81,13 +72,20 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        applicationVariants.all {
-            variant ->
-                variant.outputs.each {
-                    output ->
-                        def name = "bisq-${variant.name}.apk"
-                        output.outputFileName = name
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                output.outputFileName = "bisq-${variant.name}.apk"
+            }
+
+            // This is necessary to be able to run unit and instrumented tests in GitHub workflows,
+            // since google-services.json is unavailable and will cause the GoogleServices task to fail
+            if (!project.file('google-services.json').exists()) {
+                tasks.all { Task task ->
+                    if (task.name.matches("process${variant.name.capitalize()}GoogleServices")) {
+                        task.enabled = false
+                    }
                 }
+            }
         }
     }
 
