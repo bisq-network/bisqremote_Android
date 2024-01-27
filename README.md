@@ -36,9 +36,9 @@ For information on the architectural design, refer to the
 
 ## Screenshots
 
-![Welcome](images/welcome.png)
-![Scan Pairing Code](images/scan_pairing_code.png)
-![Pairing Success](images/pairing_success.png)
-![Notification List](images/notification_list.png)
-![Offer Taken Details](images/offer_taken_details.png)
-![Settings](images/settings.png)
+<img alt="Welcome" src="images/welcome.png" width=40% height=40%>
+<img alt="Scan Pairing Code" src="images/scan_pairing_code.png" width=40% height=40%>
+<img alt="Pairing Success" src="images/pairing_success.png" width=40% height=40%>
+<img alt="Notification List" src="images/notification_list.png" width=40% height=40%>
+<img alt="Offer Taken Details" src="images/offer_taken_details.png" width=40% height=40%>
+<img alt="Settings" src="images/settings.png" width=40% height=40%>
