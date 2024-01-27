@@ -4,10 +4,18 @@ Since Bisq is a desktop-based application, this Android app enables you to pair 
 application and receive important notifications such as trade updates and offer alerts when you are
 not near your computer.
 
-## Updating Gradle Verification Metadata
+## Prerequisites
 
-Whenever dependencies change, it is necessary to update the contents of
-`gradle/verification-metadata.xml`. This can be done automatically using the following command.
+In order to pair the app and receive notifications, you will need to obtain an appropriate
+`google-services.json` file and place it under the app/ directory. Refer to
+[firebase documentation](https://firebase.google.com/docs/android/setup#add-config-file)
+for more information.
+
+## Updating Gradle Dependency Locks and Verification Metadata
+
+Whenever dependencies are changed, it is necessary to update the following:
+
+- `gradle/verification-metadata.xml` - this can be updated using the following command:
 
 ```shell
 ./gradlew --write-verification-metadata sha256 build :app:connectedDebugAndroidTest
@@ -15,12 +23,11 @@ Whenever dependencies change, it is necessary to update the contents of
 
 > Using the `:app:connectedDebugAndroidTest` task ensures that all dependencies are updated.
 
-## How to Run
+- `gradle.lockfile` - this can be updated using the following command:
 
-In order to pair the app and receive notifications, you will need to create your own
-`google-services.json` file and place it under the app/ directory. Refer to
-[firebase documentation](https://firebase.google.com/docs/android/setup#add-config-file)
-for more information.
+```shell
+./gradlew dependencies --write-locks
+```
 
 ## Architectural Design
 
