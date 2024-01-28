@@ -23,12 +23,12 @@
     <Preference
         app:icon="@drawable/ic_bisq_mark"
         app:key="@string/about_bisq_preferences_key"
-        app:title="@string/about_bisq"></Preference>
+        app:title="@string/about_bisq" />
 
     <Preference
         app:icon="@drawable/ic_info_white_24"
         app:key="@string/about_app_preferences_key"
-        app:title="@string/about_this_app"></Preference>
+        app:title="@string/about_this_app" />
 
     <Preference
         app:enabled="false"
