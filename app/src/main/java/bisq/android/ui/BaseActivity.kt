@@ -21,6 +21,7 @@ import android.app.Activity
 import android.content.IntentFilter
 import android.media.MediaPlayer
 import android.media.RingtoneManager
+import android.os.Build
 import android.util.Log
 import android.view.View
 import androidx.annotation.IdRes
@@ -60,7 +61,11 @@ open class BaseActivity : AppCompatActivity() {
         notificationReceiver = NotificationReceiver()
         val filter = IntentFilter()
         filter.addAction(getString(R.string.notification_receiver_action))
-        registerReceiver(notificationReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(notificationReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(notificationReceiver, filter)
+        }
         Log.i(TAG, "Notification receiver registered")
     }
 
@@ -88,7 +93,11 @@ open class BaseActivity : AppCompatActivity() {
         intentReceiver = IntentReceiver(this)
         val filter = IntentFilter()
         filter.addAction(getString(R.string.intent_receiver_action))
-        registerReceiver(intentReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(intentReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(intentReceiver, filter)
+        }
         Log.i(TAG, "Intent receiver registered")
     }
 
