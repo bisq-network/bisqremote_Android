@@ -117,7 +117,7 @@ dependencies {
 
     implementation 'com.google.zxing:core:3.4.1'
 
-    implementation platform('com.google.firebase:firebase-bom:32.6.0')
+    implementation platform('com.google.firebase:firebase-bom:32.7.1')
     implementation 'com.google.firebase:firebase-analytics-ktx:21.5.0'
     implementation 'com.google.firebase:firebase-messaging:23.4.0'
 
@@ -141,7 +141,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'
-    testImplementation 'io.mockk:mockk:1.12.3'
+    testImplementation 'io.mockk:mockk:1.13.9'
     testImplementation 'org.powermock:powermock:1.6.5'
     testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
@@ -157,7 +157,7 @@ dependencies {
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
     androidTestImplementation 'org.awaitility:awaitility-kotlin:4.2.0'
-    androidTestImplementation 'io.mockk:mockk-android:1.12.3'
+    androidTestImplementation 'io.mockk:mockk-android:1.13.9'
     androidTestImplementation(project(":testCommon")) {
         exclude group: "io.mockk", module: "mockk"
     }
