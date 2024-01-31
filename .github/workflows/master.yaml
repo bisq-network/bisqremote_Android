@@ -21,7 +21,7 @@ jobs:
 
             -   name: Bump version
                 id: bump_version
-                uses: oflynned/Android-Semantic-Release@b9f6de7f8bdf25de3f695843265debf7c3919272
+                uses: oflynned/Android-Semantic-Release@c2a5e19a1239f4e1639f270ebd0aeb913438520d
                 env:
                     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
