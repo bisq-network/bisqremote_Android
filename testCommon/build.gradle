@@ -40,11 +40,11 @@ android {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.4")
+    detektPlugins('io.gitlab.arturbosch.detekt:detekt-formatting:1.23.4')
 
     implementation platform('com.google.firebase:firebase-bom:32.7.1')
     implementation 'com.google.firebase:firebase-messaging:23.4.0'
 
-    implementation "io.mockk:mockk:1.13.9"
+    implementation 'io.mockk:mockk:1.13.9'
     implementation 'junit:junit:4.13.2'
 }

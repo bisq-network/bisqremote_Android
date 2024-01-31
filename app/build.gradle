@@ -105,9 +105,9 @@ android {
 
 dependencies {
     implementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.4")
+    detektPlugins('io.gitlab.arturbosch.detekt:detekt-formatting:1.23.4')
 
-    implementation "androidx.core:core-ktx:1.12.0"
+    implementation 'androidx.core:core-ktx:1.12.0'
 
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
@@ -136,12 +136,12 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.7.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    implementation "androidx.multidex:multidex:2.0.1"
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.hamcrest:hamcrest:2.2'
@@ -149,10 +149,10 @@ dependencies {
     testImplementation 'org.powermock:powermock:1.6.5'
     testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
-    testImplementation(project(":testCommon"))
+    testImplementation(project(':testCommon'))
 
     androidTestImplementation 'junit:junit:4.13.2'
-    androidTestImplementation "androidx.test:core-ktx:1.5.0"
+    androidTestImplementation 'androidx.test:core-ktx:1.5.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -162,9 +162,9 @@ dependencies {
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
     androidTestImplementation 'org.awaitility:awaitility-kotlin:4.2.0'
     androidTestImplementation 'io.mockk:mockk-android:1.13.9'
-    androidTestImplementation(project(":testCommon")) {
+    androidTestImplementation(project(':testCommon')) {
         // Prevent conflict with mockk-android
-        exclude group: "io.mockk", module: "mockk"
+        exclude group: 'io.mockk', module: 'mockk'
     }
     androidTestImplementation 'org.objenesis:objenesis:3.3'
 
