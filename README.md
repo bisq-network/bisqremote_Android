@@ -11,6 +11,9 @@ In order to pair the app and receive notifications, you will need to obtain an a
 [firebase documentation](https://firebase.google.com/docs/android/setup#add-config-file)
 for more information.
 
+> Note, the `google-services.json` file needs to correspond to the `fcmServiceAccountKey.json`
+> used by the [bisq-relay](https://github.com/bisq-network/bisq-relay) service.
+
 ## Updating Dependencies
 
 Whenever dependencies are updated/changed, it is necessary to update the following:
