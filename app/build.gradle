@@ -1,9 +1,9 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'io.gitlab.arturbosch.detekt'
+apply plugin: 'kotlin-android'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 repositories {
     google()
@@ -132,7 +132,7 @@ dependencies {
     implementation 'androidx.room:room-ktx:2.6.1'
     implementation 'androidx.room:room-runtime:2.6.1'
     annotationProcessor 'androidx.room:room-compiler:2.6.1'
-    kapt 'androidx.room:room-compiler:2.6.1'
+    ksp 'androidx.room:room-compiler:2.6.1'
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
@@ -163,6 +163,7 @@ dependencies {
     androidTestImplementation 'org.awaitility:awaitility-kotlin:4.2.0'
     androidTestImplementation 'io.mockk:mockk-android:1.13.9'
     androidTestImplementation(project(":testCommon")) {
+        // Prevent conflict with mockk-android
         exclude group: "io.mockk", module: "mockk"
     }
     androidTestImplementation 'org.objenesis:objenesis:3.3'
