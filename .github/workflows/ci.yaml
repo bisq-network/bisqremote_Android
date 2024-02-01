@@ -63,7 +63,7 @@ jobs:
             -   name: Upload reports
                 uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
                 with:
-                    name: Test-Reports
+                    name: analyze-reports
                     path: app/build/reports
                 if: always()
 
@@ -106,7 +106,7 @@ jobs:
             -   name: Upload reports
                 uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
                 with:
-                    name: Test-Reports
+                    name: unit-tests-reports
                     path: app/build/reports
                 if: always()
 
@@ -196,6 +196,6 @@ jobs:
             -   name: Upload reports
                 uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
                 with:
-                    name: Test-Reports
+                    name: instrumentation-tests-reports-api${{ matrix.api-level }}
                     path: app/build/reports
                 if: always()
