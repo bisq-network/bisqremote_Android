@@ -38,7 +38,7 @@ import bisq.android.screens.RequestNotificationPermissionScreen
 import bisq.android.screens.SettingsScreen
 import bisq.android.screens.WelcomeScreen
 import org.junit.After
-import org.junit.Assume
+import org.junit.Assume.assumeTrue
 import org.junit.Before
 import java.util.Locale
 
@@ -117,14 +117,14 @@ abstract class BaseTest {
     }
 
     protected fun assumeMaxApiLevel(apiLevel: Int) {
-        Assume.assumeTrue(
+        assumeTrue(
             "API level $apiLevel or older is required",
             Build.VERSION.SDK_INT < apiLevel
         )
     }
 
     protected fun assumeMinApiLevel(apiLevel: Int) {
-        Assume.assumeTrue(
+        assumeTrue(
             "API level $apiLevel or newer is required",
             Build.VERSION.SDK_INT >= apiLevel
         )

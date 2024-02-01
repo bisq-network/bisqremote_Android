@@ -27,7 +27,7 @@ import bisq.android.services.NotificationProcessor
 import bisq.android.util.CryptoUtil
 import bisq.android.util.DateUtil
 import com.google.gson.GsonBuilder
-import org.junit.Assert.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.text.ParseException
@@ -49,9 +49,15 @@ class NotificationProcessorTest {
             NotificationProcessor.parseNotificationContent(
                 "$BISQ_MESSAGE_ANDROID_MAGIC|$iv|encryptedPayload"
             )
-        assertEquals(BISQ_MESSAGE_ANDROID_MAGIC, notificationMessage.magicValue)
-        assertEquals(iv, notificationMessage.initializationVector)
-        assertEquals("encryptedPayload", notificationMessage.encryptedPayload)
+        assertThat(notificationMessage.magicValue)
+            .describedAs("Magic value")
+            .isEqualTo(BISQ_MESSAGE_ANDROID_MAGIC)
+        assertThat(notificationMessage.initializationVector)
+            .describedAs("Initialization vector")
+            .isEqualTo(iv)
+        assertThat(notificationMessage.encryptedPayload)
+            .describedAs("Encrypted payload")
+            .isEqualTo("encryptedPayload")
     }
 
     @Test(expected = ParseException::class)
@@ -94,7 +100,9 @@ class NotificationProcessorTest {
         val decryptedPayload =
             NotificationProcessor.decryptNotificationPayload(encryptedPayload, iv)
 
-        assertEquals(payload, decryptedPayload)
+        assertThat(decryptedPayload)
+            .describedAs("Decrypted payload")
+            .isEqualTo(payload)
     }
 
     @Test(expected = DecryptingException::class)
@@ -121,11 +129,21 @@ class NotificationProcessorTest {
         val deserializedBisqNotification =
             NotificationProcessor.deserializeNotificationPayload(payload)
 
-        assertEquals(bisqNotification.type, deserializedBisqNotification.type)
-        assertEquals(bisqNotification.title, deserializedBisqNotification.title)
-        assertEquals(bisqNotification.message, deserializedBisqNotification.message)
-        assertEquals(bisqNotification.sentDate, deserializedBisqNotification.sentDate)
-        assertEquals(bisqNotification.receivedDate, deserializedBisqNotification.receivedDate)
+        assertThat(deserializedBisqNotification.type)
+            .describedAs("Notification type")
+            .isEqualTo(bisqNotification.type)
+        assertThat(deserializedBisqNotification.title)
+            .describedAs("Notification title")
+            .isEqualTo(bisqNotification.title)
+        assertThat(deserializedBisqNotification.message)
+            .describedAs("Notification message")
+            .isEqualTo(bisqNotification.message)
+        assertThat(deserializedBisqNotification.sentDate)
+            .describedAs("Notification sent date")
+            .isEqualTo(bisqNotification.sentDate)
+        assertThat(deserializedBisqNotification.receivedDate)
+            .describedAs("Notification received date")
+            .isEqualTo(bisqNotification.receivedDate)
     }
 
     private fun buildBisqNotification(): BisqNotification {
