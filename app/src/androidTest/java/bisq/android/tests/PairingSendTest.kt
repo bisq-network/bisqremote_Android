@@ -19,8 +19,8 @@ package bisq.android.tests
 
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.BundleMatchers
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.BundleMatchers.hasValue
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtras
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -39,12 +39,12 @@ class PairingSendTest : BaseTest() {
         )
         ActivityScenario.launch(PairingSendActivity::class.java).use {
             pairingSendScreen.sendPairingTokenButton.click()
-            Intents.intended(hasAction(Intent.ACTION_CHOOSER))
-            Intents.intended(
+            intended(hasAction(Intent.ACTION_CHOOSER))
+            intended(
                 hasExtras(
-                    BundleMatchers.hasValue(
+                    hasValue(
                         hasExtras(
-                            BundleMatchers.hasValue(Device.instance.pairingToken())
+                            hasValue(Device.instance.pairingToken())
                         )
                     )
                 )

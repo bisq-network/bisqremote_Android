@@ -19,7 +19,7 @@ package bisq.android.tests.ext
 
 import bisq.android.ext.capitalizeEachWord
 import bisq.android.ext.hexStringToByteArray
-import org.junit.Assert.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class StringExtTest {
@@ -27,28 +27,30 @@ class StringExtTest {
     fun testHexStringToByteArray() {
         val hexString = "ace24f2c3e0848bd9e57f6b415ca08df6ec7c22692bd48a296fe4044759e5eff"
         val bytearray = (hexString).hexStringToByteArray()
-        assertEquals(
-            "[-84, -30, 79, 44, 62, 8, 72, -67, -98, 87, -10, -76, 21, -54, 8, " +
-                "-33, 110, -57, -62, 38, -110, -67, 72, -94, -106, -2, 64, 68, 117, -98, 94, -1]",
-            bytearray.asList().toString()
-        )
+        assertThat(bytearray.asList().toString())
+            .isEqualTo(
+                "[-84, -30, 79, 44, 62, 8, 72, -67, -98, 87, -10, -76, 21, -54, 8, " +
+                    "-33, 110, -57, -62, 38, -110, -67, 72, -94, -106, -2, 64, 68, 117, -98, 94, -1]"
+            )
     }
 
     @Test
     fun testCapitalizeSingleWord() {
         val test = "testcapitalizestring".capitalizeEachWord()
-        assertEquals("Testcapitalizestring", test)
+        assertThat(test)
+            .isEqualTo("Testcapitalizestring")
     }
 
     @Test
     fun testCapitalizeMultipleWords() {
         val test = "test capitalize string".capitalizeEachWord()
-        assertEquals("Test Capitalize String", test)
+        assertThat(test)
+            .isEqualTo("Test Capitalize String")
     }
 
     @Test
     fun testCapitalizeEmptyString() {
         val test = "".capitalizeEachWord()
-        assertEquals("", test)
+        assertThat(test).isEmpty()
     }
 }

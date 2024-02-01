@@ -20,8 +20,7 @@ package bisq.android.tests.util
 import bisq.android.util.DateUtil
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assume.assumeFalse
 import org.junit.Assume.assumeTrue
 import org.junit.BeforeClass
@@ -43,75 +42,85 @@ class DateUtilTest {
 
     @Test
     fun testDefaultFormatReturnsFormattedString() {
-        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L))
+        assertThat(DateUtil.format(1651974403000L))
+            .isEqualTo("2022-05-08 01:46:43")
     }
 
     @Test
     fun testFormatWithSpecifiedLocaleReturnsFormattedString() {
-        assertEquals("2022-05-08 01:46:43", DateUtil.format(1651974403000L, Locale.GERMAN))
+        assertThat(DateUtil.format(1651974403000L, Locale.GERMAN))
+            .isEqualTo("2022-05-08 01:46:43")
     }
 
     @Test
     fun testFormatWithSpecifiedPatternReturnsFormattedString() {
-        assertEquals("08/05/2022", DateUtil.format(1651974403000L, pattern = "dd/MM/yyyy"))
+        assertThat(DateUtil.format(1651974403000L, pattern = "dd/MM/yyyy"))
+            .isEqualTo("08/05/2022")
     }
 
     @Test
     fun testFormatWithSpecifiedTimezoneReturnsFormattedString() {
         val tz = TimeZone.getTimeZone("Pacific/Galapagos") // UTC-6 always
-        assumeFalse(tz.inDaylightTime(Date()))
-        assertEquals("2022-05-07 19:46:43", DateUtil.format(1651974403000L, timezone = tz))
+        assumeFalse("In daylight time", tz.inDaylightTime(Date()))
+        assertThat(DateUtil.format(1651974403000L, timezone = tz))
+            .isEqualTo("2022-05-07 19:46:43")
     }
 
     @Test
     fun testFormatWithSpecifiedTimezoneDSTReturnsFormattedString() {
         val tz = TimeZone.getTimeZone("Europe/Helsinki") // UTC+3 when DST in effect
-        assumeTrue(tz.inDaylightTime(Date()))
-        assertEquals("2022-05-08 04:46:43", DateUtil.format(1651974403000L, timezone = tz))
+        assumeTrue("Not in daylight time", tz.inDaylightTime(Date()))
+        assertThat(DateUtil.format(1651974403000L, timezone = tz))
+            .isEqualTo("2022-05-08 04:46:43")
     }
 
     @Test
     fun testToDateReturnsDate() {
-        assertEquals(Date(1651974403000L), dateUtil.toDate(1651974403000L))
+        assertThat(dateUtil.toDate(1651974403000L))
+            .isEqualTo(Date(1651974403000L))
     }
 
     @Test
     fun testToDateWithNullParameterReturnsNull() {
-        assertEquals(null, dateUtil.toDate(null))
+        assertThat(dateUtil.toDate(null))
+            .isNull()
     }
 
     @Test
     fun testToLongReturnsLong() {
-        assertEquals(1651974403000L, dateUtil.toLong(Date(1651974403000L)))
+        assertThat(dateUtil.toLong(Date(1651974403000L)))
+            .isEqualTo(1651974403000L)
     }
 
     @Test
     fun testToLongWithNullParameterReturnsNull() {
-        assertEquals(null, dateUtil.toLong(null))
+        assertThat(dateUtil.toLong(null))
+            .isNull()
     }
 
     @Test
     fun testDeserializeReturnsDate() {
         val json = "{\"date\":\"2022-05-08 01:46:43\"}"
-        assertEquals(
-            Date(1651974403000L),
+        assertThat(
             dateUtil.deserialize(
                 Gson().fromJson(json, JsonObject::class.java).get("date"),
                 null,
                 null
             )
         )
+            .isEqualTo(Date(1651974403000L))
     }
 
     @Test
     fun testDeserializeInvalidDateReturnsNull() {
         val json = "{\"date\":\"invalid\"}"
-        assertNull(
+        assertThat(
             dateUtil.deserialize(
                 Gson().fromJson(json, JsonObject::class.java).get("date"),
                 null,
                 null
             )
         )
+            .isNull()
     }
 }

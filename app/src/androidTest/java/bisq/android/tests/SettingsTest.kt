@@ -37,6 +37,7 @@ import bisq.android.ui.pairing.PairingScanActivity
 import bisq.android.ui.settings.SettingsActivity
 import bisq.android.ui.welcome.WelcomeActivity
 import junit.framework.AssertionFailedError
+import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.Durations.TEN_SECONDS
 import org.awaitility.kotlin.atMost
 import org.awaitility.kotlin.await
@@ -44,10 +45,6 @@ import org.awaitility.kotlin.untilNotNull
 import org.hamcrest.core.AllOf
 import org.junit.After
 import org.junit.Assert
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,7 +67,9 @@ class SettingsTest : BaseTest() {
     fun clickThemePromptsToChangeTheme() {
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.themePreference.click()
-            assertTrue(settingsScreen.themePromptDialog.isDisplayed())
+            assertThat(settingsScreen.themePromptDialog.isDisplayed())
+                .describedAs("Theme prompt dialog is displayed")
+                .isTrue()
 
             settingsScreen.themePromptDialog.cancelButton.click()
             intended(IntentMatchers.hasComponent(SettingsActivity::class.java.name))
@@ -81,11 +80,15 @@ class SettingsTest : BaseTest() {
     fun clickDarkThemeChangesToDarkTheme() {
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.themePreference.click()
-            assertTrue(settingsScreen.themePromptDialog.isDisplayed())
+            assertThat(settingsScreen.themePromptDialog.isDisplayed())
+                .describedAs("Theme prompt dialog is displayed")
+                .isTrue()
 
             settingsScreen.themePromptDialog.darkThemeSelection.click()
 
-            assertEquals(UiModeManager.MODE_NIGHT_YES, AppCompatDelegate.getDefaultNightMode())
+            assertThat(AppCompatDelegate.getDefaultNightMode())
+                .describedAs("Night mode")
+                .isEqualTo(UiModeManager.MODE_NIGHT_YES)
         }
     }
 
@@ -93,11 +96,15 @@ class SettingsTest : BaseTest() {
     fun clickLightThemeChangesToLightTheme() {
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.themePreference.click()
-            assertTrue(settingsScreen.themePromptDialog.isDisplayed())
+            assertThat(settingsScreen.themePromptDialog.isDisplayed())
+                .describedAs("Theme prompt dialog is displayed")
+                .isTrue()
 
             settingsScreen.themePromptDialog.lightThemeSelection.click()
 
-            assertEquals(UiModeManager.MODE_NIGHT_NO, AppCompatDelegate.getDefaultNightMode())
+            assertThat(AppCompatDelegate.getDefaultNightMode())
+                .describedAs("Night mode")
+                .isEqualTo(UiModeManager.MODE_NIGHT_NO)
         }
     }
 
@@ -105,11 +112,15 @@ class SettingsTest : BaseTest() {
     fun clickSystemThemeChangesToSystemTheme() {
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.themePreference.click()
-            assertTrue(settingsScreen.themePromptDialog.isDisplayed())
+            assertThat(settingsScreen.themePromptDialog.isDisplayed())
+                .describedAs("Theme prompt dialog is displayed")
+                .isTrue()
 
             settingsScreen.themePromptDialog.systemThemeSelection.click()
 
-            assertEquals(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM, AppCompatDelegate.getDefaultNightMode())
+            assertThat(AppCompatDelegate.getDefaultNightMode())
+                .describedAs("Night mode")
+                .isEqualTo(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
     }
 
@@ -122,14 +133,22 @@ class SettingsTest : BaseTest() {
         val token = Device.instance.token
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.resetPairingPreference.click()
-            assertTrue(settingsScreen.alertDialogResetPairing.isDisplayed())
+            assertThat(settingsScreen.alertDialogResetPairing.isDisplayed())
+                .describedAs("Reset pairing alert dialog is displayed")
+                .isTrue()
 
             settingsScreen.alertDialogResetPairing.negativeButton.click()
 
             intended(IntentMatchers.hasComponent(SettingsActivity::class.java.name))
-            assertEquals(key, Device.instance.key)
-            assertEquals(token, Device.instance.token)
-            assertEquals(DeviceStatus.PAIRED, Device.instance.status)
+            assertThat(Device.instance.key)
+                .describedAs("Device key")
+                .isEqualTo(key)
+            assertThat(Device.instance.token)
+                .describedAs("Device token")
+                .isEqualTo(token)
+            assertThat(Device.instance.status)
+                .describedAs("Device status")
+                .isEqualTo(DeviceStatus.PAIRED)
         }
     }
 
@@ -142,17 +161,29 @@ class SettingsTest : BaseTest() {
         val token = Device.instance.token
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.resetPairingPreference.click()
-            assertTrue(settingsScreen.alertDialogResetPairing.isDisplayed())
+            assertThat(settingsScreen.alertDialogResetPairing.isDisplayed())
+                .describedAs("Reset pairing alert dialog is displayed")
+                .isTrue()
 
             settingsScreen.alertDialogResetPairing.positiveButton.click()
 
             intended(IntentMatchers.hasComponent(WelcomeActivity::class.java.name))
             await atMost TEN_SECONDS untilNotNull { Device.instance.key }
-            assertNotNull(Device.instance.key)
-            assertNotEquals(key, Device.instance.key)
-            assertNotNull(Device.instance.token)
-            assertNotEquals(token, Device.instance.token)
-            assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+            assertThat(Device.instance.key)
+                .describedAs("Device key")
+                .isNotNull()
+            assertThat(Device.instance.key)
+                .describedAs("Device key")
+                .isNotEqualTo(key)
+            assertThat(Device.instance.token)
+                .describedAs("Device token")
+                .isNotNull()
+            assertThat(Device.instance.token)
+                .describedAs("Device token")
+                .isNotEqualTo(token)
+            assertThat(Device.instance.status)
+                .describedAs("Device status")
+                .isEqualTo(DeviceStatus.UNPAIRED)
         }
     }
 
@@ -171,7 +202,9 @@ class SettingsTest : BaseTest() {
     fun clickAboutBisqAndNotAcceptingConfirmationDoesNotLoadBisqNetworkWebpage() {
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.aboutBisqPreference.click()
-            assertTrue(settingsScreen.alertDialogLoadBisqNetworkUrl.isDisplayed())
+            assertThat(settingsScreen.alertDialogLoadBisqNetworkUrl.isDisplayed())
+                .describedAs("Load Bisq Network URL alert dialog is displayed")
+                .isTrue()
 
             settingsScreen.alertDialogLoadBisqNetworkUrl.negativeButton.click()
 
@@ -199,7 +232,9 @@ class SettingsTest : BaseTest() {
             )
 
             settingsScreen.aboutBisqPreference.click()
-            assertTrue(settingsScreen.alertDialogLoadBisqNetworkUrl.isDisplayed())
+            assertThat(settingsScreen.alertDialogLoadBisqNetworkUrl.isDisplayed())
+                .describedAs("Load Bisq Network URL alert dialog is displayed")
+                .isTrue()
 
             settingsScreen.alertDialogLoadBisqNetworkUrl.positiveButton.click()
 
@@ -216,7 +251,9 @@ class SettingsTest : BaseTest() {
     fun clickAboutAppAndNotAcceptingConfirmationDoesNotLoadBisqMobileWebpage() {
         ActivityScenario.launch(SettingsActivity::class.java).use {
             settingsScreen.aboutAppPreference.click()
-            assertTrue(settingsScreen.alertDialogLoadBisqMobileUrl.isDisplayed())
+            assertThat(settingsScreen.alertDialogLoadBisqMobileUrl.isDisplayed())
+                .describedAs("Load Bisq mobile URL alert dialog is displayed")
+                .isTrue()
 
             settingsScreen.alertDialogLoadBisqMobileUrl.negativeButton.click()
 
@@ -244,7 +281,9 @@ class SettingsTest : BaseTest() {
             )
 
             settingsScreen.aboutAppPreference.click()
-            assertTrue(settingsScreen.alertDialogLoadBisqMobileUrl.isDisplayed())
+            assertThat(settingsScreen.alertDialogLoadBisqMobileUrl.isDisplayed())
+                .describedAs("Load Bisq mobile URL alert dialog is displayed")
+                .isTrue()
 
             settingsScreen.alertDialogLoadBisqMobileUrl.positiveButton.click()
 

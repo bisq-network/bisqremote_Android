@@ -22,15 +22,13 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import bisq.android.ui.notification.NotificationTableActivity
 import bisq.android.ui.pairing.RequestNotificationPermissionActivity
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.Matchers
-import org.junit.Assert
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -54,10 +52,12 @@ class RequestNotificationPermissionTest : BaseTest() {
                 IntentMatchers.hasExtra(
                     "android.content.pm.extra.REQUEST_PERMISSIONS_NAMES",
                     Matchers.hasItemInArray(Manifest.permission.POST_NOTIFICATIONS)
-                ),
+                )
             )
-            Intents.intended(expectedIntent)
-            assertTrue(requestNotificationPermissionScreen.permissionPrompt.isDisplayed())
+            intended(expectedIntent)
+            assertThat(requestNotificationPermissionScreen.permissionPrompt.isDisplayed())
+                .describedAs("Request notification permission prompt is displayed")
+                .isTrue()
         }
     }
 
@@ -67,16 +67,19 @@ class RequestNotificationPermissionTest : BaseTest() {
 
         ActivityScenario.launch(RequestNotificationPermissionActivity::class.java).use {
             requestNotificationPermissionScreen.enableNotificationsButton.click()
-            assertTrue(requestNotificationPermissionScreen.permissionPrompt.isDisplayed())
+            assertThat(requestNotificationPermissionScreen.permissionPrompt.isDisplayed())
+                .describedAs("Request notification permission prompt is displayed")
+                .isTrue()
             requestNotificationPermissionScreen.permissionPrompt.grantPermission()
-            Intents.intended(IntentMatchers.hasComponent(NotificationTableActivity::class.java.name))
-            Assert.assertEquals(
-                PackageManager.PERMISSION_GRANTED,
+            intended(IntentMatchers.hasComponent(NotificationTableActivity::class.java.name))
+            assertThat(
                 ContextCompat.checkSelfPermission(
                     applicationContext,
                     Manifest.permission.POST_NOTIFICATIONS
                 )
             )
+                .describedAs("Post notifications permission")
+                .isEqualTo(PackageManager.PERMISSION_GRANTED)
         }
     }
 
@@ -86,17 +89,20 @@ class RequestNotificationPermissionTest : BaseTest() {
 
         ActivityScenario.launch(RequestNotificationPermissionActivity::class.java).use {
             requestNotificationPermissionScreen.skipPermissionButton.click()
-            Intents.intended(IntentMatchers.hasComponent(NotificationTableActivity::class.java.name))
+            intended(IntentMatchers.hasComponent(NotificationTableActivity::class.java.name))
 
-            assertFalse(requestNotificationPermissionScreen.permissionPrompt.isDisplayed())
+            assertThat(requestNotificationPermissionScreen.permissionPrompt.isDisplayed())
+                .describedAs("Request notification permission prompt is not displayed")
+                .isFalse()
 
-            Assert.assertEquals(
-                PackageManager.PERMISSION_DENIED,
+            assertThat(
                 ContextCompat.checkSelfPermission(
                     applicationContext,
                     Manifest.permission.POST_NOTIFICATIONS
                 )
             )
+                .describedAs("Post notifications permission")
+                .isEqualTo(PackageManager.PERMISSION_DENIED)
         }
     }
 }
