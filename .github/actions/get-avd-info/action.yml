@@ -14,6 +14,7 @@ outputs:
 runs:
     using: "composite"
     steps:
+        # API 30+ emulators only have x86_64 system images
         -   id: get-avd-arch
             run: echo "::set-output name=arch::$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo x86_64; else echo x86; fi)"
             shell: bash

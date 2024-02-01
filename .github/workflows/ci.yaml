@@ -151,7 +151,6 @@ jobs:
                     sudo udevadm control --reload-rules
                     sudo udevadm trigger --name-match=kvm
 
-            # API 30+ emulators only have x86_64 system images
             -   name: Get AVD info
                 uses: ./.github/actions/get-avd-info
                 id: avd-info
