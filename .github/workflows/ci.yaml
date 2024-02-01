@@ -116,7 +116,7 @@ jobs:
         timeout-minutes: 30
         needs: unit-tests
         strategy:
-            fail-fast: true
+            fail-fast: false
             matrix:
                 api-level: [ 26, 27, 28, 29, 30, 31, 32, 33, 34 ]
         steps:
