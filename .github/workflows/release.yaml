@@ -19,7 +19,7 @@ jobs:
 
             -   name: Read VERSION file
                 id: get_version
-                run: echo "::set-output name=version::$(cat VERSION/VERSION)"
+                run: echo "version=$(cat VERSION/VERSION)" >> $GITHUB_OUTPUT
 
             -   name: Create release
                 id: create_release
