@@ -152,14 +152,14 @@ jobs:
                     path: app/build/outputs/bundle/release
 
             -   name: Upload signed APK to Firebase App Distribution
-                uses: wzieba/Firebase-Distribution-Github-Action@55ea7b794b97be119d68165453207a1de5cea16d
+                uses: wzieba/Firebase-Distribution-Github-Action@a41b2f7ab3f7c2631b6a73fb2f660b517cef45a9
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     token: ${{ secrets.FIREBASE_TOKEN }}
                     file: app/build/outputs/apk/release/bisq-release-signed.apk
 
             -   name: Upload signed AAB to Firebase App Distribution
-                uses: wzieba/Firebase-Distribution-Github-Action@55ea7b794b97be119d68165453207a1de5cea16d
+                uses: wzieba/Firebase-Distribution-Github-Action@a41b2f7ab3f7c2631b6a73fb2f660b517cef45a9
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     token: ${{ secrets.FIREBASE_TOKEN }}
