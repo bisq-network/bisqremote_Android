@@ -74,14 +74,8 @@ android {
         }
     }
 
-    project.ext.set("buildType", "")
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
-            def typename = variant.buildType.name.toLowerCase()
-            if (getGradle().getStartParameter().toString().toLowerCase().contains(typename)) {
-                project.ext.set("buildType", typename)
-            }
-
             output.outputFileName = "bisq-${variant.name}.apk"
         }
 
@@ -182,7 +176,7 @@ dependencies {
 }
 
 def androidTestsReportsDirectory() {
-    return "$buildDir/reports/androidTests/connected/${project.buildType}"
+    return "$buildDir/reports/androidTests/connected/debug"
 }
 
 tasks.register('embedScreenshotsIntoReport') {
