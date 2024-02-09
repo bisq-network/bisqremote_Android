@@ -72,18 +72,25 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                output.outputFileName = "bisq-${variant.name}.apk"
+    }
+
+    project.ext.set("buildType", "")
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def typename = variant.buildType.name.toLowerCase()
+            if (getGradle().getStartParameter().toString().toLowerCase().contains(typename)) {
+                project.ext.set("buildType", typename)
             }
 
-            // This is necessary to be able to run unit and instrumented tests in GitHub workflows,
-            // since google-services.json is unavailable and will cause the GoogleServices task to fail
-            if (!project.file('google-services.json').exists()) {
-                tasks.all { Task task ->
-                    if (task.name.matches("process${variant.name.capitalize()}GoogleServices")) {
-                        task.enabled = false
-                    }
+            output.outputFileName = "bisq-${variant.name}.apk"
+        }
+
+        // Must disable the GoogleServices task when running unit and instrumented tests in GitHub
+        // workflows, since google-services.json is unavailable and will cause it to fail.
+        if (!project.file('google-services.json').exists()) {
+            tasks.configureEach { Task task ->
+                if (task.name.matches("process${variant.name.capitalize()}GoogleServices")) {
+                    task.enabled = false
                 }
             }
         }
@@ -160,6 +167,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1'
     androidTestImplementation 'org.awaitility:awaitility-kotlin:4.2.0'
@@ -171,4 +179,83 @@ dependencies {
     androidTestImplementation 'org.objenesis:objenesis:3.3'
 
     androidTestUtil 'androidx.test:orchestrator:1.4.2'
+}
+
+def androidTestsReportsDirectory() {
+    return "$buildDir/reports/androidTests/connected/${project.buildType}"
+}
+
+tasks.register('embedScreenshotsIntoReport') {
+    group = "reporting"
+    doFirst {
+        def failureScreenshotsDirectory =
+            new File(androidTestsReportsDirectory(), "screenshots/failures")
+
+        if (!failureScreenshotsDirectory.exists()) {
+            return
+        }
+
+        println "Embedding failure screenshots into report from ${failureScreenshotsDirectory}"
+
+        failureScreenshotsDirectory.eachFile { failedTestClassDirectory ->
+            def failedTestClassName = failedTestClassDirectory.name
+
+            failedTestClassDirectory.eachFile { failedTestFile ->
+                def failedTestName = failedTestFile.name
+                def failedTestNameWithoutExtension =
+                    failedTestName.take(failedTestName.lastIndexOf('.'))
+                def failedTestClassJunitReportFile =
+                    new File(androidTestsReportsDirectory(), "${failedTestClassName}.html")
+
+                if (!failedTestClassJunitReportFile.exists()) {
+                    println "Could not find JUnit report file for test class " +
+                        "'${failedTestClassJunitReportFile}'"
+                    return
+                }
+
+                def failedTestJunitReportContent = failedTestClassJunitReportFile.text
+
+                def patternToFind = "<h3 class=\"failures\">" +
+                    "${failedTestNameWithoutExtension}</h3>"
+                def patternToReplace = "${patternToFind} <img src=\"screenshots/failures/" +
+                    "${failedTestClassName}/${failedTestName}\" width =\"360\" /><br />"
+
+                failedTestJunitReportContent = failedTestJunitReportContent.replaceAll(
+                    patternToFind, patternToReplace)
+
+                failedTestClassJunitReportFile.write(failedTestJunitReportContent)
+            }
+        }
+    }
+}
+
+static def deviceScreenshotsDir() {
+    return "/storage/emulated/0/Pictures/bisq"
+}
+
+tasks.register('clearScreenshotsFromDevice', Exec) {
+    group = "reporting"
+    ignoreExitValue = true
+    doFirst {
+        executable "${android.getAdbExecutable().absolutePath}"
+        args 'shell', 'rm', '-rf', deviceScreenshotsDir()
+    }
+}
+
+tasks.register('fetchScreenshotsFromDevice', Exec) {
+    group = "reporting"
+    ignoreExitValue = true
+    doFirst {
+        executable "${android.getAdbExecutable().absolutePath}"
+        args 'pull', "${deviceScreenshotsDir()}/.", androidTestsReportsDirectory()
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name == 'connectedDebugAndroidTest') {
+        task.doFirst { 'clearScreenshotsFromDevice' }
+        task.finalizedBy { 'fetchScreenshotsFromDevice' }
+        task.finalizedBy { 'clearScreenshotsFromDevice' }
+        task.finalizedBy { 'embedScreenshotsIntoReport' }
+    }
 }

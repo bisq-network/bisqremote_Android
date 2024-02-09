@@ -17,11 +17,9 @@
 
 package bisq.android.tests
 
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import bisq.android.ui.pairing.PairingScanActivity
 import bisq.android.ui.pairing.PairingSendActivity
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,9 +28,9 @@ import org.junit.runner.RunWith
 class PairingScanTest : BaseTest() {
     @Test
     fun clickNoWebcamButtonLoadsPairingSendActivity() {
-        ActivityScenario.launch(PairingScanActivity::class.java).use {
-            pairingScanScreen.noWebcamButton.click()
-            intended(hasComponent(PairingSendActivity::class.java.name))
-        }
+        pairingScanActivityRule.launch()
+
+        pairingScanScreen.noWebcamButton.click()
+        intended(hasComponent(PairingSendActivity::class.java.name))
     }
 }

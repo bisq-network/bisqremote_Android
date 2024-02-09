@@ -17,12 +17,10 @@
 
 package bisq.android.tests
 
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import bisq.android.ui.notification.NotificationDetailActivity
-import bisq.android.ui.notification.NotificationTableActivity
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -38,42 +36,42 @@ class NotificationDetailTest : BaseTest() {
 
     @Test
     fun notificationDetailsArePopulatedCorrectly() {
-        ActivityScenario.launch(NotificationTableActivity::class.java).use {
-            notificationTableScreen.addExampleNotificationsMenuItem.click()
-            notificationTableScreen.notificationRecylerView.clickAtPosition(2)
-            intended(hasComponent(NotificationDetailActivity::class.java.name))
-            assertThat(notificationDetailScreen.title.getText())
-                .describedAs("Notification title")
-                .isEqualTo("Dispute message")
-            assertThat(notificationDetailScreen.message.getText())
-                .describedAs("Notification message")
-                .isEqualTo("You received a dispute message for trade with ID 34059340")
-            assertThat(notificationDetailScreen.action.getText())
-                .describedAs("Notification action")
-                .isEqualTo("Please contact the arbitrator")
-            assertThat(notificationDetailScreen.eventTime.getText())
-                .describedAs("Notification event time")
-                .matches("Event occurred: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
-            assertThat(notificationDetailScreen.receivedTime.getText())
-                .describedAs("Notification received time")
-                .matches("Event received: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
-        }
+        notificationTableActivityRule.launch()
+
+        notificationTableScreen.addExampleNotificationsMenuItem.click()
+        notificationTableScreen.notificationRecylerView.clickAtPosition(2)
+        intended(hasComponent(NotificationDetailActivity::class.java.name))
+        assertThat(notificationDetailScreen.title.getText())
+            .describedAs("Notification title")
+            .isEqualTo("Dispute message")
+        assertThat(notificationDetailScreen.message.getText())
+            .describedAs("Notification message")
+            .isEqualTo("You received a dispute message for trade with ID 34059340")
+        assertThat(notificationDetailScreen.action.getText())
+            .describedAs("Notification action")
+            .isEqualTo("Please contact the arbitrator")
+        assertThat(notificationDetailScreen.eventTime.getText())
+            .describedAs("Notification event time")
+            .matches("Event occurred: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
+        assertThat(notificationDetailScreen.receivedTime.getText())
+            .describedAs("Notification received time")
+            .matches("Event received: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
     }
 
     @Test
     fun clickDeleteButtonDeletesNotification() {
-        ActivityScenario.launch(NotificationTableActivity::class.java).use {
-            notificationTableScreen.addExampleNotificationsMenuItem.click()
-            val countBeforeSwipe = notificationTableScreen.notificationRecylerView.getItemCount()
+        notificationTableActivityRule.launch()
 
-            notificationTableScreen.notificationRecylerView.clickAtPosition(0)
-            intended(hasComponent(NotificationDetailActivity::class.java.name))
+        notificationTableScreen.addExampleNotificationsMenuItem.click()
+        val countBeforeSwipe = notificationTableScreen.notificationRecylerView.getItemCount()
 
-            notificationDetailScreen.deleteButton.click()
-            val countAfterDelete = notificationTableScreen.notificationRecylerView.getItemCount()
-            assertThat(countAfterDelete)
-                .describedAs("Notification count after delete")
-                .isEqualTo(countBeforeSwipe - 1)
-        }
+        notificationTableScreen.notificationRecylerView.clickAtPosition(0)
+        intended(hasComponent(NotificationDetailActivity::class.java.name))
+
+        notificationDetailScreen.deleteButton.click()
+        val countAfterDelete = notificationTableScreen.notificationRecylerView.getItemCount()
+        assertThat(countAfterDelete)
+            .describedAs("Notification count after delete")
+            .isEqualTo(countBeforeSwipe - 1)
     }
 }

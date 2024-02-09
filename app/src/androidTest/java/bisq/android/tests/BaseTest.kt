@@ -25,10 +25,13 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.base.DefaultFailureHandler
 import androidx.test.espresso.intent.Intents
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
+import bisq.android.rules.ScreenshotRule
+import bisq.android.rules.lazyActivityScenarioRule
 import bisq.android.screens.NotificationDetailScreen
 import bisq.android.screens.NotificationTableScreen
 import bisq.android.screens.PairingScanScreen
@@ -37,9 +40,18 @@ import bisq.android.screens.PairingSuccessScreen
 import bisq.android.screens.RequestNotificationPermissionScreen
 import bisq.android.screens.SettingsScreen
 import bisq.android.screens.WelcomeScreen
+import bisq.android.ui.notification.NotificationTableActivity
+import bisq.android.ui.pairing.PairingScanActivity
+import bisq.android.ui.pairing.PairingSendActivity
+import bisq.android.ui.pairing.PairingSuccessActivity
+import bisq.android.ui.pairing.RequestNotificationPermissionActivity
+import bisq.android.ui.settings.SettingsActivity
+import bisq.android.ui.welcome.WelcomeActivity
 import org.junit.After
 import org.junit.Assume.assumeTrue
 import org.junit.Before
+import org.junit.Rule
+import org.junit.rules.RuleChain
 import java.util.Locale
 
 abstract class BaseTest {
@@ -71,6 +83,40 @@ abstract class BaseTest {
             "default root matcher, it may be picking a root that never takes focus. " +
             "Root:"
     )
+
+    protected val welcomeActivityRule = lazyActivityScenarioRule<WelcomeActivity>(launchActivity = false)
+    protected val notificationTableActivityRule =
+        lazyActivityScenarioRule<NotificationTableActivity>(launchActivity = false)
+    protected val pairingScanActivityRule =
+        lazyActivityScenarioRule<PairingScanActivity>(launchActivity = false)
+    protected val pairingSendActivityRule =
+        lazyActivityScenarioRule<PairingSendActivity>(launchActivity = false)
+    protected val pairingSuccessActivityRule =
+        lazyActivityScenarioRule<PairingSuccessActivity>(launchActivity = false)
+    protected val requestNotificationPermissionActivityRule =
+        lazyActivityScenarioRule<RequestNotificationPermissionActivity>(launchActivity = false)
+    protected val settingsActivityRule =
+        lazyActivityScenarioRule<SettingsActivity>(launchActivity = false)
+
+    private val permissionRule: GrantPermissionRule
+        get() = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        } else {
+            GrantPermissionRule.grant()
+        }
+
+    // Define a RuleChain to ensure screenshots are taken BEFORE the teardown of activity rules
+    @get:Rule
+    val ruleChain: RuleChain = RuleChain
+        .outerRule(permissionRule)
+        .around(welcomeActivityRule)
+        .around(notificationTableActivityRule)
+        .around(pairingScanActivityRule)
+        .around(pairingSendActivityRule)
+        .around(pairingSuccessActivityRule)
+        .around(requestNotificationPermissionActivityRule)
+        .around(settingsActivityRule)
+        .around(ScreenshotRule())
 
     @Before
     open fun setup() {

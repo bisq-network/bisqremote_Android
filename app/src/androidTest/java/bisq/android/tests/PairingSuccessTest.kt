@@ -22,13 +22,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import bisq.android.ui.notification.NotificationTableActivity
-import bisq.android.ui.pairing.PairingSuccessActivity
 import bisq.android.ui.pairing.RequestNotificationPermissionActivity
 import io.mockk.every
 import io.mockk.mockkStatic
@@ -58,82 +56,82 @@ class PairingSuccessTest : BaseTest() {
     fun clickPairingSuccessButtonLoadsNotificationTableScreenWithApi32AndOlder() {
         assumeMaxApiLevel(Build.VERSION_CODES.S_V2)
 
-        ActivityScenario.launch(PairingSuccessActivity::class.java).use {
-            pairingSuccessScreen.pairingCompleteButton.click()
-            intended(hasComponent(NotificationTableActivity::class.java.name))
+        pairingSuccessActivityRule.launch()
 
-            assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
-                .describedAs("Request notification permission prompt is not displayed")
-                .isFalse()
-        }
+        pairingSuccessScreen.pairingCompleteButton.click()
+        intended(hasComponent(NotificationTableActivity::class.java.name))
+
+        assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
+            .describedAs("Request notification permission prompt is not displayed")
+            .isFalse()
     }
 
     @Test
     fun clickPairingSuccessButtonLoadsNotificationPermissionRequestPromptWithApi33AndNewer() {
         assumeMinApiLevel(Build.VERSION_CODES.TIRAMISU)
 
-        ActivityScenario.launch(PairingSuccessActivity::class.java).use {
-            pairingSuccessScreen.pairingCompleteButton.click()
-            val expectedIntent = Matchers.allOf(
-                IntentMatchers.hasAction("android.content.pm.action.REQUEST_PERMISSIONS"),
-                IntentMatchers.hasExtra(
-                    "android.content.pm.extra.REQUEST_PERMISSIONS_NAMES",
-                    Matchers.hasItemInArray(Manifest.permission.POST_NOTIFICATIONS)
-                ),
-            )
-            intended(expectedIntent)
-            assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
-                .describedAs("Request notification permission prompt is displayed")
-                .isTrue()
-        }
+        pairingSuccessActivityRule.launch()
+
+        pairingSuccessScreen.pairingCompleteButton.click()
+        val expectedIntent = Matchers.allOf(
+            IntentMatchers.hasAction("android.content.pm.action.REQUEST_PERMISSIONS"),
+            IntentMatchers.hasExtra(
+                "android.content.pm.extra.REQUEST_PERMISSIONS_NAMES",
+                Matchers.hasItemInArray(Manifest.permission.POST_NOTIFICATIONS)
+            ),
+        )
+        intended(expectedIntent)
+        assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
+            .describedAs("Request notification permission prompt is displayed")
+            .isTrue()
     }
 
     @Test
     fun acceptingNotificationPermissionRequestLoadsNotificationTableScreen() {
         assumeMinApiLevel(Build.VERSION_CODES.TIRAMISU)
 
-        ActivityScenario.launch(PairingSuccessActivity::class.java).use {
-            pairingSuccessScreen.pairingCompleteButton.click()
-            assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
-                .describedAs("Request notification permission prompt is displayed")
-                .isTrue()
+        pairingSuccessActivityRule.launch()
 
-            pairingSuccessScreen.permissionPrompt.grantPermission()
-            intended(hasComponent(NotificationTableActivity::class.java.name))
+        pairingSuccessScreen.pairingCompleteButton.click()
+        assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
+            .describedAs("Request notification permission prompt is displayed")
+            .isTrue()
 
-            assertThat(
-                ContextCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.POST_NOTIFICATIONS
-                )
+        pairingSuccessScreen.permissionPrompt.grantPermission()
+        intended(hasComponent(NotificationTableActivity::class.java.name))
+
+        assertThat(
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
             )
-                .describedAs("Post notifications permission")
-                .isEqualTo(PackageManager.PERMISSION_GRANTED)
-        }
+        )
+            .describedAs("Post notifications permission")
+            .isEqualTo(PackageManager.PERMISSION_GRANTED)
     }
 
     @Test
     fun denyingNotificationPermissionRequestLoadsNotificationTableScreen() {
         assumeMinApiLevel(Build.VERSION_CODES.TIRAMISU)
 
-        ActivityScenario.launch(PairingSuccessActivity::class.java).use {
-            pairingSuccessScreen.pairingCompleteButton.click()
-            assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
-                .describedAs("Request notification permission prompt is displayed")
-                .isTrue()
+        pairingSuccessActivityRule.launch()
 
-            pairingSuccessScreen.permissionPrompt.denyPermission()
-            intended(hasComponent(NotificationTableActivity::class.java.name))
+        pairingSuccessScreen.pairingCompleteButton.click()
+        assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
+            .describedAs("Request notification permission prompt is displayed")
+            .isTrue()
 
-            assertThat(
-                ContextCompat.checkSelfPermission(
-                    applicationContext,
-                    Manifest.permission.POST_NOTIFICATIONS
-                )
+        pairingSuccessScreen.permissionPrompt.denyPermission()
+        intended(hasComponent(NotificationTableActivity::class.java.name))
+
+        assertThat(
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
             )
-                .describedAs("Post notifications permission")
-                .isEqualTo(PackageManager.PERMISSION_DENIED)
-        }
+        )
+            .describedAs("Post notifications permission")
+            .isEqualTo(PackageManager.PERMISSION_DENIED)
     }
 
     @Test
@@ -150,14 +148,14 @@ class PairingSuccessTest : BaseTest() {
             )
         } returns PackageManager.PERMISSION_GRANTED
 
-        ActivityScenario.launch(PairingSuccessActivity::class.java).use {
-            pairingSuccessScreen.pairingCompleteButton.click()
-            intended(hasComponent(NotificationTableActivity::class.java.name))
+        pairingSuccessActivityRule.launch()
 
-            assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
-                .describedAs("Request notification permission prompt is not displayed")
-                .isFalse()
-        }
+        pairingSuccessScreen.pairingCompleteButton.click()
+        intended(hasComponent(NotificationTableActivity::class.java.name))
+
+        assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
+            .describedAs("Request notification permission prompt is not displayed")
+            .isFalse()
     }
 
     @Test
@@ -173,13 +171,13 @@ class PairingSuccessTest : BaseTest() {
             )
         } returns true
 
-        ActivityScenario.launch(PairingSuccessActivity::class.java).use {
-            pairingSuccessScreen.pairingCompleteButton.click()
-            intended(hasComponent(RequestNotificationPermissionActivity::class.java.name))
+        pairingSuccessActivityRule.launch()
 
-            assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
-                .describedAs("Request notification permission prompt is not displayed")
-                .isFalse()
-        }
+        pairingSuccessScreen.pairingCompleteButton.click()
+        intended(hasComponent(RequestNotificationPermissionActivity::class.java.name))
+
+        assertThat(pairingSuccessScreen.permissionPrompt.isDisplayed())
+            .describedAs("Request notification permission prompt is not displayed")
+            .isFalse()
     }
 }
