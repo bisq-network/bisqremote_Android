@@ -41,7 +41,7 @@ class RequestNotificationPermissionActivity : PairedBaseActivity() {
     }
 
     private fun initView() {
-        setContentView(R.layout.request_notification_permission)
+        setContentView(R.layout.activity_request_notification_permission)
 
         requestNotificationPermissionButton = bind(R.id.request_notification_permission_button)
         requestNotificationPermissionButton.setOnClickListener {
