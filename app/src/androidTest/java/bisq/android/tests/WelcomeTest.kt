@@ -20,7 +20,6 @@ package bisq.android.tests
 import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
@@ -31,7 +30,6 @@ import bisq.android.BISQ_MOBILE_URL
 import bisq.android.model.Device
 import bisq.android.testCommon.mocks.FirebaseMock
 import bisq.android.ui.pairing.PairingScanActivity
-import bisq.android.ui.welcome.WelcomeActivity
 import junit.framework.AssertionFailedError
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.core.AllOf.allOf
@@ -59,85 +57,85 @@ class WelcomeTest : BaseTest() {
     @Test
     fun testClickPairButtonWhenGooglePlayServicesUnavailableShowsPrompt() {
         FirebaseMock.mockGooglePlayServicesNotAvailable()
-        ActivityScenario.launch(WelcomeActivity::class.java).use {
-            welcomeScreen.pairButton.click()
-            assertThat(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
-                .describedAs("Google Play Services unavailable alert dialog is displayed")
-                .isTrue()
+        welcomeActivityRule.launch()
 
-            welcomeScreen.alertDialogGooglePlayServicesUnavailable.dismissButton.click()
-            assertThat(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
-                .describedAs("Google Play Services unavailable alert dialog is not displayed")
-                .isFalse()
+        welcomeScreen.pairButton.click()
+        assertThat(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
+            .describedAs("Google Play Services unavailable alert dialog is displayed")
+            .isTrue()
 
-            welcomeScreen.pairButton.click()
-            assertThat(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
-                .describedAs("Google Play Services unavailable alert dialog is displayed")
-                .isTrue()
-        }
+        welcomeScreen.alertDialogGooglePlayServicesUnavailable.dismissButton.click()
+        assertThat(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
+            .describedAs("Google Play Services unavailable alert dialog is not displayed")
+            .isFalse()
+
+        welcomeScreen.pairButton.click()
+        assertThat(welcomeScreen.alertDialogGooglePlayServicesUnavailable.isDisplayed())
+            .describedAs("Google Play Services unavailable alert dialog is displayed")
+            .isTrue()
     }
 
     @Test
     fun clickPairButtonAfterReceivingFcmTokenLoadsPairingScanActivity() {
         FirebaseMock.mockFirebaseTokenSuccessful()
-        ActivityScenario.launch(WelcomeActivity::class.java).use {
-            welcomeScreen.pairButton.click()
-            intended(hasComponent(PairingScanActivity::class.java.name))
-        }
+        welcomeActivityRule.launch()
+
+        welcomeScreen.pairButton.click()
+        intended(hasComponent(PairingScanActivity::class.java.name))
     }
 
     @Test
     fun clickPairButtonAfterFailingToReceiveFcmTokenShowsPromptToRetryFetchingToken() {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
-        ActivityScenario.launch(WelcomeActivity::class.java).use {
-            welcomeScreen.pairButton.click()
-            assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
-                .describedAs("Cannot retrieve device token alert dialog is displayed")
-                .isTrue()
-        }
+        welcomeActivityRule.launch()
+
+        welcomeScreen.pairButton.click()
+        assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
+            .describedAs("Cannot retrieve device token alert dialog is displayed")
+            .isTrue()
     }
 
     @Test
     fun clickCancelOnTokenFailurePromptAllowsClickingPairButtonAgain() {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
-        ActivityScenario.launch(WelcomeActivity::class.java).use {
-            welcomeScreen.pairButton.click()
-            assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
-                .describedAs("Cannot retrieve device token alert dialog is displayed")
-                .isTrue()
+        welcomeActivityRule.launch()
 
-            welcomeScreen.alertDialogCannotRetrieveDeviceToken.negativeButton.click()
-            assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
-                .describedAs("Cannot retrieve device token alert dialog is not displayed")
-                .isFalse()
+        welcomeScreen.pairButton.click()
+        assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
+            .describedAs("Cannot retrieve device token alert dialog is displayed")
+            .isTrue()
 
-            welcomeScreen.pairButton.click()
-            assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
-                .describedAs("Cannot retrieve device token alert dialog is displayed")
-                .isTrue()
-        }
+        welcomeScreen.alertDialogCannotRetrieveDeviceToken.negativeButton.click()
+        assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
+            .describedAs("Cannot retrieve device token alert dialog is not displayed")
+            .isFalse()
+
+        welcomeScreen.pairButton.click()
+        assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
+            .describedAs("Cannot retrieve device token alert dialog is displayed")
+            .isTrue()
     }
 
     @Test
     fun clickTryAgainOnTokenFailurePromptRetriesFetchingToken() {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
-        ActivityScenario.launch(WelcomeActivity::class.java).use {
-            welcomeScreen.pairButton.click()
-            assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
-                .describedAs("Cannot retrieve device token alert dialog is displayed")
-                .isTrue()
+        welcomeActivityRule.launch()
 
-            FirebaseMock.mockFirebaseTokenSuccessful()
-            welcomeScreen.alertDialogCannotRetrieveDeviceToken.positiveButton.click()
-            intended(hasComponent(PairingScanActivity::class.java.name))
-            assertThat(Device.instance.token)
-                .describedAs("Device token")
-                .isEqualTo(
-                    "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqn" +
-                        "Ql8owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHY" +
-                        "E7XPFUQDD7UlnVB-giAI"
-                )
-        }
+        welcomeScreen.pairButton.click()
+        assertThat(welcomeScreen.alertDialogCannotRetrieveDeviceToken.isDisplayed())
+            .describedAs("Cannot retrieve device token alert dialog is displayed")
+            .isTrue()
+
+        FirebaseMock.mockFirebaseTokenSuccessful()
+        welcomeScreen.alertDialogCannotRetrieveDeviceToken.positiveButton.click()
+        intended(hasComponent(PairingScanActivity::class.java.name))
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(
+                "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqn" +
+                    "Ql8owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHY" +
+                    "E7XPFUQDD7UlnVB-giAI"
+            )
     }
 
     @Test
@@ -145,28 +143,28 @@ class WelcomeTest : BaseTest() {
         intending(hasAction(Intent.ACTION_VIEW)).respondWith(
             Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
         )
-        ActivityScenario.launch(WelcomeActivity::class.java).use {
-            welcomeScreen.learnMoreButton.click()
-            assertThat(welcomeScreen.alertDialogLoadBisqMobileUrl.isDisplayed())
-                .describedAs("Load Bisq mobile URL alert dialog is displayed")
-                .isTrue()
+        welcomeActivityRule.launch()
 
-            welcomeScreen.alertDialogLoadBisqMobileUrl.negativeButton.click()
+        welcomeScreen.learnMoreButton.click()
+        assertThat(welcomeScreen.alertDialogLoadBisqMobileUrl.isDisplayed())
+            .describedAs("Load Bisq mobile URL alert dialog is displayed")
+            .isTrue()
 
-            try {
-                val expectedIntent = allOf(
-                    hasAction(Intent.ACTION_VIEW),
-                    hasData(BISQ_MOBILE_URL)
-                )
-                intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-                intended(expectedIntent)
-            } catch (e: AssertionFailedError) {
-                // We want the assertion to fail, since trying to negate the intended
-                // doesn't seem to work
-                return
-            }
-            fail("Loaded web page after clicking cancel")
+        welcomeScreen.alertDialogLoadBisqMobileUrl.negativeButton.click()
+
+        try {
+            val expectedIntent = allOf(
+                hasAction(Intent.ACTION_VIEW),
+                hasData(BISQ_MOBILE_URL)
+            )
+            intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+            intended(expectedIntent)
+        } catch (e: AssertionFailedError) {
+            // We want the assertion to fail, since trying to negate the intended
+            // doesn't seem to work
+            return
         }
+        fail("Loaded web page after clicking cancel")
     }
 
     @Test
@@ -174,24 +172,24 @@ class WelcomeTest : BaseTest() {
         intending(hasAction(Intent.ACTION_VIEW)).respondWith(
             Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
         )
-        ActivityScenario.launch(WelcomeActivity::class.java).use {
-            intending(hasAction(Intent.ACTION_VIEW)).respondWith(
-                Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
-            )
+        welcomeActivityRule.launch()
 
-            welcomeScreen.learnMoreButton.click()
-            assertThat(welcomeScreen.alertDialogLoadBisqMobileUrl.isDisplayed())
-                .describedAs("Load Bisq mobile URL alert dialog is displayed")
-                .isTrue()
+        intending(hasAction(Intent.ACTION_VIEW)).respondWith(
+            Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
+        )
 
-            welcomeScreen.alertDialogLoadBisqMobileUrl.positiveButton.click()
+        welcomeScreen.learnMoreButton.click()
+        assertThat(welcomeScreen.alertDialogLoadBisqMobileUrl.isDisplayed())
+            .describedAs("Load Bisq mobile URL alert dialog is displayed")
+            .isTrue()
 
-            val expectedIntent = allOf(
-                hasAction(Intent.ACTION_VIEW),
-                hasData(BISQ_MOBILE_URL)
-            )
-            intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-            intended(expectedIntent)
-        }
+        welcomeScreen.alertDialogLoadBisqMobileUrl.positiveButton.click()
+
+        val expectedIntent = allOf(
+            hasAction(Intent.ACTION_VIEW),
+            hasData(BISQ_MOBILE_URL)
+        )
+        intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+        intended(expectedIntent)
     }
 }

@@ -18,14 +18,12 @@
 package bisq.android.tests
 
 import android.content.Intent
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.BundleMatchers.hasValue
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtras
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import bisq.android.model.Device
-import bisq.android.ui.pairing.PairingSendActivity
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -37,18 +35,18 @@ class PairingSendTest : BaseTest() {
             "fnWtGaJGSByKiPwT71O3Lo:APA91bGU05lvoKxvz3Y0fnFHytSveA_juVjq2QMY3_H9URqDsEp" +
                 "LHGbLSFBN3wY7YdHDD3w52GECwRWuKGBJm1O1f5fJhVvcr1rJxo94aDjoWwsnkVp-ecWwh5YY_MQ6LRqbWzumCeX_"
         )
-        ActivityScenario.launch(PairingSendActivity::class.java).use {
-            pairingSendScreen.sendPairingTokenButton.click()
-            intended(hasAction(Intent.ACTION_CHOOSER))
-            intended(
-                hasExtras(
-                    hasValue(
-                        hasExtras(
-                            hasValue(Device.instance.pairingToken())
-                        )
+        pairingSendActivityRule.launch()
+
+        pairingSendScreen.sendPairingTokenButton.click()
+        intended(hasAction(Intent.ACTION_CHOOSER))
+        intended(
+            hasExtras(
+                hasValue(
+                    hasExtras(
+                        hasValue(Device.instance.pairingToken())
                     )
                 )
             )
-        }
+        )
     }
 }

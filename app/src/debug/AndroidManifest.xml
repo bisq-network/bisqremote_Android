@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <!--
+    The WRITE_EXTERNAL_STORAGE permission is necessary for creating screenshots in
+    instrumented tests. Not ideal to have it enabled for regular debug builds, but
+    this is the simplest solution.
+    -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        tools:ignore="ScopedStorage" />
+</manifest>
