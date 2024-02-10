@@ -173,8 +173,9 @@ jobs:
                 uses: reactivecircus/android-emulator-runner@6b0df4b0efb23bb0ec63d881db79aefbc976e4b2
                 with:
                     api-level: ${{ matrix.api-level }}
-                    arch: ${{ steps.avd-info.outputs.arch }}
                     target: ${{ steps.avd-info.outputs.target }}
+                    arch: ${{ steps.avd-info.outputs.arch }}
+                    channel: ${{ steps.avd-info.outputs.channel }}
                     disable-animations: true
                     force-avd-creation: false
                     ram-size: 4096M
@@ -185,8 +186,9 @@ jobs:
                 uses: reactivecircus/android-emulator-runner@6b0df4b0efb23bb0ec63d881db79aefbc976e4b2
                 with:
                     api-level: ${{ matrix.api-level }}
-                    arch: ${{ steps.avd-info.outputs.arch }}
                     target: ${{ steps.avd-info.outputs.target }}
+                    arch: ${{ steps.avd-info.outputs.arch }}
+                    channel: ${{ steps.avd-info.outputs.channel }}
                     disable-animations: true
                     force-avd-creation: false
                     ram-size: 4096M
