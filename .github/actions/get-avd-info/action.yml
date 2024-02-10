@@ -11,9 +11,6 @@ outputs:
     arch:
         description: CPU architecture of the system image
         value: ${{ steps.get-avd-arch.outputs.arch }}
-    channel:
-        description: Channel to download the SDK components from
-        value: ${{ steps.get-avd-channel.outputs.channel }}
 runs:
     using: "composite"
     steps:
@@ -23,11 +20,7 @@ runs:
         -   id: get-avd-target
             run: echo "target=$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo google_atd; elif [ ${{ inputs.api-level }} -eq 27 ]; then echo default; else echo google_apis; fi)" >> $GITHUB_OUTPUT
             shell: bash
-        # The google_atd system images currently require x86 or arm64-v8 arch
+        # Prefer x86_64 architecture
         -   id: get-avd-arch
-            run: echo "arch=$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo x86; else echo x86_64; fi)" >> $GITHUB_OUTPUT
-            shell: bash
-        # The google_atd system images currently require the canary channel
-        -   id: get-avd-channel
-            run: echo "channel=$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo canary; else echo stable; fi)" >> $GITHUB_OUTPUT
+            run: echo "arch=x86_64" >> $GITHUB_OUTPUT
             shell: bash

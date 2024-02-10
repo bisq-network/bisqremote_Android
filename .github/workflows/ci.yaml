@@ -175,7 +175,6 @@ jobs:
                     api-level: ${{ matrix.api-level }}
                     target: ${{ steps.avd-info.outputs.target }}
                     arch: ${{ steps.avd-info.outputs.arch }}
-                    channel: ${{ steps.avd-info.outputs.channel }}
                     disable-animations: true
                     force-avd-creation: false
                     ram-size: 4096M
@@ -188,7 +187,6 @@ jobs:
                     api-level: ${{ matrix.api-level }}
                     target: ${{ steps.avd-info.outputs.target }}
                     arch: ${{ steps.avd-info.outputs.arch }}
-                    channel: ${{ steps.avd-info.outputs.channel }}
                     disable-animations: true
                     force-avd-creation: false
                     ram-size: 4096M
