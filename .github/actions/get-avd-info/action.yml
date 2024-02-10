@@ -5,19 +5,29 @@ inputs:
         description: The API level for which to retrieve AVD info
         required: true
 outputs:
-    arch:
-        description: CPU architecture of the system image
-        value: ${{ steps.get-avd-arch.outputs.arch }}
     target:
         description: Target of the system image
         value: ${{ steps.get-avd-target.outputs.target }}
+    arch:
+        description: CPU architecture of the system image
+        value: ${{ steps.get-avd-arch.outputs.arch }}
+    channel:
+        description: Channel to download the SDK components from
+        value: ${{ steps.get-avd-channel.outputs.channel }}
 runs:
     using: "composite"
     steps:
-        # API 30+ emulators only have x86_64 system images
-        -   id: get-avd-arch
-            run: echo "arch=$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo x86_64; else echo x86; fi)" >> $GITHUB_OUTPUT
-            shell: bash
+        # Prefer ATD system images available in API 30+ as they are optimized for headless automated tests
+        # Otherwise use the google_apis system image since Google Play Services is required
+        # Though for some reason API 27 does not provide a google_apis system image
         -   id: get-avd-target
-            run: echo "target=google_apis" >> $GITHUB_OUTPUT
+            run: echo "target=$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo google_atd; elif [ ${{ inputs.api-level }} -eq 27 ]; then echo default; else echo google_apis; fi)" >> $GITHUB_OUTPUT
+            shell: bash
+        # The google_atd system images currently require x86 or arm64-v8 arch
+        -   id: get-avd-arch
+            run: echo "arch=$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo x86; else echo x86_64; fi)" >> $GITHUB_OUTPUT
+            shell: bash
+        # The google_atd system images currently require the canary channel
+        -   id: get-avd-channel
+            run: echo "channel=$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo canary; else echo stable; fi)" >> $GITHUB_OUTPUT
             shell: bash
