@@ -36,7 +36,7 @@ class NotificationAdapter(
 
     companion object {
         var iconTypeface: Typeface? = null
-        var iconTextSize: Float = 33F
+        var iconTextSize: Float = 28F
     }
 
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
@@ -63,16 +63,33 @@ class NotificationAdapter(
             )
             holder.title.setTextColor(
                 ContextCompat.getColor(
-                    holder.icon.context,
-                    R.color.read_title
+                    holder.title.context,
+                    R.color.read_notification
+                )
+            )
+            holder.time.setTextColor(
+                ContextCompat.getColor(
+                    holder.time.context,
+                    R.color.read_notification
                 )
             )
         } else {
-            holder.icon.setTextColor(ContextCompat.getColor(holder.icon.context, R.color.primary))
-            holder.title.setTextColor(
+            holder.icon.setTextColor(
                 ContextCompat.getColor(
                     holder.icon.context,
-                    R.color.unread_title
+                    R.color.primary
+                )
+            )
+            holder.title.setTextColor(
+                ContextCompat.getColor(
+                    holder.title.context,
+                    R.color.unread_notification
+                )
+            )
+            holder.time.setTextColor(
+                ContextCompat.getColor(
+                    holder.time.context,
+                    R.color.unread_notification
                 )
             )
         }

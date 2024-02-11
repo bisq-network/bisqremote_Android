@@ -19,56 +19,70 @@ package bisq.android.tests.model
 
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import java.util.UUID
 
 class DeviceTest {
-
     private var token = generateToken()
 
     @Test
     fun testResetDevice() {
+        Device.instance.newToken(token)
         Device.instance.reset()
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .matches("[0-9a-zA-Z/+]{32}")
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(token)
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
     }
 
     @Test
     fun testSetNewToken() {
         Device.instance.newToken(token)
-        assertEquals(token, Device.instance.token)
-        assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(token)
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .matches("[0-9a-zA-Z/+]{32}")
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
     }
 
     @Test
     fun testGetPairingToken() {
         Device.instance.newToken(token)
-        assertEquals(
-            Device.DEVICE_MAGIC_ANDROID +
-                Device.DEVICE_SEPARATOR + Device.instance.descriptor +
-                Device.DEVICE_SEPARATOR + Device.instance.key +
-                Device.DEVICE_SEPARATOR + Device.instance.token,
-            Device.instance.pairingToken()
-        )
+        assertThat(Device.instance.pairingToken())
+            .isEqualTo(
+                Device.DEVICE_MAGIC_ANDROID +
+                    Device.DEVICE_SEPARATOR + Device.instance.descriptor +
+                    Device.DEVICE_SEPARATOR + Device.instance.key +
+                    Device.DEVICE_SEPARATOR + Device.instance.token
+            )
     }
 
     @Test
-    fun testGetEmptyPairingToken() {
+    fun testGetPairingTokenAfterReset() {
         Device.instance.reset()
-        assertNull(Device.instance.pairingToken())
+        assertThat(Device.instance.pairingToken())
+            .isEqualTo(
+                Device.DEVICE_MAGIC_ANDROID +
+                    Device.DEVICE_SEPARATOR + Device.instance.descriptor +
+                    Device.DEVICE_SEPARATOR + Device.instance.key +
+                    Device.DEVICE_SEPARATOR + Device.instance.token,
+            )
     }
 
     @Test
     fun testGetDeviceName() {
-        assertEquals("My Manufacturer My Model", Device.instance.getDeviceName())
+        assertThat(Device.instance.getDeviceName())
+            .isEqualTo("My Manufacturer My Model")
     }
 
     @Test
@@ -76,28 +90,50 @@ class DeviceTest {
         Device.instance.newToken(token)
         var result = false
         Device.instance.pairingToken()?.let { result = Device.instance.fromString(it) }
-        assertTrue(result)
-        assertEquals(token, Device.instance.token)
-        assertThat(Device.instance.key, Matchers.matchesPattern("[0-9a-zA-Z/+]{32}"))
-        assertEquals(DeviceStatus.PAIRED, Device.instance.status)
+        assertThat(result).isTrue()
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(token)
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .matches("[0-9a-zA-Z/+]{32}")
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.PAIRED)
     }
 
     @Test
     fun testFromInvalidString() {
         Device.instance.newToken(token)
-        assertFalse(Device.instance.fromString("android|Manufacturer Model|invalidKey|invalidToken"))
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.fromString("android|Manufacturer Model|invalidKey|invalidToken"))
+            .describedAs("Device fromString")
+            .isFalse()
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .matches("[0-9a-zA-Z/+]{32}")
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(token)
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
     }
 
     @Test
     fun testFromEmptyString() {
         Device.instance.newToken(token)
-        assertFalse(Device.instance.fromString(""))
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.fromString(""))
+            .describedAs("Device fromString")
+            .isFalse()
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .matches("[0-9a-zA-Z/+]{32}")
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(token)
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
     }
 
     private fun generateToken(): String {

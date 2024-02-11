@@ -17,22 +17,17 @@
 
 package bisq.android.tests
 
-import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.Intents.intended
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import bisq.android.ui.notification.NotificationDetailActivity
-import bisq.android.ui.notification.NotificationTableActivity
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.matchesPattern
-import org.junit.Assert.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class NotificationDetailTest : BaseTest() {
-
     @Before
     override fun setup() {
         super.setup()
@@ -41,25 +36,42 @@ class NotificationDetailTest : BaseTest() {
 
     @Test
     fun notificationDetailsArePopulatedCorrectly() {
-        ActivityScenario.launch(NotificationTableActivity::class.java).use {
-            notificationTableScreen.settingsButton.click()
-            settingsScreen.addExampleNotificationsButton.click()
-            notificationTableScreen.notificationRecylerView.clickAtPosition(2)
-            Intents.intended(IntentMatchers.hasComponent(NotificationDetailActivity::class.java.name))
-            assertEquals("(example) Dispute message", notificationDetailScreen.title.getText())
-            assertEquals(
-                "You received a dispute message for trade with ID 34059340",
-                notificationDetailScreen.message.getText()
-            )
-            assertEquals("Please contact the arbitrator", notificationDetailScreen.action.getText())
-            assertThat(
-                notificationDetailScreen.eventTime.getText(),
-                matchesPattern("Event occurred: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
-            )
-            assertThat(
-                notificationDetailScreen.receivedTime.getText(),
-                matchesPattern("Event received: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
-            )
-        }
+        notificationTableActivityRule.launch()
+
+        notificationTableScreen.addExampleNotificationsMenuItem.click()
+        notificationTableScreen.notificationRecylerView.clickAtPosition(2)
+        intended(hasComponent(NotificationDetailActivity::class.java.name))
+        assertThat(notificationDetailScreen.title.getText())
+            .describedAs("Notification title")
+            .isEqualTo("Dispute message")
+        assertThat(notificationDetailScreen.message.getText())
+            .describedAs("Notification message")
+            .isEqualTo("You received a dispute message for trade with ID 34059340")
+        assertThat(notificationDetailScreen.action.getText())
+            .describedAs("Notification action")
+            .isEqualTo("Please contact the arbitrator")
+        assertThat(notificationDetailScreen.eventTime.getText())
+            .describedAs("Notification event time")
+            .matches("Event occurred: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
+        assertThat(notificationDetailScreen.receivedTime.getText())
+            .describedAs("Notification received time")
+            .matches("Event received: 20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d")
+    }
+
+    @Test
+    fun clickDeleteButtonDeletesNotification() {
+        notificationTableActivityRule.launch()
+
+        notificationTableScreen.addExampleNotificationsMenuItem.click()
+        val countBeforeSwipe = notificationTableScreen.notificationRecylerView.getItemCount()
+
+        notificationTableScreen.notificationRecylerView.clickAtPosition(0)
+        intended(hasComponent(NotificationDetailActivity::class.java.name))
+
+        notificationDetailScreen.deleteButton.click()
+        val countAfterDelete = notificationTableScreen.notificationRecylerView.getItemCount()
+        assertThat(countAfterDelete)
+            .describedAs("Notification count after delete")
+            .isEqualTo(countBeforeSwipe - 1)
     }
 }

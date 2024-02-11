@@ -18,14 +18,12 @@
 package bisq.android.ui
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.content.IntentFilter
+import android.media.MediaPlayer
 import android.media.RingtoneManager
-import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import bisq.android.R
@@ -41,7 +39,6 @@ open class BaseActivity : AppCompatActivity() {
     private var intentReceiver: IntentReceiver? = null
 
     fun <T : View> Activity.bind(@IdRes res: Int): T {
-        @Suppress("UNCHECKED_CAST")
         return findViewById(res)
     }
 
@@ -64,7 +61,11 @@ open class BaseActivity : AppCompatActivity() {
         notificationReceiver = NotificationReceiver()
         val filter = IntentFilter()
         filter.addAction(getString(R.string.notification_receiver_action))
-        registerReceiver(notificationReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(notificationReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(notificationReceiver, filter)
+        }
         Log.i(TAG, "Notification receiver registered")
     }
 
@@ -92,7 +93,11 @@ open class BaseActivity : AppCompatActivity() {
         intentReceiver = IntentReceiver(this)
         val filter = IntentFilter()
         filter.addAction(getString(R.string.intent_receiver_action))
-        registerReceiver(intentReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(intentReceiver, filter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(intentReceiver, filter)
+        }
         Log.i(TAG, "Intent receiver registered")
     }
 
@@ -116,25 +121,9 @@ open class BaseActivity : AppCompatActivity() {
         try {
             val notificationTone =
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            RingtoneManager.getRingtone(applicationContext, notificationTone).play()
+            MediaPlayer.create(applicationContext, notificationTone).start()
         } catch (e: Exception) {
             Log.e(TAG, "Unable to play notification tone", e)
         }
-    }
-
-    protected fun loadWebPage(uri: String) {
-        DialogBuilder.choicePrompt(
-            this, getString(R.string.warning), getString(R.string.load_web_page_text, uri),
-            getString(R.string.yes), getString(R.string.no),
-            { _, _ ->
-                try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(uri)))
-                } catch (ignored: ActivityNotFoundException) {
-                    Toast.makeText(
-                        this, getString(R.string.cannot_launch_browser), Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        ).show()
     }
 }

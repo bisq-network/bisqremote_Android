@@ -43,7 +43,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val bisqNotification: BisqNotification
         try {
             bisqNotification = NotificationProcessor.processNotification(
-                intent.extras?.get("encrypted").toString()
+                intent.extras?.getString("encrypted").toString()
             )
         } catch (e: ProcessingException) {
             e.message?.let { Log.e(TAG, it) }

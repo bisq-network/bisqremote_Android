@@ -17,14 +17,22 @@
 
 package bisq.android.ui.pairing
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import bisq.android.R
 import bisq.android.ui.PairedBaseActivity
 import bisq.android.ui.notification.NotificationTableActivity
 
 class PairingSuccessActivity : PairedBaseActivity() {
+    companion object {
+        private const val NOTIFICATION_PERMISSION_REQUEST_CODE = 1
+    }
 
     private lateinit var pairingCompleteButton: Button
 
@@ -36,13 +44,53 @@ class PairingSuccessActivity : PairedBaseActivity() {
     private fun initView() {
         setContentView(R.layout.activity_pairing_success)
 
-        pairingCompleteButton = bind(R.id.pairing_complete_button)
+        pairingCompleteButton = bind(R.id.pairing_scan_pairing_complete_button)
         pairingCompleteButton.setOnClickListener {
-            onPairingCompleteButtonClick()
+            onPairingComplete()
         }
     }
 
-    private fun onPairingCompleteButtonClick() {
-        startActivity(Intent(Intent(this, NotificationTableActivity::class.java)))
+    private fun onPairingComplete() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                val intent = Intent(this, NotificationTableActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+            }
+
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) -> {
+                startActivity(Intent(Intent(this, RequestNotificationPermissionActivity::class.java)))
+            }
+
+            else -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    requestPermissions(
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        NOTIFICATION_PERMISSION_REQUEST_CODE
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            NOTIFICATION_PERMISSION_REQUEST_CODE -> {
+                // If request is cancelled, the result arrays are empty
+                if (grantResults.isNotEmpty()) {
+                    val intent = Intent(this, NotificationTableActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    startActivity(intent)
+                }
+                return
+            }
+        }
     }
 }

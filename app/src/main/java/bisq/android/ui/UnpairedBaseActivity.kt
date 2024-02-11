@@ -25,7 +25,9 @@ open class UnpairedBaseActivity : BaseActivity() {
     fun pairingConfirmed() {
         this.runOnUiThread {
             playTone()
-            startActivity(Intent(Intent(this, PairingSuccessActivity::class.java)))
         }
+        val intent = Intent(this, PairingSuccessActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 }

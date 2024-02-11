@@ -1,17 +1,67 @@
 <resources>
 
-    <style name="BisqMaterialTheme" parent="BisqMaterialTheme.Base" />
-
-    <style name="BisqMaterialTheme.Base" parent="Theme.AppCompat.Light">
+    <style name="BisqMaterialTheme" parent="Theme.MaterialComponents.DayNight">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+
         <item name="colorPrimary">@color/primary</item>
-        <item name="colorAccent">@color/accent</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+
+        <item name="colorAccent">@color/primary_accent</item>
+
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
+
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/on_error</item>
+        <item name="colorErrorContainer">@color/error_container</item>
+        <item name="colorOnErrorContainer">@color/on_error_container</item>
+
+        <item name="backgroundColor">@color/background</item>
+        <item name="colorOnBackground">@color/on_background</item>
+
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+
+        <item name="preferenceTheme">@style/PreferenceTheme</item>
+    </style>
+
+    <style name="PreferenceTheme" parent="@style/PreferenceThemeOverlay.v14.Material">
+        <item name="android:tint">@color/on_surface</item>
     </style>
 
     <style name="PrimaryButton" parent="Theme.AppCompat">
-        <item name="colorButtonNormal">@color/primary</item>
-        <item name="colorControlHighlight">@color/accent</item>
+        <item name="android:textColor">@color/on_primary_container</item>
+        <item name="android:backgroundTint">@color/primary_container</item>
+    </style>
+
+    <style name="BorderlessPrimaryButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/primary</item>
+        <item name="colorControlHighlight">@color/primary_accent</item>
+        <item name="iconTint">@color/primary</item>
+        <item name="iconPadding">4dp</item>
+    </style>
+
+    <style name="SecondaryButton" parent="Theme.AppCompat">
+        <item name="android:textColor">@color/on_secondary_container</item>
+        <item name="android:backgroundTint">@color/secondary_container</item>
+    </style>
+
+    <style name="BorderlessSecondaryButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/secondary</item>
+        <item name="colorControlHighlight">@color/secondary_accent</item>
+        <item name="iconTint">@color/secondary</item>
+        <item name="iconPadding">4dp</item>
+    </style>
+
+    <style name="CautionButton" parent="Theme.AppCompat">
+        <item name="android:textColor">@color/on_error_container</item>
+        <item name="android:backgroundTint">@color/error_container</item>
     </style>
 
 </resources>

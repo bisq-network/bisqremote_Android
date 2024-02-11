@@ -38,6 +38,7 @@ object NotificationHandler {
 
         when (bisqNotification.type) {
             NotificationType.SETUP_CONFIRMATION.name -> {
+                Log.i(TAG, "Setup confirmation")
                 if (Device.instance.token == null) {
                     Log.e(TAG, "Device token is null")
                     return
@@ -52,15 +53,14 @@ object NotificationHandler {
                 }
                 Device.instance.status = DeviceStatus.PAIRED
                 Device.instance.saveToPreferences(context)
-                Log.i(TAG, "Setup confirmed")
             }
             NotificationType.ERASE.name -> {
+                Log.i(TAG, "Erase pairing")
                 Device.instance.reset()
                 Device.instance.clearPreferences(context)
                 notificationRepository.deleteAll()
                 Device.instance.status = DeviceStatus.REMOTE_ERASED
                 refreshFcmToken()
-                Log.i(TAG, "Pairing erased")
             }
             else -> {
                 Log.i(TAG, "Inserting ${bisqNotification.type} notification to repository")

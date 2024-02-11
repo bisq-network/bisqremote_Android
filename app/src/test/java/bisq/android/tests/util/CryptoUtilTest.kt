@@ -19,16 +19,11 @@ package bisq.android.tests.util
 
 import bisq.android.util.CryptoUtil
 import bisq.android.util.CryptoUtil.Companion.generateKey
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.matchesPattern
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertTrue
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import java.util.UUID
 
 class CryptoUtilTest {
-
     private var key = generateKey()
     private var iv = generateValidIV()
     private var crypto = CryptoUtil(key)
@@ -36,7 +31,7 @@ class CryptoUtilTest {
     @Test
     fun testGenerateKeyIsValid() {
         val testKey = generateKey()
-        assertThat(testKey, matchesPattern("[0-9a-zA-Z/+]{32}"))
+        assertThat(testKey).matches("[0-9a-zA-Z/+]{32}")
     }
 
     @Test
@@ -45,7 +40,7 @@ class CryptoUtilTest {
         @Suppress("UnusedPrivateMember")
         for (i in 1..10000) {
             val testKey = generateKey()
-            assertTrue(testKey !in generatedKeys)
+            assertThat(testKey).isNotIn(generatedKeys)
             generatedKeys.add(testKey)
         }
     }
@@ -53,11 +48,12 @@ class CryptoUtilTest {
     @Test
     fun testEncryptDecryptRandomString() {
         val charPool: List<Char> = (' '..'~').toList()
-        val valueToEncrypt = (1..kotlin.random.Random.nextInt(10, 256))
-            .map { kotlin.random.Random.nextInt(0, charPool.size) }
-            .map(charPool::get)
-            .joinToString("")
-            .trim()
+        val valueToEncrypt =
+            (1..kotlin.random.Random.nextInt(10, 256))
+                .map { kotlin.random.Random.nextInt(0, charPool.size) }
+                .map(charPool::get)
+                .joinToString("")
+                .trim()
         var expectedDecryptedValue = valueToEncrypt
         while (expectedDecryptedValue.length % 16 != 0) {
             expectedDecryptedValue = "$expectedDecryptedValue "
@@ -66,8 +62,12 @@ class CryptoUtilTest {
         val encrypted = crypto.encrypt(valueToEncrypt, iv)
         val decrypted = crypto.decrypt(encrypted, iv)
 
-        assertNotEquals(valueToEncrypt, encrypted)
-        assertEquals(expectedDecryptedValue, decrypted)
+        assertThat(encrypted)
+            .describedAs("Encrypted value")
+            .isNotEqualTo(valueToEncrypt)
+        assertThat(decrypted)
+            .describedAs("Decrypted value")
+            .isEqualTo(expectedDecryptedValue)
     }
 
     @Test
@@ -81,7 +81,9 @@ class CryptoUtilTest {
         val encrypted = crypto.encrypt(valueToEncrypt, iv)
         val decrypted = crypto.decrypt(encrypted, iv)
 
-        assertEquals(expectedDecryptedValue, decrypted)
+        assertThat(decrypted)
+            .describedAs("Decrypted value")
+            .isEqualTo(expectedDecryptedValue)
     }
 
     @Test(expected = IllegalArgumentException::class)

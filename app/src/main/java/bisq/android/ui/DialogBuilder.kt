@@ -39,11 +39,12 @@ object DialogBuilder {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
         builder.setMessage(message)
-        builder.setCancelable(false)
+        builder.setCancelable(true)
         builder.setPositiveButton(positiveButtonText, positiveActionListener)
         if (negativeActionListener != null) {
             builder.setNegativeButton(
-                negativeButtonText, negativeActionListener
+                negativeButtonText,
+                negativeActionListener
             )
         } else {
             builder.setNegativeButton(
@@ -75,10 +76,11 @@ object DialogBuilder {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
         builder.setMessage(message)
-        builder.setCancelable(false)
+        builder.setCancelable(true)
         if (actionListener != null) {
             builder.setPositiveButton(
-                buttonText, actionListener
+                buttonText,
+                actionListener
             )
         } else {
             builder.setPositiveButton(
