@@ -14,10 +14,10 @@ outputs:
 runs:
     using: "composite"
     steps:
-        # Prefer ATD system images available in API 30+ as they are optimized for headless automated tests
-        # Otherwise use the google_apis system image since Google Play Services is required
-        # API 27 does not provide a google_apis system image and API 34 does not yet provide a
-        # google_atd system image
+        # Prefer ATD system images available in API 30+ as they are optimized for headless tests.
+        # Google Play services is required and is available in the google_atd and google_apis images.
+        # Note, API 27 does not provide a google_apis system image and API 34 does not yet provide a
+        # google_atd system image.
         -   id: get-avd-target
             run: echo "target=$(if [ ${{ inputs.api-level }} -eq 34 ]; then echo google_apis; elif [ ${{ inputs.api-level }} -eq 27 ]; then echo default; elif [ ${{ inputs.api-level }} -ge 30 ]; then echo google_atd; else echo google_apis; fi)" >> $GITHUB_OUTPUT
             shell: bash
