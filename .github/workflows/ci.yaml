@@ -113,7 +113,7 @@ jobs:
     instrumentation-tests:
         name: Instrumentation tests on API ${{ matrix.api-level }}
         runs-on: ubuntu-latest
-        timeout-minutes: 30
+        timeout-minutes: 15
         needs: unit-tests
         strategy:
             fail-fast: false
