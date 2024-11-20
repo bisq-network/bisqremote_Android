@@ -175,7 +175,7 @@ dependencies {
 }
 
 def androidTestsReportsDirectory() {
-    return "$buildDir/reports/androidTests/connected/debug"
+    return "$layout.buildDirectory/reports/androidTests/connected/debug"
 }
 
 tasks.register('embedScreenshotsIntoReport') {
@@ -229,18 +229,34 @@ static def deviceScreenshotsDir() {
 tasks.register('clearScreenshotsFromDevice', Exec) {
     group = "reporting"
     ignoreExitValue = true
+
+    def adbExecutableProvider = project.provider { android.getAdbExecutable().absolutePath }
+    def deviceScreenshotsDirProvider = project.provider { deviceScreenshotsDir() }
+
     doFirst {
-        executable "${android.getAdbExecutable().absolutePath}"
-        args 'shell', 'rm', '-rf', deviceScreenshotsDir()
+        commandLine = [
+            adbExecutableProvider.get(),
+            'shell', 'rm', '-rf',
+            deviceScreenshotsDirProvider.get()
+        ]
     }
 }
 
 tasks.register('fetchScreenshotsFromDevice', Exec) {
     group = "reporting"
     ignoreExitValue = true
+
+    def adbExecutableProvider = project.provider { android.getAdbExecutable().absolutePath }
+    def deviceScreenshotsDirProvider = project.provider { "${deviceScreenshotsDir()}/." }
+    def androidTestsReportsDirectoryProvider = project.provider { androidTestsReportsDirectory() }
+
     doFirst {
-        executable "${android.getAdbExecutable().absolutePath}"
-        args 'pull', "${deviceScreenshotsDir()}/.", androidTestsReportsDirectory()
+        commandLine = [
+            adbExecutableProvider.get(),
+            'pull',
+            deviceScreenshotsDirProvider.get(),
+            androidTestsReportsDirectoryProvider.get()
+        ]
     }
 }
 
