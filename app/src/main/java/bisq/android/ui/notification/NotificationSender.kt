@@ -32,11 +32,13 @@ import java.util.Date
 
 object NotificationSender {
     private const val TAG = "NotificationSender"
-    private const val MILLISECONDS_PER_SECOND = 1000L
+    private const val SUMMARY_NOTIFICATION_TAG = "summary"
 
     fun sendNotification(contentTitle: String, contentText: String?) {
+        val context = Application.applicationContext()
+
         if (ActivityCompat.checkSelfPermission(
-                Application.applicationContext(),
+                context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -44,22 +46,23 @@ object NotificationSender {
             return
         }
 
-        val intent = Intent(Application.applicationContext(), NotificationTableActivity::class.java).apply {
+        val intent = Intent(context, NotificationTableActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
         val requestCode = 0
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
-            Application.applicationContext(),
+            context,
             requestCode,
             intent,
             PendingIntent.FLAG_IMMUTABLE
         )
 
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        val notification = NotificationCompat.Builder(
-            Application.applicationContext(),
-            Application.applicationContext().getString(R.string.default_notification_channel_id)
-        )
+        val groupKey = context.getString(R.string.default_notification_group_key)
+        val channelId = context.getString(R.string.default_notification_channel_id)
+        val notificationManager = NotificationManagerCompat.from(context)
+
+        val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.bisq_mark)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
@@ -68,27 +71,44 @@ object NotificationSender {
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-            .setGroup(Application.applicationContext().getString(R.string.default_notification_group_key))
+            .setGroup(groupKey)
             .build()
 
-        val summaryNotification = NotificationCompat.Builder(
-            Application.applicationContext(),
-            Application.applicationContext().getString(R.string.default_notification_channel_id)
-        )
+        val summaryNotification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.bisq_mark)
-            .setGroup(Application.applicationContext().getString(R.string.default_notification_group_key))
+            .setGroup(groupKey)
             .setGroupSummary(true)
             .build()
 
-        // TODO investigate potential issue where first notification received is not
-        //  included in summary group, while subsequent notifications are included
-        NotificationManagerCompat.from(Application.applicationContext()).apply {
-            // The notification ID must be unique for each notification
-            val notificationId = (Date().time / MILLISECONDS_PER_SECOND % Int.MAX_VALUE).toInt()
-            notify(notificationId, notification)
+        // Get the current active notifications, other than summary notification
+        val activeNotifications = notificationManager.activeNotifications.filter {
+            it.groupKey.endsWith(groupKey) && it.tag != SUMMARY_NOTIFICATION_TAG
+        }
 
-            // The summary notification ID must stay the same so that it's only posted once
-            notify(0, summaryNotification)
+        notificationManager.apply {
+            // Post the summary notification only if there are already previous notifications.
+            // In other words, only if there are multiple notifications shown will they be grouped.
+            if (activeNotifications.isNotEmpty()) {
+                // The summary notification tag/id pair must stay the same so that it's only posted once
+                notify(SUMMARY_NOTIFICATION_TAG, 0, summaryNotification)
+
+                // Previous notifications must be updated to prevent an issue where the first notification
+                // received is not included in the summary group, while subsequent notifications are included.
+                // So as to prevent unnecessary updates, this only needs to be done if there are 2 or less
+                // active notifications.
+                if (activeNotifications.size <= 2) {
+                    activeNotifications.forEach { notification ->
+                        cancel(notification.tag, notification.id)
+                        notify(notification.tag, notification.id, notification.notification)
+                    }
+                }
+            }
+
+            // Post the new notification.
+            // Each notification must have a unique id or combination of tag/id pair.
+            // Using the current timestamp down to the millisecond should ensure uniqueness.
+            // Since the id only accepts an int, which does not have enough resolution, use the timestamp as the tag.
+            notify(Date().time.toString(), activeNotifications.size + 1, notification)
         }
     }
 }
