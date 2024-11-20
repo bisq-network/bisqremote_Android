@@ -17,12 +17,13 @@
 
 package bisq.android.services
 
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import bisq.android.Application
+import bisq.android.Application.Companion.isAppInBackground
 import bisq.android.R
+import bisq.android.database.BisqNotification
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.ui.notification.NotificationSender
@@ -176,14 +177,23 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             }
 
             // Since this is a data-only message, will need to show a notification if the app is not in the foreground
-            val myProcess = ActivityManager.RunningAppProcessInfo()
-            ActivityManager.getMyMemoryState(myProcess)
-            val isInBackground = myProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
-            if (isInBackground) {
-                // TODO show relevant message details for the title and text
-                //  (will need to decrypt the data)
-                NotificationSender.sendNotification(getString(R.string.you_have_received_notification), null)
+            if (isAppInBackground()) {
+                processNotification(encryptedData)?.let { bisqNotification ->
+                    NotificationSender.sendNotification(
+                        bisqNotification.title ?: getString(R.string.you_have_received_notification),
+                        bisqNotification.message
+                    )
+                } ?: NotificationSender.sendNotification(getString(R.string.you_have_received_notification), null)
             }
+        }
+    }
+
+    private fun processNotification(encryptedData: String): BisqNotification? {
+        return try {
+            NotificationProcessor.processNotification(encryptedData)
+        } catch (e: ProcessingException) {
+            e.message?.let { Log.e(TAG, it) }
+            null
         }
     }
 

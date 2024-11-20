@@ -17,6 +17,7 @@
 
 package bisq.android
 
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -47,6 +48,12 @@ class Application : MultiDexApplication() {
                 R.string.unknown
             }
             return version.toString()
+        }
+
+        fun isAppInBackground(): Boolean {
+            val myProcess = ActivityManager.RunningAppProcessInfo()
+            ActivityManager.getMyMemoryState(myProcess)
+            return myProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
         }
     }
 
