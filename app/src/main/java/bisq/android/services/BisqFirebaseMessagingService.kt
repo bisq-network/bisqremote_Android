@@ -29,7 +29,7 @@ import bisq.android.model.DeviceStatus
 import bisq.android.ui.notification.NotificationSender
 import bisq.android.ui.welcome.WelcomeActivity
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.GoogleApiAvailabilityLight
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -42,7 +42,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         private var tokenBeingFetched: Boolean = false
 
         fun isGooglePlayServicesAvailable(context: Context): Boolean {
-            val googleApiAvailability = GoogleApiAvailability.getInstance()
+            val googleApiAvailability = GoogleApiAvailabilityLight.getInstance()
             val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
             return resultCode == ConnectionResult.SUCCESS
         }

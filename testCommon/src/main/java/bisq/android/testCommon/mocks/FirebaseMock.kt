@@ -19,7 +19,7 @@ package bisq.android.testCommon.mocks
 
 import android.os.Build
 import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.GoogleApiAvailabilityLight
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.messaging.FirebaseMessaging
@@ -31,8 +31,6 @@ import io.mockk.unmockkStatic
 import org.junit.Assume.assumeTrue
 
 object FirebaseMock {
-    private const val FIREBASE_MESSAGING_CLASS = "com.google.firebase.messaging.FirebaseMessaging"
-    private const val GOOGLE_API_AVAILABILITY_CLASS = "com.google.android.gms.common.GoogleApiAvailability"
 
     fun mockFirebaseTokenSuccessful() {
         val firebaseMessagingMock = mockFirebaseMessaging()
@@ -69,7 +67,7 @@ object FirebaseMock {
     fun mockFirebaseNotInitialized() {
         checkStaticMockingSupport()
 
-        mockkStatic(FIREBASE_MESSAGING_CLASS)
+        mockkStatic(FirebaseMessaging::class)
 
         every { FirebaseMessaging.getInstance() } throws IllegalStateException("")
     }
@@ -77,10 +75,10 @@ object FirebaseMock {
     fun mockGooglePlayServicesAvailable() {
         checkStaticMockingSupport()
 
-        mockkStatic(GOOGLE_API_AVAILABILITY_CLASS)
+        mockkStatic(GoogleApiAvailabilityLight::class)
 
-        val googleApiAvailabilityMock = mockk<GoogleApiAvailability>()
-        every { GoogleApiAvailability.getInstance() } returns googleApiAvailabilityMock
+        val googleApiAvailabilityMock = mockk<GoogleApiAvailabilityLight>()
+        every { GoogleApiAvailabilityLight.getInstance() } returns googleApiAvailabilityMock
         every { googleApiAvailabilityMock.isGooglePlayServicesAvailable(any()) } returns
             ConnectionResult.SUCCESS
     }
@@ -88,22 +86,22 @@ object FirebaseMock {
     fun mockGooglePlayServicesNotAvailable() {
         checkStaticMockingSupport()
 
-        mockkStatic(GOOGLE_API_AVAILABILITY_CLASS)
+        mockkStatic(GoogleApiAvailabilityLight::class)
 
-        val googleApiAvailabilityMock = mockk<GoogleApiAvailability>()
-        every { GoogleApiAvailability.getInstance() } returns googleApiAvailabilityMock
+        val googleApiAvailabilityMock = mockk<GoogleApiAvailabilityLight>()
+        every { GoogleApiAvailabilityLight.getInstance() } returns googleApiAvailabilityMock
         every { googleApiAvailabilityMock.isGooglePlayServicesAvailable(any()) } returns
             ConnectionResult.SERVICE_MISSING
     }
 
     fun unmockFirebaseMessaging() {
-        unmockkStatic(FIREBASE_MESSAGING_CLASS, GOOGLE_API_AVAILABILITY_CLASS)
+        unmockkStatic(FirebaseMessaging::class, GoogleApiAvailabilityLight::class)
     }
 
     private fun mockFirebaseMessaging(): FirebaseMessaging {
         checkStaticMockingSupport()
 
-        mockkStatic(FIREBASE_MESSAGING_CLASS)
+        mockkStatic(FirebaseMessaging::class)
 
         val firebaseMessagingMock = mockk<FirebaseMessaging>()
         every { FirebaseMessaging.getInstance() } returns firebaseMessagingMock
@@ -117,7 +115,7 @@ object FirebaseMock {
     ) {
         checkStaticMockingSupport()
 
-        mockkStatic(FIREBASE_MESSAGING_CLASS)
+        mockkStatic(FirebaseMessaging::class)
 
         val slotGetTokenListener = slot<OnCompleteListener<String>>()
         val slotDeleteTokenListener = slot<OnCompleteListener<Void>>()
