@@ -69,7 +69,7 @@ class WelcomeActivity : UnpairedBaseActivity() {
         }
     }
 
-    // TODO determine if this should check/request post notifications permission
+    // TODO might need to check/request post notifications permission
     //  in particular to handle the scenario where the app was updated while already paired
     override fun onStart() {
         super.onStart()

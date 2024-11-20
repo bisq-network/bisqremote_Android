@@ -62,7 +62,7 @@ class NotificationTableActivity : PairedBaseActivity() {
         initView()
     }
 
-    // TODO perhaps should close all data-only notifications
+    // TODO close all data-only notifications
     override fun onStart() {
         super.onStart()
         viewModel.bisqNotifications.observe(this) { bisqNotifications ->
@@ -213,7 +213,7 @@ class NotificationTableActivity : PairedBaseActivity() {
                 5 -> {
                     bisqNotification.type = NotificationType.MARKET.name
                     bisqNotification.title = "New offer"
-                    bisqNotification.message = "A new offer offer with price 36000 USD" +
+                    bisqNotification.message = "A new offer with price 36000 USD" +
                         " (1% above market price) and payment method Zelle was published to" +
                         " the Bisq offerbook.\nThe offer ID is 34534"
                 }
