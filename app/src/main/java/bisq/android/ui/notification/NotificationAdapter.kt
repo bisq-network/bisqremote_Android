@@ -52,7 +52,7 @@ class NotificationAdapter(
         }
 
         holder.title.text = notification.title
-        holder.time.text = DateUtil.format(notification.sentDate)
+        holder.time.text = if (notification.sentDate > 0) DateUtil.format(notification.sentDate) else ""
         holder.read = notification.read
         if (notification.read) {
             holder.icon.setTextColor(
