@@ -29,12 +29,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import bisq.android.Application
 import bisq.android.R
 import bisq.android.database.BisqNotification
 import bisq.android.model.Device
@@ -62,13 +64,27 @@ class NotificationTableActivity : PairedBaseActivity() {
         initView()
     }
 
-    // TODO close all data-only notifications
     override fun onStart() {
         super.onStart()
         viewModel.bisqNotifications.observe(this) { bisqNotifications ->
             updateView(
                 bisqNotifications!!
             )
+        }
+        clearDataNotifications()
+    }
+
+    private fun clearDataNotifications() {
+        val context = Application.applicationContext()
+        val notificationManager = NotificationManagerCompat.from(context)
+        val groupKey = context.getString(R.string.default_notification_group_key)
+
+        notificationManager.apply {
+            activeNotifications.filter {
+                it.groupKey.endsWith(groupKey)
+            }.forEach { notification ->
+                cancel(notification.tag, notification.id)
+            }
         }
     }
 
