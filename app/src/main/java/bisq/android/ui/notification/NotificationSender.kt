@@ -85,30 +85,32 @@ object NotificationSender {
             it.groupKey.endsWith(groupKey) && it.tag != SUMMARY_NOTIFICATION_TAG
         }
 
-        notificationManager.apply {
-            // Post the summary notification only if there are already previous notifications.
-            // In other words, only if there are multiple notifications shown will they be grouped.
-            if (activeNotifications.isNotEmpty()) {
-                // The summary notification tag/id pair must stay the same so that it's only posted once
-                notify(SUMMARY_NOTIFICATION_TAG, 0, summaryNotification)
+        // Post the summary notification only if there are already previous notifications.
+        // In other words, only if there are multiple notifications shown will they be grouped.
+        if (activeNotifications.isNotEmpty()) {
+            // The summary notification tag/id pair must stay the same so that it's only posted once
+            notificationManager.notify(SUMMARY_NOTIFICATION_TAG, 0, summaryNotification)
 
-                // Previous notifications must be updated to prevent an issue where the first notification
-                // received is not included in the summary group, while subsequent notifications are included.
-                // So as to prevent unnecessary updates, this only needs to be done if there are 2 or less
-                // active notifications.
-                if (activeNotifications.size <= 2) {
-                    activeNotifications.forEach { notification ->
-                        cancel(notification.tag, notification.id)
-                        notify(notification.tag, notification.id, notification.notification)
-                    }
+            // Previous notifications must be updated to prevent an issue where the first notification
+            // received is not included in the summary group, while subsequent notifications are included.
+            // So as to prevent unnecessary updates, this only needs to be done if there are 2 or less
+            // active notifications.
+            if (activeNotifications.size <= 2) {
+                activeNotifications.forEach { activeNotification ->
+                    notificationManager.cancel(activeNotification.tag, activeNotification.id)
+                    notificationManager.notify(
+                        activeNotification.tag,
+                        activeNotification.id,
+                        activeNotification.notification
+                    )
                 }
             }
-
-            // Post the new notification.
-            // Each notification must have a unique id or combination of tag/id pair.
-            // Using the current timestamp down to the millisecond should ensure uniqueness.
-            // Since the id only accepts an int, which does not have enough resolution, use the timestamp as the tag.
-            notify(Date().time.toString(), activeNotifications.size + 1, notification)
         }
+
+        // Post the new notification.
+        // Each notification must have a unique id or combination of tag/id pair.
+        // Using the current timestamp down to the millisecond should ensure uniqueness.
+        // Since the id only accepts an int, which does not have enough resolution, use the timestamp as the tag.
+        notificationManager.notify(Date().time.toString(), activeNotifications.size + 1, notification)
     }
 }

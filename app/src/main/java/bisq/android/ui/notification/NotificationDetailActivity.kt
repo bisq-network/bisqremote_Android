@@ -85,9 +85,15 @@ class NotificationDetailActivity : PairedBaseActivity() {
             action.visibility = View.GONE
         }
 
-        eventTime.text = if (notification.sentDate > 0)
-            getString(R.string.event_occurred_at, DateUtil.format(notification.sentDate)) else ""
-        receivedTime.text = if (notification.receivedDate > 0)
-            getString(R.string.event_received_at, DateUtil.format(notification.receivedDate)) else ""
+        eventTime.text = if (notification.sentDate > 0) {
+            getString(R.string.event_occurred_at, DateUtil.format(notification.sentDate))
+        } else {
+            ""
+        }
+        receivedTime.text = if (notification.receivedDate > 0) {
+            getString(R.string.event_received_at, DateUtil.format(notification.receivedDate))
+        } else {
+            ""
+        }
     }
 }
