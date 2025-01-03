@@ -37,9 +37,10 @@ class NotificationRepository(context: Context) {
 
     suspend fun insert(bisqNotification: BisqNotification) = coroutineScope {
         launch {
-            if (bisqNotification !in bisqNotificationDao.getAll()) {
-                bisqNotificationDao.insert(bisqNotification)
-            }
+            bisqNotificationDao.insert(bisqNotification)
+            // This is a hack to prevent duplicate entries.
+            // All other attempts at enforcing uniqueness were unsuccessful.
+            bisqNotificationDao.removeDuplicates()
         }
     }
 

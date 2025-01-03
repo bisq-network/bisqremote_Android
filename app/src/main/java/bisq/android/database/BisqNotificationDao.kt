@@ -37,6 +37,18 @@ interface BisqNotificationDao {
     @Insert
     suspend fun insert(bisqNotification: BisqNotification): Long
 
+    @Query(
+        """
+        DELETE FROM BisqNotification
+        WHERE rowid NOT IN (
+            SELECT MIN(rowid)
+            FROM BisqNotification
+            GROUP BY version, type, title, message, actionRequired, txId, sentDate
+        )
+        """
+    )
+    suspend fun removeDuplicates()
+
     @Delete
     suspend fun delete(bisqNotification: BisqNotification)
 

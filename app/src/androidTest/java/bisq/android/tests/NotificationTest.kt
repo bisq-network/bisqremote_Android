@@ -40,6 +40,7 @@ import bisq.android.util.DateUtil
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.GsonBuilder
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -73,8 +74,14 @@ class NotificationTest {
     private val bisqNotification = buildBisqNotification()
 
     @Before
-    fun setup() {
+    fun setupDevice() {
         pairDevice()
+    }
+
+    @After
+    fun closeNotificationPanel() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        device.pressBack()
     }
 
     @Test
@@ -127,6 +134,10 @@ class NotificationTest {
 
         val notificationTableScreen = NotificationTableScreen()
         assertThat(notificationTableScreen.notificationRecylerView.isDisplayed()).isTrue()
+        val notificationCount = notificationTableScreen.notificationRecylerView.getItemCount()
+        assertThat(notificationCount)
+            .describedAs("Notification count")
+            .isEqualTo(1)
     }
 
     private fun pairDevice() {
