@@ -58,8 +58,6 @@ class WelcomeActivity : UnpairedBaseActivity() {
 
         initView()
 
-        registerNotificationReceiver()
-
         if (Device.instance.readFromPreferences(this)) {
             return
         }
@@ -103,11 +101,6 @@ class WelcomeActivity : UnpairedBaseActivity() {
                 // Do nothing
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterNotificationReceiver()
     }
 
     private fun initView() {

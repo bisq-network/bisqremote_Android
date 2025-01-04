@@ -22,6 +22,7 @@ import android.content.IntentFilter
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.annotation.IdRes
@@ -42,37 +43,51 @@ open class BaseActivity : AppCompatActivity() {
         return findViewById(res)
     }
 
-    override fun onStart() {
-        super.onStart()
-        registerIntentReceiver()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate ${this::class.simpleName}")
+        super.onCreate(savedInstanceState)
+        registerNotificationReceiver()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        Log.d(TAG, "onDestroy ${this::class.simpleName}")
+        super.onDestroy()
+        unregisterNotificationReceiver()
+    }
+
+    override fun onPause() {
+        Log.d(TAG, "onPause ${this::class.simpleName}")
+        super.onPause()
         unregisterIntentReceiver()
     }
 
-    protected fun registerNotificationReceiver() {
-        Log.i(TAG, "Registering notification receiver")
+    override fun onResume() {
+        Log.d(TAG, "onResume ${this::class.simpleName}")
+        super.onResume()
+        registerIntentReceiver()
+    }
+
+    private fun registerNotificationReceiver() {
+        Log.d(TAG, "Registering notification receiver for ${this::class.simpleName}")
         if (notificationReceiver != null) {
-            Log.i(TAG, "Notification receiver already registered")
+            Log.d(TAG, "Notification receiver already registered")
             return
         }
         notificationReceiver = NotificationReceiver()
         val filter = IntentFilter()
         filter.addAction(getString(R.string.notification_receiver_action))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(notificationReceiver, filter, RECEIVER_NOT_EXPORTED)
+            registerReceiver(notificationReceiver, filter, RECEIVER_EXPORTED)
         } else {
             registerReceiver(notificationReceiver, filter)
         }
-        Log.i(TAG, "Notification receiver registered")
+        Log.d(TAG, "Notification receiver registered for ${this::class.simpleName}")
     }
 
-    protected fun unregisterNotificationReceiver() {
-        Log.i(TAG, "Unregistering notification receiver")
+    private fun unregisterNotificationReceiver() {
+        Log.d(TAG, "Unregistering notification receiver for ${this::class.simpleName}")
         if (notificationReceiver == null) {
-            Log.i(TAG, "Notification receiver already unregistered")
+            Log.d(TAG, "Notification receiver already unregistered")
             return
         }
         try {
@@ -81,30 +96,30 @@ open class BaseActivity : AppCompatActivity() {
             // Receiver not registered, do nothing
         }
         notificationReceiver = null
-        Log.i(TAG, "Notification receiver unregistered")
+        Log.d(TAG, "Notification receiver unregistered for ${this::class.simpleName}")
     }
 
-    protected fun registerIntentReceiver() {
-        Log.i(TAG, "Registering intent receiver")
+    private fun registerIntentReceiver() {
+        Log.d(TAG, "Registering intent receiver for ${this::class.simpleName}")
         if (intentReceiver != null) {
-            Log.i(TAG, "Intent receiver already registered")
+            Log.d(TAG, "Intent receiver already registered")
             return
         }
         intentReceiver = IntentReceiver(this)
         val filter = IntentFilter()
         filter.addAction(getString(R.string.intent_receiver_action))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(intentReceiver, filter, RECEIVER_NOT_EXPORTED)
+            registerReceiver(intentReceiver, filter, RECEIVER_EXPORTED)
         } else {
             registerReceiver(intentReceiver, filter)
         }
-        Log.i(TAG, "Intent receiver registered")
+        Log.d(TAG, "Intent receiver registered for ${this::class.simpleName}")
     }
 
-    protected fun unregisterIntentReceiver() {
-        Log.i(TAG, "Unregistering intent receiver")
+    private fun unregisterIntentReceiver() {
+        Log.d(TAG, "Unregistering intent receiver for ${this::class.simpleName}")
         if (intentReceiver == null) {
-            Log.i(TAG, "Intent receiver already unregistered")
+            Log.d(TAG, "Intent receiver already unregistered")
             return
         }
         try {
@@ -113,7 +128,7 @@ open class BaseActivity : AppCompatActivity() {
             // Receiver not registered, do nothing
         }
         intentReceiver = null
-        Log.i(TAG, "Intent receiver unregistered")
+        Log.d(TAG, "Intent receiver unregistered for ${this::class.simpleName}")
     }
 
     protected fun playTone() {
