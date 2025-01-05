@@ -175,7 +175,7 @@ dependencies {
 }
 
 def androidTestsReportsDirectory() {
-    return "$layout.buildDirectory/reports/androidTests/connected/debug"
+    return "${layout.buildDirectory.get()}/reports/androidTests/connected/debug"
 }
 
 tasks.register('embedScreenshotsIntoReport') {
