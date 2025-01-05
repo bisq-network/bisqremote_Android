@@ -23,6 +23,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
+import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
@@ -93,8 +94,8 @@ class NotificationTest {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.openNotification()
         device.wait(Until.hasObject(By.text("Bisq")), WAIT_CONDITION_TIMEOUT_MS)
-        val title: UiObject2 = device.findObject(By.text(bisqNotification.title!!))
-        val text: UiObject2 = device.findObject(By.text(bisqNotification.message!!))
+        val title: UiObject2 = device.getObject(By.text(bisqNotification.title!!))
+        val text: UiObject2 = device.getObject(By.text(bisqNotification.message!!))
         assertThat(title.text).isEqualTo(bisqNotification.title)
         assertThat(text.text).isEqualTo(bisqNotification.message)
     }
@@ -112,8 +113,8 @@ class NotificationTest {
         device.openNotification()
         bisqNotifications.forEach { bisqNotification ->
             device.wait(Until.hasObject(By.text("Bisq")), WAIT_CONDITION_TIMEOUT_MS)
-            val title: UiObject2 = device.findObject(By.text(bisqNotification.title!!))
-            val text: UiObject2 = device.findObject(By.text(bisqNotification.message!!))
+            val title: UiObject2 = device.getObject(By.text(bisqNotification.title!!))
+            val text: UiObject2 = device.getObject(By.text(bisqNotification.message!!))
             assertThat(title.text).isEqualTo(bisqNotification.title)
             assertThat(text.text).isEqualTo(bisqNotification.message)
         }
@@ -128,7 +129,7 @@ class NotificationTest {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.openNotification()
         device.wait(Until.hasObject(By.text("Bisq")), WAIT_CONDITION_TIMEOUT_MS)
-        val title: UiObject2 = device.findObject(By.text(bisqNotification.title!!))
+        val title: UiObject2 = device.getObject(By.text(bisqNotification.title!!))
 
         title.click()
 
@@ -177,4 +178,7 @@ class NotificationTest {
             "${BISQ_MESSAGE_ANDROID_MAGIC}|$initializationVector|$encryptedContent"
         ).build()
     }
+
+    private fun UiDevice.getObject(selector: BySelector): UiObject2 =
+        findObject(selector) ?: error("Object not found for: $selector")
 }
