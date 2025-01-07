@@ -18,6 +18,7 @@
 package bisq.android.tests
 
 import android.content.Context
+import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -58,7 +59,11 @@ class NotificationTest {
     private val fcmTestRule = FirebasePushNotificationTestRule(BisqFirebaseMessagingService())
 
     private val permissionRule: GrantPermissionRule
-        get() = GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS)
+        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            GrantPermissionRule.grant(android.Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            GrantPermissionRule.grant()
+        }
 
     // Define a RuleChain to ensure screenshots are taken BEFORE the teardown of activity rules
     @get:Rule
