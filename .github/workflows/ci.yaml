@@ -151,6 +151,9 @@ jobs:
                     sudo udevadm control --reload-rules
                     sudo udevadm trigger --name-match=kvm
 
+            -   name: Create directory for AVD
+                run: mkdir -p ~/.android/avd
+
             -   name: Get AVD info
                 uses: ./.github/actions/get-avd-info
                 id: avd-info
