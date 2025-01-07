@@ -116,8 +116,8 @@ class NotificationTest {
 
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.openNotification()
+        device.wait(Until.hasObject(By.text("Bisq")), WAIT_CONDITION_TIMEOUT_MS)
         bisqNotifications.forEach { bisqNotification ->
-            device.wait(Until.hasObject(By.text("Bisq")), WAIT_CONDITION_TIMEOUT_MS)
             val title: UiObject2 = device.getObject(By.text(bisqNotification.title!!))
             val text: UiObject2 = device.getObject(By.text(bisqNotification.message!!))
             assertThat(title.text).isEqualTo(bisqNotification.title)
@@ -184,6 +184,8 @@ class NotificationTest {
         ).build()
     }
 
-    private fun UiDevice.getObject(selector: BySelector): UiObject2 =
-        findObject(selector) ?: error("Object not found for: $selector")
+    private fun UiDevice.getObject(selector: BySelector): UiObject2 {
+        wait(Until.hasObject(selector), WAIT_CONDITION_TIMEOUT_MS)
+        return findObject(selector) ?: error("Object not found for: $selector")
+    }
 }
