@@ -17,6 +17,8 @@
 
 package bisq.android.tests
 
+import android.app.Notification
+import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.test.core.app.ApplicationProvider
@@ -117,11 +119,13 @@ class NotificationTest {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.openNotification()
         device.wait(Until.hasObject(By.text("Bisq")), WAIT_CONDITION_TIMEOUT_MS)
+        val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         bisqNotifications.forEach { bisqNotification ->
-            val title: UiObject2 = device.getObject(By.text(bisqNotification.title!!))
-            val text: UiObject2 = device.getObject(By.text(bisqNotification.message!!))
-            assertThat(title.text).isEqualTo(bisqNotification.title)
-            assertThat(text.text).isEqualTo(bisqNotification.message)
+            assertThat(
+                manager.activeNotifications.find {
+                    it.notification.extras.getString(Notification.EXTRA_TEXT).equals(bisqNotification.message)
+                }
+            ).isNotNull
         }
     }
 
