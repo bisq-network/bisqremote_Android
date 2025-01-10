@@ -101,10 +101,17 @@ class NotificationTest {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.openNotification()
         device.wait(Until.hasObject(By.text("Bisq")), WAIT_CONDITION_TIMEOUT_MS)
-        val title: UiObject2 = device.getObject(By.text(bisqNotification.title!!))
-        val text: UiObject2 = device.getObject(By.text(bisqNotification.message!!))
-        assertThat(title.text).isEqualTo(bisqNotification.title)
-        assertThat(text.text).isEqualTo(bisqNotification.message)
+        val manager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        assertThat(
+            manager.activeNotifications.find {
+                it.notification.extras.getString(Notification.EXTRA_TITLE).equals(bisqNotification.title)
+            }
+        ).isNotNull
+        assertThat(
+            manager.activeNotifications.find {
+                it.notification.extras.getString(Notification.EXTRA_TEXT).equals(bisqNotification.message)
+            }
+        ).isNotNull
     }
 
     @Test
