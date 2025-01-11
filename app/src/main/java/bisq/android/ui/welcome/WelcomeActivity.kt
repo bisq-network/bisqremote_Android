@@ -67,8 +67,6 @@ class WelcomeActivity : UnpairedBaseActivity() {
         }
     }
 
-    // TODO might need to check/request post notifications permission
-    //  in particular to handle the scenario where the app was updated while already paired
     override fun onStart() {
         super.onStart()
 
@@ -194,8 +192,6 @@ class WelcomeActivity : UnpairedBaseActivity() {
     }
 
     private fun maybeProcessOpenedNotification() {
-        // TODO ensure the corresponding notification detail activity is loaded
-        //  for both notification and data messages
         val extras = intent.extras
         if (extras != null) {
             Log.i(TAG, "Processing opened notification")
