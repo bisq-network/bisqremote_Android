@@ -17,7 +17,6 @@
 
 package bisq.android.database
 
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -27,7 +26,6 @@ import com.google.gson.annotations.SerializedName
 @Entity
 data class BisqNotification(
     @PrimaryKey(autoGenerate = true)
-    @NonNull
     @SerializedName("uid")
     var uid: Int = 0,
 
@@ -68,21 +66,20 @@ data class BisqNotification(
     var read: Boolean = false
 ) {
     override fun equals(other: Any?): Boolean {
-        return when (other) {
-            is BisqNotification -> {
-                this.type == other.type &&
-                    this.title == other.title &&
-                    this.message == other.message &&
-                    this.actionRequired == other.actionRequired &&
-                    this.txId == other.txId &&
-                    this.sentDate == other.sentDate
-            }
-            else -> false
-        }
+        if (this === other) return true
+        if (other !is BisqNotification) return false
+        return version == other.version &&
+            type == other.type &&
+            title == other.title &&
+            message == other.message &&
+            actionRequired == other.actionRequired &&
+            txId == other.txId &&
+            sentDate == other.sentDate
     }
 
     override fun hashCode(): Int {
-        return uid
+        return listOf(version, type, title, message, actionRequired, txId, sentDate)
+            .hashCode()
     }
 
     override fun toString(): String {

@@ -17,24 +17,21 @@
 
 package bisq.android.tests.services
 
-import bisq.android.mocks.FirebaseMock
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.services.BisqFirebaseMessagingService.Companion.fetchFcmToken
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isFirebaseMessagingInitialized
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isGooglePlayServicesAvailable
 import bisq.android.services.BisqFirebaseMessagingService.Companion.refreshFcmToken
+import bisq.android.testCommon.mocks.FirebaseMock
 import io.mockk.mockk
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Ignore
 import org.junit.Test
 
 class BisqFirebaseMessagingServiceTest {
+    // TODO add tests for notification vs data messages
 
     @After
     fun cleanup() {
@@ -44,25 +41,25 @@ class BisqFirebaseMessagingServiceTest {
     @Test
     fun testIsGooglePlayServicesAvailableReturnsFalseWhenNotAvailable() {
         FirebaseMock.mockGooglePlayServicesNotAvailable()
-        assertFalse(isGooglePlayServicesAvailable(mockk()))
+        assertThat(isGooglePlayServicesAvailable(mockk())).isFalse()
     }
 
     @Test
     fun testIsGooglePlayServicesAvailableReturnsTrueWhenAvailable() {
         FirebaseMock.mockGooglePlayServicesAvailable()
-        assertTrue(isGooglePlayServicesAvailable(mockk()))
+        assertThat(isGooglePlayServicesAvailable(mockk())).isTrue()
     }
 
     @Test
     fun testIsFirebaseMessagingInitializedReturnsFalseWhenNotInitialized() {
         FirebaseMock.mockFirebaseNotInitialized()
-        assertFalse(isFirebaseMessagingInitialized())
+        assertThat(isFirebaseMessagingInitialized()).isFalse()
     }
 
     @Test
     fun testIsFirebaseMessagingInitializedReturnsTrueWhenInitialized() {
         FirebaseMock.mockFirebaseTokenSuccessful()
-        assertTrue(isFirebaseMessagingInitialized())
+        assertThat(isFirebaseMessagingInitialized()).isTrue()
     }
 
     @Test
@@ -70,9 +67,15 @@ class BisqFirebaseMessagingServiceTest {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
         Device.instance.reset()
         fetchFcmToken()
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .matches("[0-9a-zA-Z/+]{32}")
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isNull()
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
     }
 
     @Test
@@ -84,11 +87,19 @@ class BisqFirebaseMessagingServiceTest {
         fetchFcmToken {
             invokeCount++
         }
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .matches("[0-9a-zA-Z/+]{32}")
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isNull()
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
 
-        assertEquals(1, invokeCount)
+        assertThat(invokeCount)
+            .describedAs("Fetch FCM token invoke count")
+            .isEqualTo(1)
     }
 
     @Test
@@ -96,14 +107,19 @@ class BisqFirebaseMessagingServiceTest {
         FirebaseMock.mockFirebaseTokenSuccessful()
         Device.instance.reset()
         fetchFcmToken()
-        assertEquals(
-            "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
-                "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
-                "QDD7UlnVB-giAI",
-            Device.instance.token
-        )
-        assertNotNull(Device.instance.key)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(
+                "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
+                    "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
+                    "QDD7UlnVB-giAI"
+            )
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .isNotNull()
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
     }
 
     @Test
@@ -115,16 +131,23 @@ class BisqFirebaseMessagingServiceTest {
         fetchFcmToken {
             invokeCount++
         }
-        assertEquals(
-            "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
-                "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
-                "QDD7UlnVB-giAI",
-            Device.instance.token
-        )
-        assertNotNull(Device.instance.key)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(
+                "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
+                    "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
+                    "QDD7UlnVB-giAI"
+            )
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .isNotNull()
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
 
-        assertEquals(1, invokeCount)
+        assertThat(invokeCount)
+            .describedAs("Fetch FCM token invoke count")
+            .isEqualTo(1)
     }
 
     @Test
@@ -133,9 +156,15 @@ class BisqFirebaseMessagingServiceTest {
         FirebaseMock.mockFirebaseTokenUnsuccessful()
         Device.instance.reset()
         refreshFcmToken()
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .isNull()
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isNull()
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
     }
 
     @Test
@@ -148,11 +177,19 @@ class BisqFirebaseMessagingServiceTest {
         refreshFcmToken {
             invokeCount++
         }
-        assertNull(Device.instance.key)
-        assertNull(Device.instance.token)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .isNull()
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isNull()
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
 
-        assertEquals(1, invokeCount)
+        assertThat(invokeCount)
+            .describedAs("Fetch FCM token invoke count")
+            .isEqualTo(1)
     }
 
     @Test
@@ -161,14 +198,19 @@ class BisqFirebaseMessagingServiceTest {
         FirebaseMock.mockFirebaseTokenSuccessful()
         Device.instance.reset()
         refreshFcmToken()
-        assertEquals(
-            "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
-                "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
-                "QDD7UlnVB-giAI",
-            Device.instance.token
-        )
-        assertNotNull(Device.instance.key)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(
+                "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
+                    "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
+                    "QDD7UlnVB-giAI"
+            )
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .isNotNull()
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
     }
 
     @Test
@@ -181,15 +223,22 @@ class BisqFirebaseMessagingServiceTest {
         refreshFcmToken {
             invokeCount++
         }
-        assertEquals(
-            "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
-                "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
-                "QDD7UlnVB-giAI",
-            Device.instance.token
-        )
-        assertNotNull(Device.instance.key)
-        assertEquals(DeviceStatus.UNPAIRED, Device.instance.status)
+        assertThat(Device.instance.token)
+            .describedAs("Device token")
+            .isEqualTo(
+                "cutUn7ZaTra9q3ayZG5vCQ:APA91bGrc9pTJdqzBgKYWQfP4I1g21rukjFpyKsjGCvFqnQl8" +
+                    "owMqD_7_HB7viqHYXW5XE5O8B82Vyu9kZbAZ7u-S1sP_qVU9HS-MjZlfFJXc-LU_ycjwdHYE7XPFU" +
+                    "QDD7UlnVB-giAI"
+            )
+        assertThat(Device.instance.key)
+            .describedAs("Device key")
+            .isNotNull()
+        assertThat(Device.instance.status)
+            .describedAs("Device status")
+            .isEqualTo(DeviceStatus.UNPAIRED)
 
-        assertEquals(1, invokeCount)
+        assertThat(invokeCount)
+            .describedAs("Fetch FCM token invoke count")
+            .isEqualTo(1)
     }
 }

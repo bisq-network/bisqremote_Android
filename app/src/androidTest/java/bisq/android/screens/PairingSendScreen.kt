@@ -21,6 +21,5 @@ import bisq.android.R
 import bisq.android.screens.elements.ButtonElement
 
 class PairingSendScreen : Screen() {
-
-    val sendPairingTokenButton = ButtonElement(R.id.sendPairingTokenButton)
+    val sendPairingTokenButton = ButtonElement(R.id.pairing_send_pairing_token_button)
 }

@@ -17,15 +17,18 @@
 
 package bisq.android.screens.elements
 
+import android.view.View
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import org.hamcrest.Matcher
 
-open class Element(private val id: Int) {
+abstract class Element {
+    abstract fun getViewMatcher(): Matcher<View>?
 
     fun isDisplayed(): Boolean {
         try {
-            Espresso.onView(ViewMatchers.withId(id))
+            Espresso.onView(getViewMatcher())
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         } catch (e: AssertionError) {
             return false
@@ -35,7 +38,7 @@ open class Element(private val id: Int) {
 
     fun isEnabled(): Boolean {
         try {
-            Espresso.onView(ViewMatchers.withId(id))
+            Espresso.onView(getViewMatcher())
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
                 .check(ViewAssertions.matches(ViewMatchers.isEnabled()))
         } catch (e: AssertionError) {

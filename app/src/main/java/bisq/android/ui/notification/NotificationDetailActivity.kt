@@ -19,6 +19,7 @@ package bisq.android.ui.notification
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import bisq.android.R
@@ -34,6 +35,7 @@ class NotificationDetailActivity : PairedBaseActivity() {
     private lateinit var action: TextView
     private lateinit var eventTime: TextView
     private lateinit var receivedTime: TextView
+    private lateinit var deleteButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,11 +58,16 @@ class NotificationDetailActivity : PairedBaseActivity() {
 
     private fun initView() {
         setContentView(R.layout.activity_notification_detail)
-        title = bind(R.id.detail_title)
-        message = bind(R.id.detail_message)
-        action = bind(R.id.detail_action)
-        eventTime = bind(R.id.detail_event_time)
-        receivedTime = bind(R.id.detail_received_time)
+        title = bind(R.id.notification_detail_title)
+        message = bind(R.id.notification_detail_message)
+        action = bind(R.id.notification_detail_action)
+        eventTime = bind(R.id.notification_detail_event_time)
+        receivedTime = bind(R.id.notification_detail_received_time)
+        deleteButton = bind(R.id.notification_delete_button)
+        deleteButton.setOnClickListener {
+            getNotification()?.let { notification -> viewModel.delete(notification) }
+            finish()
+        }
     }
 
     private fun updateView(notification: BisqNotification) {
@@ -78,9 +85,15 @@ class NotificationDetailActivity : PairedBaseActivity() {
             action.visibility = View.GONE
         }
 
-        eventTime.text =
+        eventTime.text = if (notification.sentDate > 0) {
             getString(R.string.event_occurred_at, DateUtil.format(notification.sentDate))
-        receivedTime.text =
+        } else {
+            ""
+        }
+        receivedTime.text = if (notification.receivedDate > 0) {
             getString(R.string.event_received_at, DateUtil.format(notification.receivedDate))
+        } else {
+            ""
+        }
     }
 }

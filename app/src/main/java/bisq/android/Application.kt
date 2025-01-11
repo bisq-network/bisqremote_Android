@@ -17,9 +17,14 @@
 
 package bisq.android
 
+import android.app.ActivityManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
+import bisq.android.ui.ThemeProvider
 
 class Application : MultiDexApplication() {
     init {
@@ -44,5 +49,32 @@ class Application : MultiDexApplication() {
             }
             return version.toString()
         }
+
+        fun isAppInBackground(): Boolean {
+            val myProcess = ActivityManager.RunningAppProcessInfo()
+            ActivityManager.getMyMemoryState(myProcess)
+            return myProcess.importance != ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+        }
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        val theme = ThemeProvider(this).getThemeFromPreferences()
+        AppCompatDelegate.setDefaultNightMode(theme)
+
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
+        val id = getString(R.string.default_notification_channel_id)
+        val name = getString(R.string.notification_channel_name)
+        val descriptionText = getString(R.string.notification_channel_description)
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(id, name, importance)
+            .apply { description = descriptionText }
+
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }

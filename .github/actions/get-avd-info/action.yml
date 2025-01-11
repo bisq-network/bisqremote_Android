@@ -5,18 +5,22 @@ inputs:
         description: The API level for which to retrieve AVD info
         required: true
 outputs:
-    arch:
-        description: CPU architecture of the system image
-        value: ${{ steps.get-avd-arch.outputs.arch }}
     target:
         description: Target of the system image
         value: ${{ steps.get-avd-target.outputs.target }}
+    arch:
+        description: CPU architecture of the system image
+        value: ${{ steps.get-avd-arch.outputs.arch }}
 runs:
     using: "composite"
     steps:
-        -   id: get-avd-arch
-            run: echo "::set-output name=arch::$(if [ ${{ inputs.api-level }} -ge 30 ]; then echo x86_64; else echo x86; fi)"
-            shell: bash
+        # Prefer ATD system images available in API 30+ as they are optimized for headless tests.
+        # Google Play services is required and is available in the google_atd and google_apis images.
+        # Note, API 27 does not provide a google_apis system image.
         -   id: get-avd-target
-            run: echo "::set-output name=target::$(if [ ${{ inputs.api-level }} -ge 32 ]; then echo google_apis; else echo default; fi)"
+            run: echo "target=$(if [ ${{ inputs.api-level }} -eq 27 ]; then echo default; elif [ ${{ inputs.api-level }} -ge 30 ]; then echo google_atd; else echo google_apis; fi)" >> $GITHUB_OUTPUT
+            shell: bash
+        # Prefer x86_64 architecture
+        -   id: get-avd-arch
+            run: echo "arch=x86_64" >> $GITHUB_OUTPUT
             shell: bash

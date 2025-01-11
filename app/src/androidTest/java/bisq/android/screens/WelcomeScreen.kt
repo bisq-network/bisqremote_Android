@@ -24,9 +24,8 @@ import bisq.android.screens.dialogs.PromptDialog
 import bisq.android.screens.elements.ButtonElement
 
 class WelcomeScreen : Screen() {
-
-    val pairButton = ButtonElement(R.id.pairButton)
-    val learnMoreButton = ButtonElement(R.id.learnMoreButton)
+    val pairButton = ButtonElement(R.id.welcome_pair_button)
+    val learnMoreButton = ButtonElement(R.id.welcome_learn_more_button)
     val alertDialogGooglePlayServicesUnavailable = PromptDialog(
         applicationContext.resources.getString(R.string.google_play_services_unavailable)
     )
@@ -34,6 +33,6 @@ class WelcomeScreen : Screen() {
         applicationContext.resources.getString(R.string.cannot_retrieve_fcm_token)
     )
     val alertDialogLoadBisqMobileUrl = ChoicePromptDialog(
-        applicationContext.resources.getString(R.string.load_web_page_text, BISQ_MOBILE_URL)
+        applicationContext.resources.getString(R.string.load_web_page_confirmation, BISQ_MOBILE_URL)
     )
 }

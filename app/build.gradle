@@ -1,22 +1,13 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
-apply plugin: 'org.jlleitschuh.gradle.ktlint'
 apply plugin: 'io.gitlab.arturbosch.detekt'
+apply plugin: 'kotlin-android'
+apply plugin: 'org.jlleitschuh.gradle.ktlint'
 
 repositories {
     google()
     mavenCentral()
-}
-
-// This is primarily to be able to run unit and instrumented tests in GitHub workflows,
-// since google-services.json is unavailable and will cause the GoogleServices task to fail
-if (!project.file('google-services.json').exists()) {
-    android.applicationVariants.all { variant ->
-        def googleTask = tasks.findByName("process${variant.name.capitalize()}GoogleServices")
-        googleTask.enabled = false
-    }
 }
 
 Properties props = new Properties()
@@ -43,13 +34,14 @@ def getVersionName = { ->
 
 android {
     namespace 'bisq.android'
-    compileSdkVersion 32
+    compileSdk 34
+
     defaultConfig {
         applicationId "com.joachimneumann.bisq"
         versionCode getVersionCode()
         versionName getVersionName()
-        minSdkVersion 21
-        targetSdkVersion 32
+        minSdkVersion 26
+        targetSdkVersion 34
         multiDexEnabled true
         setProperty("archivesBaseName", "bisq")
 
@@ -60,10 +52,18 @@ android {
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
     }
+
     testOptions {
         animationsDisabled = true
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+
+        packagingOptions {
+            jniLibs {
+                useLegacyPackaging true
+            }
+        }
     }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -72,81 +72,199 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        applicationVariants.all {
-            variant ->
-                variant.outputs.each {
-                    output ->
-                        def name = "bisq-${variant.name}.apk"
-                        output.outputFileName = name
+    }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            output.outputFileName = "bisq-${variant.name}.apk"
+        }
+
+        // Must disable the GoogleServices task when running unit and instrumented tests in GitHub
+        // workflows, since google-services.json is unavailable and will cause it to fail.
+        if (!project.file('google-services.json').exists()) {
+            tasks.configureEach { Task task ->
+                if (task.name.matches("process${variant.name.capitalize()}GoogleServices")) {
+                    task.enabled = false
                 }
+            }
         }
     }
-    sourceSets {
-        androidTest {
-            java.srcDirs += "$projectDir/src/testCommon/java"
-        }
-        test {
-            java.srcDirs += "$projectDir/src/testCommon/java"
-        }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
 }
 
 dependencies {
-    implementation 'androidx.test.uiautomator:uiautomator:2.2.0'
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.20.0")
+    detektPlugins('io.gitlab.arturbosch.detekt:detekt-formatting:1.23.5')
 
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.core:core-ktx:1.12.0'
 
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
+
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.media:media:1.6.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.media:media:1.7.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
 
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.12.0'
 
-    implementation 'com.google.zxing:core:3.4.1'
+    implementation 'com.google.zxing:core:3.5.3'
 
-    implementation platform('com.google.firebase:firebase-bom:30.1.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.0.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.5'
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx:22.1.2'
+    implementation 'com.google.firebase:firebase-messaging:24.1.0'
 
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 
-    implementation 'androidx.room:room-ktx:2.4.2'
-    implementation 'androidx.room:room-runtime:2.4.2'
-    annotationProcessor 'androidx.room:room-compiler:2.4.2'
-    kapt 'androidx.room:room-compiler:2.4.2'
+    implementation 'androidx.room:room-ktx:2.6.1'
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+    ksp 'androidx.room:room-compiler:2.6.1'
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.4.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    implementation "androidx.multidex:multidex:2.0.1"
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.assertj:assertj-core:3.25.3'
     testImplementation 'org.hamcrest:hamcrest:2.2'
-    testImplementation "io.mockk:mockk:1.12.3"
-    testImplementation 'org.powermock:powermock:1.6.5'
-    testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
-    testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
+    testImplementation 'io.mockk:mockk:1.13.9'
+    testImplementation 'org.powermock:powermock:1.6.6'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
+    testImplementation(project(':testCommon'))
 
-    androidTestImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test:core-ktx:1.4.0"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation "androidx.test.ext:junit-ktx:1.1.3"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.4.0"
-    androidTestImplementation "androidx.test.espresso:espresso-intents:3.4.0"
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.4.0"
-    androidTestImplementation "androidx.test.uiautomator:uiautomator:2.2.0"
-    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
-    androidTestImplementation "io.mockk:mockk-android:1.12.3"
+    androidTestImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'org.assertj:assertj-core:3.25.3'
+    androidTestImplementation 'androidx.test:core-ktx:1.6.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.6.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.6.1'
+    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
     androidTestImplementation 'org.awaitility:awaitility-kotlin:4.2.0'
+    androidTestImplementation 'io.mockk:mockk-android:1.13.9'
+    androidTestImplementation(project(':testCommon')) {
+        // Prevent conflict with mockk-android
+        exclude group: 'io.mockk', module: 'mockk'
+    }
+    androidTestImplementation 'org.objenesis:objenesis:3.3'
 
-    androidTestUtil 'androidx.test:orchestrator:1.4.1'
+    androidTestUtil 'androidx.test:orchestrator:1.5.1'
+}
+
+def androidTestsReportsDirectory() {
+    return "${layout.buildDirectory.get()}/reports/androidTests/connected/debug"
+}
+
+tasks.register('embedScreenshotsIntoReport') {
+    group = "reporting"
+    doFirst {
+        def failureScreenshotsDirectory =
+            new File(androidTestsReportsDirectory(), "screenshots/failures")
+
+        if (!failureScreenshotsDirectory.exists()) {
+            return
+        }
+
+        println "Embedding failure screenshots into report from ${failureScreenshotsDirectory}"
+
+        failureScreenshotsDirectory.eachFile { failedTestClassDirectory ->
+            def failedTestClassName = failedTestClassDirectory.name
+
+            failedTestClassDirectory.eachFile { failedTestFile ->
+                def failedTestName = failedTestFile.name
+                def failedTestNameWithoutExtension =
+                    failedTestName.take(failedTestName.lastIndexOf('.'))
+                def failedTestClassJunitReportFile =
+                    new File(androidTestsReportsDirectory(), "${failedTestClassName}.html")
+
+                if (!failedTestClassJunitReportFile.exists()) {
+                    println "Could not find JUnit report file for test class " +
+                        "'${failedTestClassJunitReportFile}'"
+                    return
+                }
+
+                def failedTestJunitReportContent = failedTestClassJunitReportFile.text
+
+                def patternToFind = "<h3 class=\"failures\">" +
+                    "${failedTestNameWithoutExtension}</h3>"
+                def patternToReplace = "${patternToFind} <img src=\"screenshots/failures/" +
+                    "${failedTestClassName}/${failedTestName}\" width =\"360\" /><br />"
+
+                failedTestJunitReportContent = failedTestJunitReportContent.replaceAll(
+                    patternToFind, patternToReplace)
+
+                failedTestClassJunitReportFile.write(failedTestJunitReportContent)
+            }
+        }
+    }
+}
+
+static def deviceScreenshotsDir() {
+    return "/storage/emulated/0/Pictures/bisq"
+}
+
+tasks.register('clearScreenshotsFromDevice', Exec) {
+    group = "reporting"
+    ignoreExitValue = true
+
+    def adbExecutableProvider = project.provider { android.getAdbExecutable().absolutePath }
+    def deviceScreenshotsDirProvider = project.provider { deviceScreenshotsDir() }
+
+    doFirst {
+        commandLine = [
+            adbExecutableProvider.get(),
+            'shell', 'rm', '-rf',
+            deviceScreenshotsDirProvider.get()
+        ]
+    }
+}
+
+tasks.register('fetchScreenshotsFromDevice', Exec) {
+    group = "reporting"
+    ignoreExitValue = true
+
+    def adbExecutableProvider = project.provider { android.getAdbExecutable().absolutePath }
+    def deviceScreenshotsDirProvider = project.provider { "${deviceScreenshotsDir()}/." }
+    def androidTestsReportsDirectoryProvider = project.provider { androidTestsReportsDirectory() }
+
+    doFirst {
+        commandLine = [
+            adbExecutableProvider.get(),
+            'pull',
+            deviceScreenshotsDirProvider.get(),
+            androidTestsReportsDirectoryProvider.get()
+        ]
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name == 'connectedDebugAndroidTest') {
+        task.doFirst { 'clearScreenshotsFromDevice' }
+        task.finalizedBy { 'fetchScreenshotsFromDevice' }
+        task.finalizedBy { 'clearScreenshotsFromDevice' }
+        task.finalizedBy { 'embedScreenshotsIntoReport' }
+    }
 }

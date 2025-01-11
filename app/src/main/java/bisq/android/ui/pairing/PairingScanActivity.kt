@@ -21,7 +21,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -34,42 +33,36 @@ import bisq.android.ui.UnpairedBaseActivity
 import bisq.android.util.QrUtil
 
 class PairingScanActivity : UnpairedBaseActivity() {
-
     private lateinit var qrImage: ImageView
-    private lateinit var qrText: TextView
+    private lateinit var qrPlaceholderText: TextView
     private lateinit var noWebcamButton: Button
     private lateinit var simulatePairingButton: Button
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    companion object {
-        private const val TAG = "PairingScanActivity"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
-        Log.i(TAG, "Pairing token: ${Device.instance.pairingToken()}")
     }
 
     private fun initView() {
         setContentView(R.layout.activity_pairing_scan)
 
-        qrImage = this.bind(R.id.qrImageView)
+        qrImage = this.bind(R.id.pairing_scan_qr_image)
 
-        qrText = this.bind(R.id.qrTextView)
+        qrPlaceholderText = this.bind(R.id.pairing_scan_qr_placeholder)
 
-        noWebcamButton = bind(R.id.noWebcamButton)
+        noWebcamButton = bind(R.id.pairing_scan_no_webcam_button)
         noWebcamButton.setOnClickListener {
-            onNoWebcamButtonClick()
+            onNoWebcam()
         }
 
-        simulatePairingButton = bind(R.id.simulatePairingButton)
-        if (Device.instance.isEmulator()) {
+        simulatePairingButton = bind(R.id.pairing_scan_simulate_pairing_button)
+        if (Device.instance.isEmulator() && Device.instance.status != DeviceStatus.PAIRED) {
             simulatePairingButton.visibility = View.VISIBLE
         }
         simulatePairingButton.setOnClickListener {
-            onSimulatePairingButtonClick()
+            onSimulatePairing()
         }
 
         mainHandler.post {
@@ -80,21 +73,22 @@ class PairingScanActivity : UnpairedBaseActivity() {
             try {
                 val bmp = QrUtil.createQrImage(Device.instance.pairingToken()!!)
                 qrImage.setImageBitmap(bmp)
-                qrText.visibility = View.INVISIBLE
+                qrPlaceholderText.visibility = View.INVISIBLE
             } catch (ignored: Exception) {
                 Toast.makeText(
-                    this, getString(R.string.cannot_generate_qr_code),
+                    this,
+                    getString(R.string.cannot_generate_qr_code),
                     Toast.LENGTH_LONG
                 ).show()
             }
         }
     }
 
-    private fun onNoWebcamButtonClick() {
+    private fun onNoWebcam() {
         startActivity(Intent(Intent(this, PairingSendActivity::class.java)))
     }
 
-    private fun onSimulatePairingButtonClick() {
+    private fun onSimulatePairing() {
         Device.instance.status = DeviceStatus.PAIRED
         Device.instance.saveToPreferences(this)
         pairingConfirmed()

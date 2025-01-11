@@ -21,20 +21,23 @@ import bisq.android.BISQ_MOBILE_URL
 import bisq.android.BISQ_NETWORK_URL
 import bisq.android.R
 import bisq.android.screens.dialogs.ChoicePromptDialog
-import bisq.android.screens.elements.ButtonElement
+import bisq.android.screens.dialogs.ThemePromptDialog
+import bisq.android.screens.elements.PreferenceElement
 
 class SettingsScreen : Screen() {
-
-    val aboutBisqButton = ButtonElement(R.id.settingsAboutBisqButton)
-    val aboutAppButton = ButtonElement(R.id.settingsAboutAppButton)
+    val themePreference = PreferenceElement(applicationContext.getString(R.string.theme))
+    val themePromptDialog = ThemePromptDialog()
+    val resetPairingPreference = PreferenceElement(applicationContext.getString(R.string.reset_pairing))
+    val alertDialogResetPairing = ChoicePromptDialog(
+        applicationContext.resources.getString(R.string.register_again_confirmation)
+    )
+    val scanPairingTokenPreference = PreferenceElement(applicationContext.getString(R.string.scan_pairing_token))
+    val aboutBisqPreference = PreferenceElement(applicationContext.getString(R.string.about_bisq))
+    val aboutAppPreference = PreferenceElement(applicationContext.getString(R.string.about_this_app))
     val alertDialogLoadBisqNetworkUrl = ChoicePromptDialog(
-        applicationContext.resources.getString(R.string.load_web_page_text, BISQ_NETWORK_URL)
+        applicationContext.resources.getString(R.string.load_web_page_confirmation, BISQ_NETWORK_URL)
     )
     val alertDialogLoadBisqMobileUrl = ChoicePromptDialog(
-        applicationContext.resources.getString(R.string.load_web_page_text, BISQ_MOBILE_URL)
+        applicationContext.resources.getString(R.string.load_web_page_confirmation, BISQ_MOBILE_URL)
     )
-    val resetButton = ButtonElement(R.id.settingsRegisterAgainButton)
-    val deleteNotificationsButton = ButtonElement(R.id.settingsDeleteAllNotificationsButton)
-    val markAsReadButton = ButtonElement(R.id.settingsMarkAsReadButton)
-    val addExampleNotificationsButton = ButtonElement(R.id.settingsAddExampleButton)
 }

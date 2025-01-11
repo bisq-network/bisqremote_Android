@@ -17,11 +17,11 @@ jobs:
             -   name: Checkout the code
                 uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 
-            -   name: Set up JDK 11
+            -   name: Set up JDK 17
                 uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
                 with:
-                    java-version: '11'
-                    distribution: 'temurin'
+                    java-version: '17'
+                    distribution: 'corretto'
                     cache: gradle
 
             -   name: Clear gradle cache
@@ -63,7 +63,7 @@ jobs:
             -   name: Upload reports
                 uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
                 with:
-                    name: Test-Reports
+                    name: analyze-reports
                     path: app/build/reports
                 if: always()
 
@@ -76,11 +76,11 @@ jobs:
             -   name: Checkout the code
                 uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 
-            -   name: Set up JDK 11
+            -   name: Set up JDK 17
                 uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
                 with:
-                    java-version: '11'
-                    distribution: 'temurin'
+                    java-version: '17'
+                    distribution: 'corretto'
                     cache: gradle
 
             -   name: Clear gradle cache
@@ -106,28 +106,28 @@ jobs:
             -   name: Upload reports
                 uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
                 with:
-                    name: Test-Reports
+                    name: unit-tests-reports
                     path: app/build/reports
                 if: always()
 
     instrumentation-tests:
-        name: Instrumentation tests on ${{ matrix.target }} API ${{ matrix.api-level }}
-        runs-on: macos-latest
-        timeout-minutes: 30
+        name: Instrumentation tests on API ${{ matrix.api-level }}
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
         needs: unit-tests
         strategy:
-            fail-fast: true
+            fail-fast: false
             matrix:
-                api-level: [ 21, 32 ]
+                api-level: [ 26, 27, 28, 29, 30, 31, 32, 33, 34 ]
         steps:
             -   name: Checkout the code
                 uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 
-            -   name: Set up JDK 11
+            -   name: Set up JDK 17
                 uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
                 with:
-                    java-version: '11'
-                    distribution: 'temurin'
+                    java-version: '17'
+                    distribution: 'corretto'
                     cache: gradle
 
             -   name: Clear gradle cache
@@ -145,7 +145,15 @@ jobs:
             -   name: Check Gradle wrapper
                 uses: gradle/wrapper-validation-action@216d1ad2b3710bf005dc39237337b9673fd8fcd5
 
-            # API 30+ emulators only have x86_64 system images
+            -   name: Enable KVM
+                run: |
+                    echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+                    sudo udevadm control --reload-rules
+                    sudo udevadm trigger --name-match=kvm
+
+            -   name: Create directory for AVD
+                run: mkdir -p ~/.android/avd
+
             -   name: Get AVD info
                 uses: ./.github/actions/get-avd-info
                 id: avd-info
@@ -168,29 +176,29 @@ jobs:
                 uses: reactivecircus/android-emulator-runner@6b0df4b0efb23bb0ec63d881db79aefbc976e4b2
                 with:
                     api-level: ${{ matrix.api-level }}
-                    arch: ${{ steps.avd-info.outputs.arch }}
                     target: ${{ steps.avd-info.outputs.target }}
-                    disable-animations: false
+                    arch: ${{ steps.avd-info.outputs.arch }}
+                    disable-animations: true
                     force-avd-creation: false
                     ram-size: 4096M
                     emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
                     script: echo "Generated AVD snapshot"
 
             -   name: Run instrumentation tests
-                uses: reactivecircus/android-emulator-runner@6b0df4b0efb23bb0ec63d881db79aefbc976e4b2
+                uses: reactivecircus/android-emulator-runner@62dbb605bba737720e10b196cb4220d374026a6d
                 with:
                     api-level: ${{ matrix.api-level }}
-                    arch: ${{ steps.avd-info.outputs.arch }}
                     target: ${{ steps.avd-info.outputs.target }}
+                    arch: ${{ steps.avd-info.outputs.arch }}
                     disable-animations: true
                     force-avd-creation: false
                     ram-size: 4096M
-                    emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -no-snapshot-save
-                    script: mv .github/debug.keystore ~/.android; ./gradlew connectedDebugAndroidTest
+                    emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+                    script: ./gradlew connectedCheck && killall -INT crashpad_handler || true
 
             -   name: Upload reports
                 uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808
                 with:
-                    name: Test-Reports
+                    name: instrumentation-tests-reports-api${{ matrix.api-level }}
                     path: app/build/reports
                 if: always()

@@ -15,15 +15,8 @@
  * along with Bisq. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bisq.android.util
+package bisq.android.screens.elements
 
-object TextUtil {
-    private const val TRUNCATE_AFTER = 10
-
-    fun truncateSensitiveText(text: String?): String {
-        if (text == null) {
-            return ""
-        }
-        return text.substring(0, TRUNCATE_AFTER) + "..."
-    }
+interface ClickableElement {
+    fun click()
 }

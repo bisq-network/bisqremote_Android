@@ -1,71 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/welcome_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context="bisq.android.ui.welcome.WelcomeActivity">
 
     <ImageView
-        android:id="@+id/welcomeImageView"
-        android:layout_width="0dp"
+        android:id="@+id/welcome_image"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/button_pair"
+        android:contentDescription="@string/app_name"
         android:cropToPadding="false"
         android:paddingLeft="60dp"
         android:paddingTop="40dp"
         android:paddingRight="60dp"
-        android:scaleType="fitStart"
+        android:scaleType="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/playstore_icon" />
+        app:srcCompat="@drawable/bisq_logo_green" />
 
 
     <TextView
-        android:id="@+id/welcomeText"
+        android:id="@+id/welcome_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:gravity="start"
+        android:gravity="center_horizontal"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         android:text="@string/welcome_text"
+        android:textAlignment="center"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/pairButton"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_pair_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeImageView" />
+        app:layout_constraintTop_toBottomOf="@+id/welcome_image" />
 
 
     <Button
-        android:id="@+id/learnMoreButton"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
+        android:id="@+id/welcome_learn_more_button"
+        style="@style/BorderlessPrimaryButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
         android:layout_marginBottom="20dp"
         android:enabled="true"
+        android:gravity="center_horizontal|center_vertical"
         android:text="@string/button_learn_more"
         android:textAllCaps="false"
-        android:textColor="@color/primary"
         android:textSize="16sp"
+        app:icon="@drawable/ic_link_white_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pairButton" />
+        app:layout_constraintStart_toEndOf="@+id/welcome_pair_button" />
 
     <Button
-        android:id="@+id/pairButton"
+        android:id="@+id/welcome_pair_button"
+        style="@style/PrimaryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -76,16 +74,14 @@
         android:paddingRight="20dp"
         android:text="@string/button_pair"
         android:textAllCaps="false"
-        android:textColor="@android:color/white"
         android:textSize="16sp"
-        android:theme="@style/PrimaryButton"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
-        android:id="@+id/circularProgressbar"
+        android:id="@+id/welcome_circular_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -98,9 +94,9 @@
         android:progress="0"
         android:secondaryProgress="0"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/pairButton"
-        app:layout_constraintEnd_toEndOf="@+id/pairButton"
-        app:layout_constraintStart_toStartOf="@+id/pairButton"
-        app:layout_constraintTop_toTopOf="@+id/pairButton" />
+        app:layout_constraintBottom_toBottomOf="@+id/welcome_pair_button"
+        app:layout_constraintEnd_toEndOf="@+id/welcome_pair_button"
+        app:layout_constraintStart_toStartOf="@+id/welcome_pair_button"
+        app:layout_constraintTop_toTopOf="@+id/welcome_pair_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

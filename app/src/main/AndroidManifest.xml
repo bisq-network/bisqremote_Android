@@ -2,57 +2,33 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="Bisq"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/BisqMaterialTheme">
+        android:theme="@style/BisqMaterialTheme"
+        tools:targetApi="34">
 
         <activity
             android:name="bisq.android.ui.welcome.WelcomeActivity"
-            android:configChanges="orientation"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="bisq.android.ui.pairing.PairingSendActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name="bisq.android.ui.pairing.PairingScanActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name="bisq.android.ui.settings.SettingsActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name="bisq.android.ui.pairing.PairingSuccessActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name="bisq.android.ui.notification.NotificationTableActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name="bisq.android.ui.notification.NotificationDetailActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+        <activity android:name="bisq.android.ui.pairing.PairingScanActivity" />
+        <activity android:name="bisq.android.ui.pairing.PairingSendActivity" />
+        <activity android:name="bisq.android.ui.pairing.PairingSuccessActivity" />
+        <activity android:name="bisq.android.ui.pairing.RequestNotificationPermissionActivity" />
+        <activity android:name="bisq.android.ui.settings.SettingsActivity" />
+        <activity android:name="bisq.android.ui.notification.NotificationTableActivity" />
+        <activity android:name="bisq.android.ui.notification.NotificationDetailActivity" />
 
         <service
             android:name="bisq.android.services.BisqFirebaseMessagingService"
@@ -79,7 +55,6 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
-
     </application>
 
 </manifest>

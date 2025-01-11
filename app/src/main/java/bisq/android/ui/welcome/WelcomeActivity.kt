@@ -36,6 +36,7 @@ import bisq.android.services.BisqFirebaseMessagingService
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isGooglePlayServicesAvailable
 import bisq.android.services.BisqFirebaseMessagingService.Companion.isTokenBeingFetched
 import bisq.android.ui.DialogBuilder
+import bisq.android.ui.UiUtil.loadWebPage
 import bisq.android.ui.UnpairedBaseActivity
 import bisq.android.ui.notification.NotificationTableActivity
 import bisq.android.ui.pairing.PairingScanActivity
@@ -57,8 +58,6 @@ class WelcomeActivity : UnpairedBaseActivity() {
 
         initView()
 
-        registerNotificationReceiver()
-
         if (Device.instance.readFromPreferences(this)) {
             return
         }
@@ -77,6 +76,7 @@ class WelcomeActivity : UnpairedBaseActivity() {
             DeviceStatus.PAIRED -> {
                 startActivity(Intent(this, NotificationTableActivity::class.java))
             }
+
             DeviceStatus.NEEDS_REPAIR -> {
                 Toast.makeText(
                     this,
@@ -85,6 +85,7 @@ class WelcomeActivity : UnpairedBaseActivity() {
                 ).show()
                 Device.instance.status = DeviceStatus.UNPAIRED
             }
+
             DeviceStatus.REMOTE_ERASED -> {
                 Toast.makeText(
                     this,
@@ -93,21 +94,17 @@ class WelcomeActivity : UnpairedBaseActivity() {
                 ).show()
                 Device.instance.status = DeviceStatus.UNPAIRED
             }
+
             else -> {
                 // Do nothing
             }
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterNotificationReceiver()
-    }
-
     private fun initView() {
         setContentView(R.layout.activity_welcome)
 
-        pairButton = bind(R.id.pairButton)
+        pairButton = bind(R.id.welcome_pair_button)
         if (isGooglePlayServicesAvailable(this)) {
             pairButton.setOnClickListener {
                 maybeProceedToPairingScanActivity()
@@ -118,12 +115,12 @@ class WelcomeActivity : UnpairedBaseActivity() {
             }
         }
 
-        learnMoreButton = bind(R.id.learnMoreButton)
+        learnMoreButton = bind(R.id.welcome_learn_more_button)
         learnMoreButton.setOnClickListener {
-            loadWebPage(BISQ_MOBILE_URL)
+            loadWebPage(this, BISQ_MOBILE_URL)
         }
 
-        progressBar = bind(R.id.circularProgressbar)
+        progressBar = bind(R.id.welcome_circular_progressbar)
         progressBar.progressDrawable =
             ContextCompat.getDrawable(this, R.drawable.circular_progressbar)
         Thread {
@@ -198,13 +195,13 @@ class WelcomeActivity : UnpairedBaseActivity() {
         val extras = intent.extras
         if (extras != null) {
             Log.i(TAG, "Processing opened notification")
-            val notificationMessage = extras.get("encrypted")
+            val notificationMessage = extras.getString("encrypted")
             if (notificationMessage != null) {
                 Log.i(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
                 Intent().also { broadcastIntent ->
                     broadcastIntent.action = getString(R.string.notification_receiver_action)
                     broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES
-                    broadcastIntent.putExtra("encrypted", notificationMessage as String)
+                    broadcastIntent.putExtra("encrypted", notificationMessage)
                     sendBroadcast(broadcastIntent)
                 }
             }

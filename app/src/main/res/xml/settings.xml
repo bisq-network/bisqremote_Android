@@ -1,0 +1,39 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        app:defaultValue="@string/system_theme_preference_value"
+        app:entries="@array/themes_entries"
+        app:entryValues="@array/themes_values"
+        app:icon="@drawable/ic_theme_white_24"
+        app:key="@string/theme_preferences_key"
+        app:title="@string/theme" />
+
+    <Preference
+        android:key="@string/reset_pairing_preferences_key"
+        android:summary="@string/reset_and_pair_again"
+        android:title="@string/reset_pairing"
+        app:icon="@drawable/ic_restart_white_24" />
+
+    <Preference
+        app:icon="@drawable/ic_qr_code_scanner_white_24"
+        app:key="@string/scan_pairing_token_preferences_key"
+        app:title="@string/scan_pairing_token" />
+
+    <Preference
+        app:icon="@drawable/ic_bisq_mark"
+        app:key="@string/about_bisq_preferences_key"
+        app:title="@string/about_bisq" />
+
+    <Preference
+        app:icon="@drawable/ic_info_white_24"
+        app:key="@string/about_app_preferences_key"
+        app:title="@string/about_this_app" />
+
+    <Preference
+        app:enabled="false"
+        app:key="@string/version_preferences_key"
+        app:selectable="false"
+        app:title="Version" />
+
+</PreferenceScreen>
