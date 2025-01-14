@@ -17,7 +17,7 @@ jobs:
             new_tag: ${{ steps.bump_version.outputs.new_tag }}
         steps:
             -   name: Checkout the code
-                uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+                uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
             -   name: Bump version
                 id: bump_version
@@ -148,7 +148,7 @@ jobs:
         needs: [ build, sign ]
         steps:
             -   name: Checkout the code
-                uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+                uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
             -   name: Download signed APK
                 uses: actions/download-artifact@2a5974104b6d5dbdb2f9468a3e54da3bdd241578
