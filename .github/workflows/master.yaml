@@ -87,13 +87,13 @@ jobs:
         needs: build
         steps:
             -   name: Download unsigned APK
-                uses: actions/download-artifact@2a5974104b6d5dbdb2f9468a3e54da3bdd241578
+                uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
                 with:
                     name: bisq-release.apk
                     path: app/build/outputs/apk/release
 
             -   name: Download unsigned AAB
-                uses: actions/download-artifact@2a5974104b6d5dbdb2f9468a3e54da3bdd241578
+                uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
                 with:
                     name: bisq-release.aab
                     path: app/build/outputs/bundle/release
@@ -151,13 +151,13 @@ jobs:
                 uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
             -   name: Download signed APK
-                uses: actions/download-artifact@2a5974104b6d5dbdb2f9468a3e54da3bdd241578
+                uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
                 with:
                     name: bisq-release-signed.apk
                     path: app/build/outputs/apk/release
 
             -   name: Download signed AAB
-                uses: actions/download-artifact@2a5974104b6d5dbdb2f9468a3e54da3bdd241578
+                uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
                 with:
                     name: bisq-release-signed.aab
                     path: app/build/outputs/bundle/release
