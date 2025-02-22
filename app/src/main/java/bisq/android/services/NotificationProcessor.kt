@@ -17,7 +17,7 @@
 
 package bisq.android.services
 
-import android.util.Log
+import bisq.android.Logging
 import bisq.android.database.BisqNotification
 import bisq.android.model.Device
 import bisq.android.model.NotificationMessage
@@ -50,7 +50,7 @@ object NotificationProcessor {
             when (e) {
                 is ParseException, is DecryptingException, is DeserializationException -> {
                     val message = "Failed to process notification; ${e.message}"
-                    Log.e(TAG, message)
+                    Logging().error(TAG, message)
                     throw ProcessingException(message)
                 }
                 else -> throw e
@@ -97,7 +97,7 @@ object NotificationProcessor {
                 is IllegalArgumentException,
                 is CryptoUtil.Companion.CryptoException -> {
                     val message = "Failed to decrypt notification payload"
-                    Log.e(TAG, "$message: $encryptedPayload")
+                    Logging().error(TAG, "$message: $encryptedPayload")
                     throw DecryptingException(message)
                 }
                 else -> throw e
@@ -110,11 +110,12 @@ object NotificationProcessor {
         val gsonBuilder = GsonBuilder()
         gsonBuilder.registerTypeAdapter(Date::class.java, DateUtil())
         val gson = gsonBuilder.create()
+        @Suppress("SwallowedException")
         try {
             return gson.fromJson(decryptedPayload, BisqNotification::class.java)
         } catch (e: JsonSyntaxException) {
             val message = "Failed to deserialize notification payload"
-            Log.e(TAG, "$message: $decryptedPayload")
+            Logging().error(TAG, "$message: $decryptedPayload")
             throw DeserializationException(message)
         }
     }

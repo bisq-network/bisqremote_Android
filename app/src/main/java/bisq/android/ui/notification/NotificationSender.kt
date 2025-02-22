@@ -22,11 +22,11 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.RingtoneManager
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import bisq.android.Application
+import bisq.android.Logging
 import bisq.android.R
 import java.util.Date
 
@@ -42,7 +42,7 @@ object NotificationSender {
                 Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.d(TAG, "*** Unable to send notification; POST_NOTIFICATIONS permission not granted")
+            Logging().debug(TAG, "*** Unable to send notification; POST_NOTIFICATIONS permission not granted")
             return
         }
 

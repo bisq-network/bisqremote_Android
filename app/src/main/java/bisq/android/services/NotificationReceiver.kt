@@ -20,7 +20,7 @@ package bisq.android.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import bisq.android.Logging
 import bisq.android.R
 import bisq.android.database.BisqNotification
 import bisq.android.ext.goAsync
@@ -32,21 +32,21 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        Log.i(TAG, "Notification received")
+        Logging().info(TAG, "Notification received")
 
         if (Device.instance.key == null) {
-            Log.w(TAG, "Ignoring notification, device does not have a key")
+            Logging().warn(TAG, "Ignoring notification, device does not have a key")
             return
         }
 
-        Log.i(TAG, "Processing notification")
+        Logging().info(TAG, "Processing notification")
         val bisqNotification: BisqNotification
         try {
             bisqNotification = NotificationProcessor.processNotification(
                 intent.extras?.getString("encrypted").toString()
             )
         } catch (e: ProcessingException) {
-            e.message?.let { Log.e(TAG, it) }
+            e.message?.let { Logging().error(TAG, it) }
             Intent().also { broadcastIntent ->
                 broadcastIntent.action = context.getString(R.string.intent_receiver_action)
                 broadcastIntent.putExtra(
@@ -58,7 +58,7 @@ class NotificationReceiver : BroadcastReceiver() {
             return
         }
 
-        Log.i(TAG, "Handling ${bisqNotification.type} notification")
+        Logging().info(TAG, "Handling ${bisqNotification.type} notification")
         goAsync {
             NotificationHandler.handleNotification(bisqNotification, context)
         }

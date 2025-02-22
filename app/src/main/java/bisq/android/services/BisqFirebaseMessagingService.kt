@@ -19,9 +19,9 @@ package bisq.android.services
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import bisq.android.Application
 import bisq.android.Application.Companion.isAppInBackground
+import bisq.android.Logging
 import bisq.android.R
 import bisq.android.database.BisqNotification
 import bisq.android.model.Device
@@ -62,7 +62,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
 
         fun fetchFcmToken(onComplete: () -> Unit = {}) {
             if (!isFirebaseMessagingInitialized()) {
-                Log.e(TAG, "FirebaseMessaging is not initialized")
+                Logging().error(TAG, "FirebaseMessaging is not initialized")
                 onComplete()
                 return
             }
@@ -71,7 +71,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                 token.addOnCompleteListener(
                     OnCompleteListener { getTokenTask ->
                         if (!getTokenTask.isSuccessful) {
-                            Log.e(TAG, "Fetching FCM token failed: ${getTokenTask.exception}")
+                            Logging().error(TAG, "Fetching FCM token failed: ${getTokenTask.exception}")
                             Device.instance.token = null
                             onComplete()
                             tokenBeingFetched = false
@@ -79,21 +79,21 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                         }
                         val token: String? = getTokenTask.result
                         if (token == null) {
-                            Log.e(TAG, "FCM token is null")
+                            Logging().error(TAG, "FCM token is null")
                             Device.instance.token = null
                             onComplete()
                             tokenBeingFetched = false
                             return@OnCompleteListener
                         }
                         if (Device.instance.token == token) {
-                            Log.i(TAG, "FCM token has already been fetched")
+                            Logging().info(TAG, "FCM token has already been fetched")
                             onComplete()
                             tokenBeingFetched = false
                             return@OnCompleteListener
                         }
                         Device.instance.newToken(token)
-                        Log.i(TAG, "New FCM token: $token")
-                        Log.i(TAG, "Pairing token: ${Device.instance.pairingToken()}")
+                        Logging().info(TAG, "New FCM token: $token")
+                        Logging().info(TAG, "Pairing token: ${Device.instance.pairingToken()}")
                         onComplete()
                         tokenBeingFetched = false
                     }
@@ -104,7 +104,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         @Suppress("ForbiddenComment")
         fun refreshFcmToken(onComplete: () -> Unit = {}) {
             if (!isFirebaseMessagingInitialized()) {
-                Log.e(TAG, "FirebaseMessaging is not initialized")
+                Logging().error(TAG, "FirebaseMessaging is not initialized")
                 onComplete()
                 return
             }
@@ -121,9 +121,9 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
 //            FirebaseMessaging.getInstance().apply {
 //                deleteToken().addOnCompleteListener { deleteTokenTask ->
 //                    if (!deleteTokenTask.isSuccessful) {
-//                        Log.e(TAG, "Deleting FCM token failed: ${deleteTokenTask.exception}")
+//                        Logging().error(TAG, "Deleting FCM token failed: ${deleteTokenTask.exception}")
 //                    } else {
-//                        Log.i(TAG, "FCM token deleted")
+//                        Logging().info(TAG, "FCM token deleted")
 //                    }
 //                    fetchFcmToken(onComplete)
 //                    tokenBeingFetched = false
@@ -138,12 +138,12 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
      * For more details, see https://firebase.google.com/docs/cloud-messaging/android/receive.
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.i(TAG, "Message received")
+        Logging().info(TAG, "Message received")
         super.onMessageReceived(remoteMessage)
 
         val encryptedData = remoteMessage.data["encrypted"]
         if (encryptedData == null) {
-            Log.w(TAG, "Message does not contain encrypted data; ${remoteMessage.data}")
+            Logging().warn(TAG, "Message does not contain encrypted data; ${remoteMessage.data}")
             return
         }
 
@@ -151,7 +151,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             // If the message contains notification data, then this method is only called while the app is in
             // the foreground. Since the app is running and the NotificationReceiver should be registered, only
             // need to broadcast the notification so the NotificationReceiver can process it.
-            Log.i(
+            Logging().info(
                 TAG,
                 "Notification message received, broadcasting " + getString(R.string.notification_receiver_action)
             )
@@ -166,7 +166,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             // is in the foreground or background. The NotificationReceiver may not be registered if the app is in the
             // background, so cannot simply broadcast the notification. Instead, send it directly to the
             // NotificationReceiver.
-            Log.i(TAG, "Data message received")
+            Logging().info(TAG, "Data message received")
 
             Intent().also { notificationIntent ->
                 notificationIntent.putExtra(
@@ -192,7 +192,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         return try {
             NotificationProcessor.processNotification(encryptedData)
         } catch (e: ProcessingException) {
-            e.message?.let { Log.e(TAG, it) }
+            e.message?.let { Logging().error(TAG, it) }
             null
         }
     }
@@ -212,7 +212,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         if (Device.instance.readFromPreferences(this)) {
-            Log.i(TAG, "New FCM token received, app needs to be re-paired: $newToken")
+            Logging().info(TAG, "New FCM token received, app needs to be re-paired: $newToken")
             Device.instance.reset()
             Device.instance.clearPreferences(this)
             Device.instance.status = DeviceStatus.NEEDS_REPAIR

@@ -24,7 +24,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bisq_logo_green" />
 
-
     <TextView
         android:id="@+id/welcome_text"
         android:layout_width="0dp"
@@ -44,6 +43,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome_image" />
 
+    <Button
+        android:id="@+id/welcome_debug_button"
+        style="@style/BorderlessPrimaryButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:enabled="true"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="@string/button_debug"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/welcome_pair_button"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/welcome_learn_more_button"

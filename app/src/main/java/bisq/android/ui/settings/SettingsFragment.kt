@@ -28,6 +28,7 @@ import androidx.preference.PreferenceFragmentCompat
 import bisq.android.Application
 import bisq.android.BISQ_MOBILE_URL
 import bisq.android.BISQ_NETWORK_URL
+import bisq.android.BuildConfig
 import bisq.android.R
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
@@ -35,6 +36,8 @@ import bisq.android.services.BisqFirebaseMessagingService
 import bisq.android.ui.DialogBuilder
 import bisq.android.ui.ThemeProvider
 import bisq.android.ui.UiUtil.loadWebPage
+import bisq.android.ui.debug.DebugActivity
+import bisq.android.ui.debug.DebugViewModel
 import bisq.android.ui.notification.NotificationViewModel
 import bisq.android.ui.pairing.PairingScanActivity
 import bisq.android.ui.welcome.WelcomeActivity
@@ -57,15 +60,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private val aboutAppPreference by lazy {
         findPreference<Preference>(getString(R.string.about_app_preferences_key))
     }
+    private val debugPreference by lazy {
+        findPreference<Preference>(getString(R.string.debug_preferences_key))
+    }
     private val versionPreference by lazy {
         findPreference<Preference>(getString(R.string.version_preferences_key))
     }
 
-    private lateinit var viewModel: NotificationViewModel
+    private lateinit var notificationViewModel: NotificationViewModel
+    private lateinit var debugViewModel: DebugViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[NotificationViewModel::class.java]
+        notificationViewModel = ViewModelProvider(this)[NotificationViewModel::class.java]
+        debugViewModel = ViewModelProvider(this)[DebugViewModel::class.java]
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -75,6 +83,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setScanPairingTokenPreference()
         setAboutBisqPreference()
         setAboutAppPreference()
+        setDebugPreference()
         setVersionPreference()
     }
 
@@ -114,7 +123,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             { _, _ ->
                 Device.instance.reset()
                 Device.instance.clearPreferences(context)
-                viewModel.nukeTable()
+                notificationViewModel.nukeTable()
+                debugViewModel.nukeTable()
                 Device.instance.status = DeviceStatus.ERASED
                 BisqFirebaseMessagingService.refreshFcmToken()
                 val intent = Intent(context, WelcomeActivity::class.java)
@@ -142,6 +152,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
         aboutAppPreference?.setOnPreferenceClickListener {
             this.context?.let { context -> loadWebPage(context, BISQ_MOBILE_URL) }
             true
+        }
+    }
+
+    private fun setDebugPreference() {
+        if (!BuildConfig.DEBUG) {
+            debugPreference?.let { preferenceScreen.removePreference(it) }
+        } else {
+            debugPreference?.setOnPreferenceClickListener {
+                this.context?.let { context ->
+                    startActivity(Intent(context, DebugActivity::class.java))
+                }
+                true
+            }
         }
     }
 

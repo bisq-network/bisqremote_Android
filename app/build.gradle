@@ -74,6 +74,10 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
             output.outputFileName = "bisq-${variant.name}.apk"
