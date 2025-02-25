@@ -65,6 +65,10 @@ object NotificationHandler {
                 Device.instance.status = DeviceStatus.REMOTE_ERASED
                 refreshFcmToken()
             }
+
+            null -> {
+                Logging().error(TAG, "Notification type is null: $bisqNotification")
+            }
             else -> {
                 Logging().info(TAG, "Inserting ${bisqNotification.type} notification to repository")
                 notificationRepository.insert(bisqNotification)

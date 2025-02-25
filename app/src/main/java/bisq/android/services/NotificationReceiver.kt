@@ -31,6 +31,7 @@ class NotificationReceiver : BroadcastReceiver() {
         private const val TAG = "NotificationReceiver"
     }
 
+    @Suppress("ReturnCount")
     override fun onReceive(context: Context, intent: Intent) {
         Logging().info(TAG, "Notification received")
 
@@ -55,6 +56,11 @@ class NotificationReceiver : BroadcastReceiver() {
                 )
                 context.sendBroadcast(broadcastIntent)
             }
+            return
+        }
+
+        if (bisqNotification.type == null) {
+            Logging().error(TAG, "Notification type is null: $bisqNotification")
             return
         }
 
