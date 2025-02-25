@@ -168,13 +168,13 @@ class NotificationTest {
     private fun buildBisqNotification(): BisqNotification {
         val now = Date()
         val tradeId = (100000..999999).random()
-        val bisqNotification = BisqNotification()
-        bisqNotification.type = NotificationType.TRADE.name
-        bisqNotification.title = "Trade confirmed"
-        bisqNotification.message = "The trade with ID $tradeId is confirmed."
-        bisqNotification.sentDate = now.time - 1000 * 60
-        bisqNotification.receivedDate = now.time
-        return bisqNotification
+        return BisqNotification(
+            type = NotificationType.TRADE.name,
+            title = "Trade confirmed",
+            message = "The trade with ID $tradeId is confirmed.",
+            sentDate = now.time - 1000 * 60,
+            receivedDate = now.time
+        )
     }
 
     private fun serializeNotificationPayload(bisqNotification: BisqNotification): String {
