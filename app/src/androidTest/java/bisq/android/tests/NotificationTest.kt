@@ -40,9 +40,9 @@ import bisq.android.rules.ScreenshotRule
 import bisq.android.screens.NotificationTableScreen
 import bisq.android.services.BisqFirebaseMessagingService
 import bisq.android.util.CryptoUtil
-import bisq.android.util.DateUtil
 import com.google.firebase.messaging.RemoteMessage
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -178,10 +178,7 @@ class NotificationTest {
     }
 
     private fun serializeNotificationPayload(bisqNotification: BisqNotification): String {
-        val gsonBuilder = GsonBuilder()
-        gsonBuilder.registerTypeAdapter(Date::class.java, DateUtil())
-        val gson = gsonBuilder.create()
-        return gson.toJson(bisqNotification)
+        return Json.encodeToString(bisqNotification)
     }
 
     private fun buildRemoteMessage(bisqNotification: BisqNotification): RemoteMessage {

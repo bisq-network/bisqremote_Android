@@ -18,8 +18,6 @@
 package bisq.android.tests.util
 
 import bisq.android.util.DateUtil
-import com.google.gson.Gson
-import com.google.gson.JsonObject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assume.assumeFalse
 import org.junit.Assume.assumeTrue
@@ -30,7 +28,6 @@ import java.util.Locale
 import java.util.TimeZone
 
 class DateUtilTest {
-    private val dateUtil = DateUtil()
 
     companion object {
         @BeforeClass
@@ -72,55 +69,5 @@ class DateUtilTest {
         assumeTrue("Not in daylight time", tz.inDaylightTime(Date()))
         assertThat(DateUtil.format(1651974403000L, timezone = tz))
             .isEqualTo("2022-05-08 04:46:43")
-    }
-
-    @Test
-    fun testToDateReturnsDate() {
-        assertThat(dateUtil.toDate(1651974403000L))
-            .isEqualTo(Date(1651974403000L))
-    }
-
-    @Test
-    fun testToDateWithNullParameterReturnsNull() {
-        assertThat(dateUtil.toDate(null))
-            .isNull()
-    }
-
-    @Test
-    fun testToLongReturnsLong() {
-        assertThat(dateUtil.toLong(Date(1651974403000L)))
-            .isEqualTo(1651974403000L)
-    }
-
-    @Test
-    fun testToLongWithNullParameterReturnsNull() {
-        assertThat(dateUtil.toLong(null))
-            .isNull()
-    }
-
-    @Test
-    fun testDeserializeReturnsDate() {
-        val json = "{\"date\":\"2022-05-08 01:46:43\"}"
-        assertThat(
-            dateUtil.deserialize(
-                Gson().fromJson(json, JsonObject::class.java).get("date"),
-                null,
-                null
-            )
-        )
-            .isEqualTo(Date(1651974403000L))
-    }
-
-    @Test
-    fun testDeserializeInvalidDateReturnsNull() {
-        val json = "{\"date\":\"invalid\"}"
-        assertThat(
-            dateUtil.deserialize(
-                Gson().fromJson(json, JsonObject::class.java).get("date"),
-                null,
-                null
-            )
-        )
-            .isNull()
     }
 }

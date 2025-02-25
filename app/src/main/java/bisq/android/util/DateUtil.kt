@@ -17,63 +17,22 @@
 
 package bisq.android.util
 
-import android.util.Log
-import androidx.room.TypeConverter
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonParseException
-import java.lang.reflect.Type
-import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-class DateUtil : JsonDeserializer<Date> {
+object DateUtil {
+    private val LOCALE = Locale.US
+    private const val PATTERN = "yyyy-MM-dd HH:mm:ss"
 
-    companion object {
-        private const val TAG = "DateDeserializer"
-        private val LOCALE = Locale.US
-        private const val PATTERN = "yyyy-MM-dd HH:mm:ss"
-
-        fun format(
-            date: Long,
-            locale: Locale = LOCALE,
-            pattern: String = PATTERN,
-            timezone: TimeZone = TimeZone.getDefault()
-        ): String? {
-            val formatter = SimpleDateFormat(pattern, locale)
-            formatter.timeZone = timezone
-            return formatter.format(date)
-        }
-    }
-
-    @TypeConverter
-    fun toDate(value: Long?): Date? {
-        return if (value == null) null else Date(value)
-    }
-
-    @TypeConverter
-    fun toLong(value: Date?): Long? {
-        return value?.time
-    }
-
-    @Throws(JsonParseException::class)
-    override fun deserialize(
-        element: JsonElement,
-        arg1: Type?,
-        arg2: JsonDeserializationContext?
-    ): Date? {
-        val date = element.asString
-        val formatter = SimpleDateFormat(PATTERN, LOCALE)
-        formatter.timeZone = TimeZone.getDefault()
-
-        return try {
-            formatter.parse(date)
-        } catch (e: ParseException) {
-            Log.e(TAG, "Failed to parse date: $e")
-            null
-        }
+    fun format(
+        date: Long,
+        locale: Locale = LOCALE,
+        pattern: String = PATTERN,
+        timezone: TimeZone = TimeZone.getDefault()
+    ): String? {
+        val formatter = SimpleDateFormat(pattern, locale)
+        formatter.timeZone = timezone
+        return formatter.format(date)
     }
 }

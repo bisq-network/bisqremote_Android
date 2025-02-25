@@ -21,11 +21,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import bisq.android.util.DateUtil
 
 @Database(entities = [BisqNotification::class], version = 1, exportSchema = false)
-@TypeConverters(DateUtil::class)
 abstract class NotificationDatabase : RoomDatabase() {
 
     abstract fun bisqNotificationDao(): BisqNotificationDao
