@@ -28,6 +28,7 @@ import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.ui.notification.NotificationSender
 import bisq.android.ui.welcome.WelcomeActivity
+import bisq.android.util.MaskingUtil.maskSensitive
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailabilityLight
 import com.google.android.gms.tasks.OnCompleteListener
@@ -92,8 +93,8 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
                             return@OnCompleteListener
                         }
                         Device.instance.newToken(token)
-                        Logging().info(TAG, "New FCM token: $token")
-                        Logging().info(TAG, "Pairing token: ${Device.instance.pairingToken()}")
+                        Logging().info(TAG, "New FCM token: ${maskSensitive(token)}")
+                        Logging().info(TAG, "Pairing token: ${maskSensitive(Device.instance.pairingToken())}")
                         onComplete()
                         tokenBeingFetched = false
                     }
@@ -212,7 +213,10 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         if (Device.instance.readFromPreferences(this)) {
-            Logging().info(TAG, "New FCM token received, app needs to be re-paired: $newToken")
+            Logging().info(
+                TAG,
+                "New FCM token received, app needs to be re-paired: ${maskSensitive(newToken)}"
+            )
             Device.instance.reset()
             Device.instance.clearPreferences(this)
             Device.instance.status = DeviceStatus.NEEDS_REPAIR
