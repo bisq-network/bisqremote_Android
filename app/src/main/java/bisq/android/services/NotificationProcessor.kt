@@ -43,8 +43,10 @@ object NotificationProcessor {
                 notificationMessage.encryptedPayload,
                 notificationMessage.initializationVector
             )
+            Logging().debug(TAG, "Deserializing decrypted notification payload: $decryptedNotificationPayload")
             val bisqNotification = deserializeNotificationPayload(decryptedNotificationPayload)
             bisqNotification.receivedDate = Date().time
+            Logging().debug(TAG, "Deserialized notification payload: $bisqNotification")
             return bisqNotification
         } catch (e: Throwable) {
             when (e) {
