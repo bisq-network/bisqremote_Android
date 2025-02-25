@@ -214,10 +214,10 @@ class WelcomeActivity : UnpairedBaseActivity() {
     private fun maybeProcessOpenedNotification() {
         val extras = intent.extras
         if (extras != null) {
-            Logging().info(TAG, "Processing opened notification")
+            Logging().debug(TAG, "Processing opened notification")
             val notificationMessage = extras.getString("encrypted")
             if (notificationMessage != null) {
-                Logging().info(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
+                Logging().debug(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
                 Intent().also { broadcastIntent ->
                     broadcastIntent.action = getString(R.string.notification_receiver_action)
                     broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES

@@ -124,7 +124,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
 //                    if (!deleteTokenTask.isSuccessful) {
 //                        Logging().error(TAG, "Deleting FCM token failed: ${deleteTokenTask.exception}")
 //                    } else {
-//                        Logging().info(TAG, "FCM token deleted")
+//                        Logging().debug(TAG, "FCM token deleted")
 //                    }
 //                    fetchFcmToken(onComplete)
 //                    tokenBeingFetched = false
@@ -139,12 +139,12 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
      * For more details, see https://firebase.google.com/docs/cloud-messaging/android/receive.
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Logging().info(TAG, "Message received")
+        Logging().debug(TAG, "Message received")
         super.onMessageReceived(remoteMessage)
 
         val encryptedData = remoteMessage.data["encrypted"]
         if (encryptedData == null) {
-            Logging().warn(TAG, "Message does not contain encrypted data; ${remoteMessage.data}")
+            Logging().warn(TAG, "Received message does not contain encrypted data; ${remoteMessage.data}")
             return
         }
 
@@ -152,7 +152,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             // If the message contains notification data, then this method is only called while the app is in
             // the foreground. Since the app is running and the NotificationReceiver should be registered, only
             // need to broadcast the notification so the NotificationReceiver can process it.
-            Logging().info(
+            Logging().debug(
                 TAG,
                 "Notification message received, broadcasting " + getString(R.string.notification_receiver_action)
             )
@@ -167,7 +167,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             // is in the foreground or background. The NotificationReceiver may not be registered if the app is in the
             // background, so cannot simply broadcast the notification. Instead, send it directly to the
             // NotificationReceiver.
-            Logging().info(TAG, "Data message received")
+            Logging().debug(TAG, "Data message received")
 
             Intent().also { notificationIntent ->
                 notificationIntent.putExtra(

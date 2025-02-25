@@ -42,7 +42,7 @@ object NotificationSender {
                 Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Logging().debug(TAG, "*** Unable to send notification; POST_NOTIFICATIONS permission not granted")
+            Logging().warn(TAG, "*** Unable to send notification; POST_NOTIFICATIONS permission not granted")
             return
         }
 

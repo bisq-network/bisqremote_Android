@@ -37,12 +37,12 @@ class IntentReceiver(private val activity: Activity? = null) : BroadcastReceiver
 
     @Suppress("ReturnCount")
     override fun onReceive(context: Context, intent: Intent) {
-        Logging().info(TAG, "Intent received")
+        Logging().debug(TAG, "Intent received")
 
         if (intent.action == null ||
             !intent.action.equals(context.getString(R.string.intent_receiver_action))
         ) {
-            Logging().info(
+            Logging().debug(
                 TAG,
                 "Ignoring intent, action is not " + context.getString(R.string.intent_receiver_action)
             )
@@ -57,20 +57,20 @@ class IntentReceiver(private val activity: Activity? = null) : BroadcastReceiver
         }
 
         if (!intent.hasExtra("type")) {
-            Logging().info(TAG, "Ignoring intent, missing notification type")
+            Logging().debug(TAG, "Ignoring intent, missing notification type")
             return
         }
 
         val type = intent.getStringExtra("type")
         if (type == NotificationType.SETUP_CONFIRMATION.name && activity is UnpairedBaseActivity) {
-            Logging().info(TAG, "Pairing confirmed")
+            Logging().debug(TAG, "Pairing confirmed")
             activity.pairingConfirmed()
         } else if (type == NotificationType.ERASE.name && activity is PairedBaseActivity) {
-            Logging().info(TAG, "Pairing removed")
+            Logging().debug(TAG, "Pairing removed")
             Device.instance.status = DeviceStatus.UNPAIRED
             activity.pairingRemoved(context.getString(R.string.pairing_erased))
         } else {
-            Logging().info(TAG, "Ignoring $type notification")
+            Logging().debug(TAG, "Ignoring $type notification")
         }
     }
 }

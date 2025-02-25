@@ -40,7 +40,7 @@ object NotificationHandler {
 
         when (bisqNotification.type) {
             NotificationType.SETUP_CONFIRMATION.name -> {
-                Logging().info(TAG, "Setup confirmation")
+                Logging().debug(TAG, "Setup confirmation")
                 if (Device.instance.token == null) {
                     Logging().error(TAG, "Device token is null")
                     return
@@ -57,7 +57,7 @@ object NotificationHandler {
                 Device.instance.saveToPreferences(context)
             }
             NotificationType.ERASE.name -> {
-                Logging().info(TAG, "Erase pairing")
+                Logging().debug(TAG, "Erase pairing")
                 Device.instance.reset()
                 Device.instance.clearPreferences(context)
                 notificationRepository.deleteAll()
@@ -70,12 +70,12 @@ object NotificationHandler {
                 Logging().error(TAG, "Notification type is null: $bisqNotification")
             }
             else -> {
-                Logging().info(TAG, "Inserting ${bisqNotification.type} notification to repository")
+                Logging().debug(TAG, "Inserting ${bisqNotification.type} notification to repository")
                 notificationRepository.insert(bisqNotification)
             }
         }
 
-        Logging().info(TAG, "Broadcasting " + context.getString(R.string.intent_receiver_action))
+        Logging().debug(TAG, "Broadcasting " + context.getString(R.string.intent_receiver_action))
         Intent().also { broadcastIntent ->
             broadcastIntent.action = context.getString(R.string.intent_receiver_action)
             broadcastIntent.putExtra("type", bisqNotification.type)

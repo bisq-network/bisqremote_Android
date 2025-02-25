@@ -33,14 +33,14 @@ class NotificationReceiver : BroadcastReceiver() {
 
     @Suppress("ReturnCount")
     override fun onReceive(context: Context, intent: Intent) {
-        Logging().info(TAG, "Notification received")
+        Logging().debug(TAG, "Notification received")
 
         if (Device.instance.key == null) {
-            Logging().warn(TAG, "Ignoring notification, device does not have a key")
+            Logging().warn(TAG, "Ignoring received notification, device does not have a key")
             return
         }
 
-        Logging().info(TAG, "Processing notification")
+        Logging().debug(TAG, "Processing notification")
         val bisqNotification: BisqNotification
         try {
             bisqNotification = NotificationProcessor.processNotification(
@@ -64,7 +64,7 @@ class NotificationReceiver : BroadcastReceiver() {
             return
         }
 
-        Logging().info(TAG, "Handling ${bisqNotification.type} notification")
+        Logging().debug(TAG, "Handling ${bisqNotification.type} notification")
         goAsync {
             NotificationHandler.handleNotification(bisqNotification, context)
         }
