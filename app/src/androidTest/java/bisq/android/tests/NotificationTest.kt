@@ -40,9 +40,9 @@ import bisq.android.rules.ScreenshotRule
 import bisq.android.screens.NotificationTableScreen
 import bisq.android.services.BisqFirebaseMessagingService
 import bisq.android.util.CryptoUtil
-import bisq.android.util.DateUtil
 import com.google.firebase.messaging.RemoteMessage
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -168,20 +168,17 @@ class NotificationTest {
     private fun buildBisqNotification(): BisqNotification {
         val now = Date()
         val tradeId = (100000..999999).random()
-        val bisqNotification = BisqNotification()
-        bisqNotification.type = NotificationType.TRADE.name
-        bisqNotification.title = "Trade confirmed"
-        bisqNotification.message = "The trade with ID $tradeId is confirmed."
-        bisqNotification.sentDate = now.time - 1000 * 60
-        bisqNotification.receivedDate = now.time
-        return bisqNotification
+        return BisqNotification(
+            type = NotificationType.TRADE.name,
+            title = "Trade confirmed",
+            message = "The trade with ID $tradeId is confirmed.",
+            sentDate = now.time - 1000 * 60,
+            receivedDate = now.time
+        )
     }
 
     private fun serializeNotificationPayload(bisqNotification: BisqNotification): String {
-        val gsonBuilder = GsonBuilder()
-        gsonBuilder.registerTypeAdapter(Date::class.java, DateUtil())
-        val gson = gsonBuilder.create()
-        return gson.toJson(bisqNotification)
+        return Json.encodeToString(bisqNotification)
     }
 
     private fun buildRemoteMessage(bisqNotification: BisqNotification): RemoteMessage {

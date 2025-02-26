@@ -4,6 +4,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.gitlab.arturbosch.detekt'
 apply plugin: 'kotlin-android'
 apply plugin: 'org.jlleitschuh.gradle.ktlint'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
 
 repositories {
     google()
@@ -74,6 +75,10 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
             output.outputFileName = "bisq-${variant.name}.apk"
@@ -125,7 +130,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx:22.1.2'
     implementation 'com.google.firebase:firebase-messaging:24.1.0'
 
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
 

@@ -13,6 +13,7 @@
     <string name="scan_pairing_token_preferences_key">scan_pairing_token_preferences_key</string>
     <string name="about_bisq_preferences_key">about_bisq_preferences_key</string>
     <string name="about_app_preferences_key">about_app_preferences_key</string>
+    <string name="debug_preferences_key">debug_preferences_key</string>
     <string name="version_preferences_key">version_preferences_key</string>
 
     <string name="dark_theme_preference_value">0</string>
@@ -39,10 +40,14 @@
     <string name="button_pair">Pair</string>
     <string name="button_simulate_pairing">Simulate pairing</string>
     <string name="button_no_webcam">No webcam?</string>
+    <string name="button_debug">Debug</string>
     <string name="button_learn_more">Learn more</string>
     <string name="button_reset_pair_again">Reset and pair again</string>
     <string name="button_pairing_complete">Proceed</string>
     <string name="button_request_permission">Enable Notifications</string>
+
+    <string name="clear_log">Clear Log</string>
+    <string name="send_log">Send Log</string>
 
     <string name="button_add_example_notifications">Add example notifications</string>
     <string name="button_mark_as_read">Mark all as read</string>
@@ -51,8 +56,8 @@
 
     <string name="reset_pairing">Reset Pairing</string>
     <string name="reset_and_pair_again">Reset and pair the application again</string>
-    <string name="pairing_token">Pairing Token</string>
     <string name="about_this_app">About this application</string>
+    <string name="debug">Debug</string>
     <string name="about_bisq">About Bisq</string>
 
     <string name="icon_unknown">\uf059</string>
@@ -82,6 +87,7 @@
     <string name="send_pairing_token">Send Pairing Token</string>
     <string name="scan_pairing_token">Scan Pairing Token</string>
     <string name="send_pairing_subject">Bisq pairing token</string>
+    <string name="send_log_subject">Bisq app log</string>
     <string name="send_pairing_instructions_text">If you are unable to scan the QR code, you can instead send the pairing token to yourself (e.g. via email).\n\nMake sure to keep the pairing token private. It contains your encryption key which is used by the Bisq desktop application to encrypt notifications and a token from Google that identifies this device.\n\nOnce you have the token, open the Bisq desktop application and go to Account -&gt; Notifications. Then paste/enter the token into the pairing token field. Upon entering the token, this app should then be paired and progress to the next screen automatically.</string>
     <string name="pairing_success_text">Success!\n\nThis app is now paired to your Bisq desktop application.</string>
     <string name="pairing_request_notification_permission_text">Get notified!\n\nDon\'t miss an update by allowing the app to send you notifications.</string>
@@ -98,8 +104,14 @@
     <string name="register_again_confirmation">Are you sure you want to reset and pair again? This will delete all notifications.</string>
     <string name="delete_all_notifications_confirmation">Are you sure you want to delete all notifications?</string>
 
-    <string name="key">Key %1$s</string>
-    <string name="token">Token %1$s</string>
+    <string name="key">Key: %1$s</string>
+    <string name="device_status">Device status:</string>
+    <string name="device_token">Device token:</string>
+    <string name="pairing_token">Pairing token:</string>
+
+    <string name="lorem_ipsim">Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fermentum magnis mollis ad neque lobortis. Phasellus lorem nascetur mi adipiscing, dictum bibendum ac. Lobortis dapibus vel fermentum iaculis habitant lacus mus diam. Platea dis ullamcorper magna varius nascetur vestibulum orci a et. Nibh class senectus sociosqu turpis inceptos accumsan amet tincidunt feugiat? Curae et sodales duis hendrerit libero. Rutrum et sodales viverra; cursus tempus bibendum curae vivamus. Congue nunc suscipit penatibus laoreet; at duis? Mus posuere ultrices viverra duis sit congue varius at. Malesuada primis eget turpis senectus felis justo. Nibh pellentesque primis at ligula pretium eleifend tempor diam commodo. Enim enim pharetra hendrerit ultricies fermentum nulla. Mus orci aliquam metus; laoreet tempor adipiscing. Aliquam interdum lectus nisl interdum conubia cras. Aenean vitae mauris nibh magnis iaculis malesuada semper hac. Lectus mollis per malesuada mi non. Elit leo dignissim tellus tempor euismod tristique leo iaculis.</string>
+
+    <string name="debug_warning">The information shown here is intended to be used for troubleshooting purposes. It may contain sensitive information that should not be freely shared with others.</string>
 
     <string name="event_occurred_at">Event occurred: %1$s</string>
     <string name="event_received_at">Event received: %1$s</string>
@@ -110,4 +122,6 @@
     <string name="failed_to_process_notification">Failed to process notification</string>
 
     <string name="permission_explanation">Allow Bisq to send you notifications?</string>
+
+    <string name="show_debug_logs">Show debug logs</string>
 </resources>

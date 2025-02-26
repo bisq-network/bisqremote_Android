@@ -17,21 +17,17 @@
 
 package bisq.android.tests.services
 
-import bisq.android.database.BisqNotification
 import bisq.android.model.Device
 import bisq.android.model.NotificationMessage.Companion.BISQ_MESSAGE_ANDROID_MAGIC
-import bisq.android.model.NotificationType
 import bisq.android.services.DecryptingException
 import bisq.android.services.DeserializationException
 import bisq.android.services.NotificationProcessor
 import bisq.android.util.CryptoUtil
-import bisq.android.util.DateUtil
-import com.google.gson.GsonBuilder
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.SoftAssertions
 import org.junit.Before
 import org.junit.Test
 import java.text.ParseException
-import java.util.Date
 import java.util.UUID
 
 class NotificationProcessorTest {
@@ -93,14 +89,20 @@ class NotificationProcessorTest {
 
     @Test
     fun testDecryptValidMessage() {
-        val bisqNotification = buildBisqNotification()
-        val payload = serializeBisqNotification(bisqNotification)
+        val payload = "{" +
+            "\"type\":\"TRADE\"," +
+            "\"title\":\"Trade confirmed\"," +
+            "\"message\":\"The trade with ID 38765384 is confirmed.\"," +
+            "\"receivedDate\":1740381234151," +
+            "\"sentDate\":1740381174151" +
+            "}"
+
         val encryptedPayload = CryptoUtil(Device.instance.key!!).encrypt(payload, iv)
 
         val decryptedPayload =
             NotificationProcessor.decryptNotificationPayload(encryptedPayload, iv)
 
-        assertThat(decryptedPayload)
+        assertThat(decryptedPayload.trim())
             .describedAs("Decrypted payload")
             .isEqualTo(payload)
     }
@@ -123,45 +125,34 @@ class NotificationProcessorTest {
 
     @Test
     fun testDeserializeValidNotificationMessageIsDeserialized() {
-        val bisqNotification = buildBisqNotification()
-        val payload = serializeBisqNotification(bisqNotification)
+        val payload = "{" +
+            "\"type\":\"TRADE\"," +
+            "\"title\":\"Trade confirmed\"," +
+            "\"message\":\"The trade with ID 38765384 is confirmed.\"," +
+            "\"receivedDate\":1740381234151," +
+            "\"sentDate\":1740381174151" +
+            "}"
 
         val deserializedBisqNotification =
             NotificationProcessor.deserializeNotificationPayload(payload)
 
-        assertThat(deserializedBisqNotification.type)
-            .describedAs("Notification type")
-            .isEqualTo(bisqNotification.type)
-        assertThat(deserializedBisqNotification.title)
-            .describedAs("Notification title")
-            .isEqualTo(bisqNotification.title)
-        assertThat(deserializedBisqNotification.message)
-            .describedAs("Notification message")
-            .isEqualTo(bisqNotification.message)
-        assertThat(deserializedBisqNotification.sentDate)
-            .describedAs("Notification sent date")
-            .isEqualTo(bisqNotification.sentDate)
-        assertThat(deserializedBisqNotification.receivedDate)
-            .describedAs("Notification received date")
-            .isEqualTo(bisqNotification.receivedDate)
-    }
-
-    private fun buildBisqNotification(): BisqNotification {
-        val now = Date()
-        val bisqNotification = BisqNotification()
-        bisqNotification.type = NotificationType.TRADE.name
-        bisqNotification.title = "(example) Trade confirmed"
-        bisqNotification.message = "The trade with ID 38765384 is confirmed."
-        bisqNotification.sentDate = now.time - 1000 * 60
-        bisqNotification.receivedDate = now.time
-        return bisqNotification
-    }
-
-    private fun serializeBisqNotification(bisqNotification: BisqNotification): String {
-        val gsonBuilder = GsonBuilder()
-        gsonBuilder.registerTypeAdapter(Date::class.java, DateUtil())
-        val gson = gsonBuilder.create()
-        return gson.toJson(bisqNotification)
+        SoftAssertions.assertSoftly { softAssertions: SoftAssertions ->
+            softAssertions.assertThat(deserializedBisqNotification.type)
+                .describedAs("Notification type")
+                .isEqualTo("TRADE")
+            softAssertions.assertThat(deserializedBisqNotification.title)
+                .describedAs("Notification title")
+                .isEqualTo("Trade confirmed")
+            softAssertions.assertThat(deserializedBisqNotification.message)
+                .describedAs("Notification message")
+                .isEqualTo("The trade with ID 38765384 is confirmed.")
+            softAssertions.assertThat(deserializedBisqNotification.sentDate)
+                .describedAs("Notification sent date")
+                .isEqualTo(1740381174151L)
+            softAssertions.assertThat(deserializedBisqNotification.receivedDate)
+                .describedAs("Notification received date")
+                .isEqualTo(1740381234151L)
+        }
     }
 
     private fun generateToken(): String {

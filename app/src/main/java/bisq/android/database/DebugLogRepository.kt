@@ -15,24 +15,32 @@
  * along with Bisq. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bisq.android.util
+package bisq.android.database
 
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import android.content.Context
+import androidx.lifecycle.LiveData
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
-object DateUtil {
-    private val LOCALE = Locale.US
-    private const val PATTERN = "yyyy-MM-dd HH:mm:ss"
+class DebugLogRepository(context: Context) {
 
-    fun format(
-        date: Long,
-        locale: Locale = LOCALE,
-        pattern: String = PATTERN,
-        timezone: TimeZone = TimeZone.getDefault()
-    ): String? {
-        val formatter = SimpleDateFormat(pattern, locale)
-        formatter.timeZone = timezone
-        return formatter.format(date)
+    private val debugLogDao: DebugLogDao
+
+    val allLogs: LiveData<List<DebugLog>>
+
+    init {
+        val db = DebugLogDatabase.getDatabase(context)
+        debugLogDao = db.debugLogDao()
+        allLogs = debugLogDao.all
+    }
+
+    suspend fun insert(debugLog: DebugLog) = coroutineScope {
+        launch {
+            debugLogDao.insert(debugLog)
+        }
+    }
+
+    suspend fun deleteAll() = coroutineScope {
+        launch { debugLogDao.deleteAll() }
     }
 }

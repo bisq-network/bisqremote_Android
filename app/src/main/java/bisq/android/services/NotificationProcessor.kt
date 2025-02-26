@@ -17,15 +17,14 @@
 
 package bisq.android.services
 
-import android.util.Log
+import bisq.android.Logging
 import bisq.android.database.BisqNotification
 import bisq.android.model.Device
 import bisq.android.model.NotificationMessage
 import bisq.android.model.NotificationMessage.Companion.BISQ_MESSAGE_ANDROID_MAGIC
 import bisq.android.util.CryptoUtil
-import bisq.android.util.DateUtil
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonSyntaxException
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import java.text.ParseException
 import java.util.Date
 
@@ -43,14 +42,16 @@ object NotificationProcessor {
                 notificationMessage.encryptedPayload,
                 notificationMessage.initializationVector
             )
+            Logging().debug(TAG, "Deserializing decrypted notification payload: $decryptedNotificationPayload")
             val bisqNotification = deserializeNotificationPayload(decryptedNotificationPayload)
             bisqNotification.receivedDate = Date().time
+            Logging().debug(TAG, "Deserialized notification payload: $bisqNotification")
             return bisqNotification
         } catch (e: Throwable) {
             when (e) {
                 is ParseException, is DecryptingException, is DeserializationException -> {
                     val message = "Failed to process notification; ${e.message}"
-                    Log.e(TAG, message)
+                    Logging().error(TAG, message)
                     throw ProcessingException(message)
                 }
                 else -> throw e
@@ -97,7 +98,7 @@ object NotificationProcessor {
                 is IllegalArgumentException,
                 is CryptoUtil.Companion.CryptoException -> {
                     val message = "Failed to decrypt notification payload"
-                    Log.e(TAG, "$message: $encryptedPayload")
+                    Logging().error(TAG, "$message: $encryptedPayload")
                     throw DecryptingException(message)
                 }
                 else -> throw e
@@ -107,14 +108,11 @@ object NotificationProcessor {
 
     @Throws(DeserializationException::class)
     fun deserializeNotificationPayload(decryptedPayload: String): BisqNotification {
-        val gsonBuilder = GsonBuilder()
-        gsonBuilder.registerTypeAdapter(Date::class.java, DateUtil())
-        val gson = gsonBuilder.create()
         try {
-            return gson.fromJson(decryptedPayload, BisqNotification::class.java)
-        } catch (e: JsonSyntaxException) {
-            val message = "Failed to deserialize notification payload"
-            Log.e(TAG, "$message: $decryptedPayload")
+            return Json.decodeFromString<BisqNotification>(decryptedPayload)
+        } catch (e: SerializationException) {
+            val message = "Failed to deserialize notification payload, ${e.message}"
+            Logging().error(TAG, "$message: $decryptedPayload")
             throw DeserializationException(message)
         }
     }

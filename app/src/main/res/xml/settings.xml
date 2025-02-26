@@ -31,6 +31,11 @@
         app:title="@string/about_this_app" />
 
     <Preference
+        app:icon="@drawable/ic_debug_24"
+        app:key="@string/debug_preferences_key"
+        app:title="@string/debug" />
+
+    <Preference
         app:enabled="false"
         app:key="@string/version_preferences_key"
         app:selectable="false"

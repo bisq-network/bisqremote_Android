@@ -17,22 +17,21 @@
 
 package bisq.android.util
 
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+object MaskingUtil {
+    @Suppress("ReturnCount")
+    fun maskSensitive(value: String?, visibleChars: Int = 5, maskChar: Char = '*'): String {
+        if (value.isNullOrEmpty()) return value ?: ""
 
-object DateUtil {
-    private val LOCALE = Locale.US
-    private const val PATTERN = "yyyy-MM-dd HH:mm:ss"
+        // If the value is too short to be masked, mask the whole thing
+        val minVisible = visibleChars * 2
+        if (value.length <= minVisible) {
+            return maskChar.toString().repeat(value.length)
+        }
 
-    fun format(
-        date: Long,
-        locale: Locale = LOCALE,
-        pattern: String = PATTERN,
-        timezone: TimeZone = TimeZone.getDefault()
-    ): String? {
-        val formatter = SimpleDateFormat(pattern, locale)
-        formatter.timeZone = timezone
-        return formatter.format(date)
+        val firstPart = value.take(visibleChars)
+        val lastPart = value.takeLast(visibleChars)
+        val maskedMiddle = maskChar.toString().repeat(value.length - (visibleChars * 2))
+
+        return "$firstPart$maskedMiddle$lastPart"
     }
 }

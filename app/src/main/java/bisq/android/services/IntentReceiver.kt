@@ -21,8 +21,8 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
+import bisq.android.Logging
 import bisq.android.R
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
@@ -37,12 +37,12 @@ class IntentReceiver(private val activity: Activity? = null) : BroadcastReceiver
 
     @Suppress("ReturnCount")
     override fun onReceive(context: Context, intent: Intent) {
-        Log.i(TAG, "Intent received")
+        Logging().debug(TAG, "Intent received")
 
         if (intent.action == null ||
             !intent.action.equals(context.getString(R.string.intent_receiver_action))
         ) {
-            Log.i(
+            Logging().debug(
                 TAG,
                 "Ignoring intent, action is not " + context.getString(R.string.intent_receiver_action)
             )
@@ -51,26 +51,26 @@ class IntentReceiver(private val activity: Activity? = null) : BroadcastReceiver
 
         if (intent.hasExtra("error")) {
             val errorMessage = intent.getStringExtra("error")
-            Log.e(TAG, errorMessage!!)
+            Logging().error(TAG, errorMessage!!)
             Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             return
         }
 
         if (!intent.hasExtra("type")) {
-            Log.i(TAG, "Ignoring intent, missing notification type")
+            Logging().debug(TAG, "Ignoring intent, missing notification type")
             return
         }
 
         val type = intent.getStringExtra("type")
         if (type == NotificationType.SETUP_CONFIRMATION.name && activity is UnpairedBaseActivity) {
-            Log.i(TAG, "Pairing confirmed")
+            Logging().debug(TAG, "Pairing confirmed")
             activity.pairingConfirmed()
         } else if (type == NotificationType.ERASE.name && activity is PairedBaseActivity) {
-            Log.i(TAG, "Pairing removed")
+            Logging().debug(TAG, "Pairing removed")
             Device.instance.status = DeviceStatus.UNPAIRED
             activity.pairingRemoved(context.getString(R.string.pairing_erased))
         } else {
-            Log.i(TAG, "Ignoring $type notification")
+            Logging().debug(TAG, "Ignoring $type notification")
         }
     }
 }

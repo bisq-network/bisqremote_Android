@@ -32,6 +32,7 @@
         <activity android:name="bisq.android.ui.settings.SettingsActivity" />
         <activity android:name="bisq.android.ui.notification.NotificationTableActivity" />
         <activity android:name="bisq.android.ui.notification.NotificationDetailActivity" />
+        <activity android:name="bisq.android.ui.debug.DebugActivity" />
 
         <service
             android:name="bisq.android.services.BisqFirebaseMessagingService"

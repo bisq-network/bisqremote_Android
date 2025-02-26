@@ -15,24 +15,21 @@
  * along with Bisq. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package bisq.android.util
+package bisq.android.database
 
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import bisq.android.util.DateUtil
 
-object DateUtil {
-    private val LOCALE = Locale.US
-    private const val PATTERN = "yyyy-MM-dd HH:mm:ss"
-
-    fun format(
-        date: Long,
-        locale: Locale = LOCALE,
-        pattern: String = PATTERN,
-        timezone: TimeZone = TimeZone.getDefault()
-    ): String? {
-        val formatter = SimpleDateFormat(pattern, locale)
-        formatter.timeZone = timezone
-        return formatter.format(date)
+@Entity
+data class DebugLog(
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+    var timestamp: Long,
+    var level: DebugLogLevel,
+    var text: String
+) {
+    override fun toString(): String {
+        return "${DateUtil.format(timestamp)} [$level] $text"
     }
 }

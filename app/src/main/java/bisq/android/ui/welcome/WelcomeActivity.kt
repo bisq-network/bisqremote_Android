@@ -22,13 +22,14 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import bisq.android.BISQ_MOBILE_URL
+import bisq.android.BuildConfig
+import bisq.android.Logging
 import bisq.android.R
 import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
@@ -38,11 +39,13 @@ import bisq.android.services.BisqFirebaseMessagingService.Companion.isTokenBeing
 import bisq.android.ui.DialogBuilder
 import bisq.android.ui.UiUtil.loadWebPage
 import bisq.android.ui.UnpairedBaseActivity
+import bisq.android.ui.debug.DebugActivity
 import bisq.android.ui.notification.NotificationTableActivity
 import bisq.android.ui.pairing.PairingScanActivity
 
 @Suppress("TooManyFunctions")
 class WelcomeActivity : UnpairedBaseActivity() {
+    private lateinit var debugButton: Button
     private lateinit var learnMoreButton: Button
     private lateinit var pairButton: Button
     private lateinit var progressBar: ProgressBar
@@ -104,6 +107,23 @@ class WelcomeActivity : UnpairedBaseActivity() {
     private fun initView() {
         setContentView(R.layout.activity_welcome)
 
+        debugButton = bind(R.id.welcome_debug_button)
+        debugButton.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    DebugActivity::class.java
+                )
+            )
+        }
+        if (BuildConfig.DEBUG) {
+            debugButton.visibility = View.VISIBLE
+            debugButton.isEnabled = true
+        } else {
+            debugButton.visibility = View.GONE
+            debugButton.isEnabled = false
+        }
+
         pairButton = bind(R.id.welcome_pair_button)
         if (isGooglePlayServicesAvailable(this)) {
             pairButton.setOnClickListener {
@@ -144,7 +164,7 @@ class WelcomeActivity : UnpairedBaseActivity() {
     }
 
     private fun fetchFcmToken(onFetchFcmTokenComplete: () -> Unit = {}) {
-        Log.i(TAG, "Fetching FCM token")
+        Logging().info(TAG, "Fetching FCM token")
         disablePairButton()
         BisqFirebaseMessagingService.fetchFcmToken {
             enablePairButton()
@@ -194,10 +214,10 @@ class WelcomeActivity : UnpairedBaseActivity() {
     private fun maybeProcessOpenedNotification() {
         val extras = intent.extras
         if (extras != null) {
-            Log.i(TAG, "Processing opened notification")
+            Logging().debug(TAG, "Processing opened notification")
             val notificationMessage = extras.getString("encrypted")
             if (notificationMessage != null) {
-                Log.i(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
+                Logging().debug(TAG, "Broadcasting " + getString(R.string.notification_receiver_action))
                 Intent().also { broadcastIntent ->
                     broadcastIntent.action = getString(R.string.notification_receiver_action)
                     broadcastIntent.flags = Intent.FLAG_INCLUDE_STOPPED_PACKAGES

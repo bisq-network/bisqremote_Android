@@ -22,22 +22,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [BisqNotification::class], version = 1, exportSchema = false)
-abstract class NotificationDatabase : RoomDatabase() {
+@Database(entities = [DebugLog::class], version = 1, exportSchema = false)
+abstract class DebugLogDatabase : RoomDatabase() {
 
-    abstract fun bisqNotificationDao(): BisqNotificationDao
+    abstract fun debugLogDao(): DebugLogDao
 
     companion object {
 
-        private var instance: NotificationDatabase? = null
+        private var instance: DebugLogDatabase? = null
 
-        fun getDatabase(context: Context): NotificationDatabase {
+        fun getDatabase(context: Context): DebugLogDatabase {
             if (instance == null) {
-                synchronized(NotificationDatabase::class.java) {
+                synchronized(DebugLogDatabase::class.java) {
                     if (instance == null) {
                         instance = Room.databaseBuilder(
                             context.applicationContext,
-                            NotificationDatabase::class.java, "notifications.db"
+                            DebugLogDatabase::class.java, "debug.db"
                         ).build()
                     }
                 }

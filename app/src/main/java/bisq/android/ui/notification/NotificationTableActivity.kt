@@ -193,10 +193,12 @@ class NotificationTableActivity : PairedBaseActivity() {
     @Suppress("MagicNumber")
     private fun addExampleNotifications() {
         for (counter in 1..5) {
-            val now = Date()
-            val bisqNotification = BisqNotification()
-            bisqNotification.receivedDate = now.time + counter * 1000
-            bisqNotification.sentDate = bisqNotification.receivedDate - 1000 * 30
+            val receivedDate = Date().time + counter * 1000
+            val bisqNotification = BisqNotification(
+                type = "",
+                receivedDate = receivedDate,
+                sentDate = receivedDate - 1000 * 30
+            )
             when (counter) {
                 1 -> {
                     bisqNotification.type = NotificationType.TRADE.name
