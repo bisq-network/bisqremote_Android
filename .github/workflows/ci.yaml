@@ -61,7 +61,7 @@ jobs:
             #         sarif_file: snyk.sarif
 
             -   name: Upload reports
-                uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+                uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
                 with:
                     name: analyze-reports
                     path: app/build/reports
@@ -104,7 +104,7 @@ jobs:
                 run: ./gradlew testDebugUnitTest
 
             -   name: Upload reports
-                uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+                uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
                 with:
                     name: unit-tests-reports
                     path: app/build/reports
@@ -197,7 +197,7 @@ jobs:
                     script: ./gradlew connectedCheck && killall -INT crashpad_handler || true
 
             -   name: Upload reports
-                uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
+                uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1
                 with:
                     name: instrumentation-tests-reports-api${{ matrix.api-level }}
                     path: app/build/reports
