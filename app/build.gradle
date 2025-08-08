@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'com.google.gms.google-services'
@@ -44,7 +47,6 @@ android {
         minSdkVersion 26
         targetSdkVersion 36
         multiDexEnabled true
-        setProperty("archivesBaseName", "bisq")
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -79,33 +81,62 @@ android {
         buildConfig = true
     }
 
-    applicationVariants.configureEach { variant ->
-        variant.outputs.configureEach { output ->
-            output.outputFileName = "bisq-${variant.name}.apk"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+
+    android.applicationVariants.all { variant ->
+        // Rename APK output
+        variant.outputs.all { output ->
+            def flavor = variant.flavorName ? "${variant.flavorName}-" : ""
+            def buildType = variant.buildType.name
+            def versionName = variant.versionName
+
+            if (output.outputFileName != null && output.outputFileName.endsWith('.apk')) {
+                output.outputFileName = "bisq-${flavor}${buildType}-${versionName}.apk"
+            } else {
+                output.outputFileName = "bisq-${variant.name}.apk"
+            }
+        }
+
+        // Rename AAB output
+        def bundleTaskName = "bundle${variant.name.capitalize()}"
+        tasks.named(bundleTaskName).configure {
+            doLast {
+                def aabDir = layout.buildDirectory.dir("outputs/bundle/${variant.name}").get().asFile
+                def aabFile = file("${aabDir}/${project.name}-${variant.name}.aab")
+                def newName = file("${aabDir}/bisq-${variant.name}-${variant.versionName}.aab")
+
+                if (aabFile.exists()) {
+                    aabFile.renameTo(newName)
+                    println "Renamed AAB to: ${newName.name}"
+                } else {
+                    println "Expected AAB not found at: ${aabFile}"
+                }
+            }
         }
 
         // Must disable the GoogleServices task when running unit and instrumented tests in GitHub
         // workflows, since google-services.json is unavailable and will cause it to fail.
         if (!project.file('google-services.json').exists()) {
             tasks.configureEach { Task task ->
-                if (task.name.matches("process${variant.name.capitalize()}GoogleServices")) {
+                if (task.name == "process${variant.name.capitalize()}GoogleServices") {
                     task.enabled = false
                 }
             }
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+}
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
-    packagingOptions {
-        resources.excludes.add("META-INF/*")
+tasks.withType(KotlinJvmCompile).configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
