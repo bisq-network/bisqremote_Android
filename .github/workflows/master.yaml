@@ -142,6 +142,8 @@ jobs:
 
     upload_to_firebase:
         name: Upload to Firebase
+        # Is this job necessary? Temporarily disable it for now
+        if: false
         runs-on: ubuntu-latest
         timeout-minutes: 10
         needs: [ build, sign ]
