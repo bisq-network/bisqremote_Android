@@ -22,7 +22,5 @@ import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matcher
 
 abstract class ElementByText(private val text: String) : Element() {
-    override fun getViewMatcher(): Matcher<View>? {
-        return ViewMatchers.withText(text)
-    }
+    override fun getViewMatcher(): Matcher<View>? = ViewMatchers.withText(text)
 }

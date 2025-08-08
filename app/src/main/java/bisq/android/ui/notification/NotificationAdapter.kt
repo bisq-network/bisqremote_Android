@@ -102,13 +102,9 @@ class NotificationAdapter(
         return NotificationViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return notifications.size
-    }
+    override fun getItemCount(): Int = notifications.size
 
-    fun uid(position: Int): Int {
-        return notifications[position].uid
-    }
+    fun uid(position: Int): Int = notifications[position].uid
 
     inner class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var icon: TextView

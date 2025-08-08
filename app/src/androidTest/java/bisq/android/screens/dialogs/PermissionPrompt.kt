@@ -31,9 +31,7 @@ class PermissionPrompt {
     private val denyPermissionButton
         get() = device.findObject(UiSelector().textMatches("(?:Don’t allow|DON’T ALLOW)"))
 
-    fun isDisplayed(): Boolean {
-        return grantPermissionButton.exists() && denyPermissionButton.exists()
-    }
+    fun isDisplayed(): Boolean = grantPermissionButton.exists() && denyPermissionButton.exists()
 
     fun text(): String {
         if (!textElement.exists()) {

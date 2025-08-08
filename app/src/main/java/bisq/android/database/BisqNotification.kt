@@ -67,8 +67,6 @@ data class BisqNotification(
             sentDate == other.sentDate
     }
 
-    override fun hashCode(): Int {
-        return listOf(version, type, title, message, actionRequired, txId, sentDate)
-            .hashCode()
-    }
+    override fun hashCode(): Int = listOf(version, type, title, message, actionRequired, txId, sentDate)
+        .hashCode()
 }

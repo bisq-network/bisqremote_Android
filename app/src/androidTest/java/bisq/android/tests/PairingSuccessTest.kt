@@ -144,7 +144,8 @@ class PairingSuccessTest : BaseTest() {
         mockkStatic("androidx.core.content.ContextCompat")
         every {
             ContextCompat.checkSelfPermission(
-                any(), Manifest.permission.POST_NOTIFICATIONS
+                any(),
+                Manifest.permission.POST_NOTIFICATIONS
             )
         } returns PackageManager.PERMISSION_GRANTED
 
@@ -167,7 +168,8 @@ class PairingSuccessTest : BaseTest() {
         mockkStatic("androidx.core.app.ActivityCompat")
         every {
             ActivityCompat.shouldShowRequestPermissionRationale(
-                any(), Manifest.permission.POST_NOTIFICATIONS
+                any(),
+                Manifest.permission.POST_NOTIFICATIONS
             )
         } returns true
 

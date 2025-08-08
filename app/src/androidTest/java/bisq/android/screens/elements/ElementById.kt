@@ -22,7 +22,5 @@ import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matcher
 
 abstract class ElementById(private val id: Int) : Element() {
-    override fun getViewMatcher(): Matcher<View>? {
-        return ViewMatchers.withId(id)
-    }
+    override fun getViewMatcher(): Matcher<View>? = ViewMatchers.withId(id)
 }

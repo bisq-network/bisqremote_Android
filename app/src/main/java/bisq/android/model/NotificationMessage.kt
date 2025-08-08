@@ -17,11 +17,7 @@
 
 package bisq.android.model
 
-data class NotificationMessage(
-    val magicValue: String,
-    val initializationVector: String,
-    val encryptedPayload: String
-) {
+data class NotificationMessage(val magicValue: String, val initializationVector: String, val encryptedPayload: String) {
     companion object {
         const val BISQ_MESSAGE_ANDROID_MAGIC = "BisqMessageAndroid"
     }

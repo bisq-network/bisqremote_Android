@@ -39,6 +39,7 @@ import bisq.android.R
 import bisq.android.services.IntentReceiver
 import bisq.android.services.NotificationReceiver
 
+@Suppress("TooManyFunctions")
 abstract class BaseActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "BaseActivity"
@@ -47,9 +48,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private var intentReceiver: IntentReceiver? = null
 
-    fun <T : View> Activity.bind(@IdRes res: Int): T {
-        return findViewById(res)
-    }
+    fun <T : View> Activity.bind(@IdRes res: Int): T = findViewById(res)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate ${this::class.simpleName}")

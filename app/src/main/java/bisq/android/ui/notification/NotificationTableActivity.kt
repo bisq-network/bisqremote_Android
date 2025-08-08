@@ -256,9 +256,7 @@ abstract class SwipeToDeleteCallback(context: NotificationTableActivity) :
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
-    ): Boolean {
-        return false
-    }
+    ): Boolean = false
 
     override fun onChildDraw(
         c: Canvas,
