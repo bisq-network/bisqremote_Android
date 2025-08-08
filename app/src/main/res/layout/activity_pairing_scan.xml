@@ -8,71 +8,93 @@
     android:clickable="true"
     android:focusable="true">
 
-    <TextView
-        android:id="@+id/pairing_scan_qr_placeholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/qr_placeholder_text"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="@id/pairing_scan_qr_image"
-        app:layout_constraintEnd_toStartOf="@+id/pairing_scan_qr_image"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/pairing_scan_qr_image"
-        app:layout_constraintTop_toTopOf="@id/pairing_scan_qr_image" />
-
-    <ImageView
-        android:id="@+id/pairing_scan_qr_image"
+    <!-- This scrim will sit under the status bar -->
+    <View
+        android:id="@+id/pairing_scan_status_bar_background"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:contentDescription="@string/qr_code"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toTopOf="@+id/pairing_scan_instructions"
-        app:layout_constraintDimensionRatio="1"
+        android:background="@color/primary"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/pairing_scan_instructions"
+    <!-- Container for all content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pairing_scan_content_container"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/scan_pairing_instructions_text"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/pairing_scan_no_webcam_button"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pairing_scan_status_bar_background">
 
-    <Button
-        android:id="@+id/pairing_scan_no_webcam_button"
-        style="@style/BorderlessPrimaryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/button_no_webcam"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        android:theme="@style/BorderlessPrimaryButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/pairing_scan_qr_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/qr_placeholder_text"
+            android:textSize="34sp"
+            app:layout_constraintBottom_toBottomOf="@id/pairing_scan_qr_image"
+            app:layout_constraintEnd_toStartOf="@+id/pairing_scan_qr_image"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/pairing_scan_qr_image"
+            app:layout_constraintTop_toTopOf="@id/pairing_scan_qr_image" />
 
-    <Button
-        android:id="@+id/pairing_scan_simulate_pairing_button"
-        style="@style/BorderlessPrimaryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="@string/button_simulate_pairing"
-        android:textAllCaps="false"
-        android:theme="@style/BorderlessPrimaryButton"
-        android:textSize="16sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <ImageView
+            android:id="@+id/pairing_scan_qr_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/qr_code"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toTopOf="@+id/pairing_scan_instructions"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/pairing_scan_instructions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/scan_pairing_instructions_text"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/pairing_scan_no_webcam_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/pairing_scan_no_webcam_button"
+            style="@style/BorderlessPrimaryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/button_no_webcam"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:theme="@style/BorderlessPrimaryButton"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/pairing_scan_simulate_pairing_button"
+            style="@style/BorderlessPrimaryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/button_simulate_pairing"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:theme="@style/BorderlessPrimaryButton"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

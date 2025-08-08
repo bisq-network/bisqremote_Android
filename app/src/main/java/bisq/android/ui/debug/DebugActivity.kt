@@ -39,12 +39,13 @@ class DebugActivity : BaseActivity() {
 
     private var showDebugLogs: Boolean = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun getRootLayoutId() = R.id.debug_layout
+    override fun getStatusBarScrimId() = R.id.debug_status_bar_background
 
+    override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[DebugViewModel::class.java]
 
-        initView()
+        super.onCreate(savedInstanceState)
     }
 
     override fun onStart() {
@@ -54,7 +55,7 @@ class DebugActivity : BaseActivity() {
         }
     }
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_debug)
 
         deviceStatusText = bind(R.id.device_status_value)

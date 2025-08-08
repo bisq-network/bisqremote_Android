@@ -20,7 +20,7 @@ package bisq.android.ui
 import android.content.Intent
 import bisq.android.ui.pairing.PairingSuccessActivity
 
-open class UnpairedBaseActivity : BaseActivity() {
+abstract class UnpairedBaseActivity : BaseActivity() {
 
     fun pairingConfirmed() {
         this.runOnUiThread {

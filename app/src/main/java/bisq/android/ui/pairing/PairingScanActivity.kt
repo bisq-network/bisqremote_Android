@@ -18,7 +18,6 @@
 package bisq.android.ui.pairing
 
 import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -40,12 +39,10 @@ class PairingScanActivity : UnpairedBaseActivity() {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-    }
+    override fun getRootLayoutId() = R.id.pairing_scan_layout
+    override fun getStatusBarScrimId() = R.id.pairing_scan_status_bar_background
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_pairing_scan)
 
         qrImage = this.bind(R.id.pairing_scan_qr_image)

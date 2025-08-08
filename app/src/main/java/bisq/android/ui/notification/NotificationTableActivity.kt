@@ -56,12 +56,13 @@ class NotificationTableActivity : PairedBaseActivity() {
     private var scrollFirstVisibleItemPosition: Int = 0
     private var scrollLastVisibleItemPosition: Int = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun getRootLayoutId() = R.id.notification_table_layout
+    override fun getStatusBarScrimId() = R.id.notification_table_status_bar_background
 
+    override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[NotificationViewModel::class.java]
 
-        initView()
+        super.onCreate(savedInstanceState)
     }
 
     override fun onStart() {
@@ -88,7 +89,7 @@ class NotificationTableActivity : PairedBaseActivity() {
         }
     }
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_notification_table)
 
         toolbar = bind(R.id.notification_table_toolbar)
