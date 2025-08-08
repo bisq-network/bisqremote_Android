@@ -14,23 +14,6 @@ for more information.
 > Note, the `google-services.json` file needs to correspond to the `fcmServiceAccountKey.json`
 > used by the [bisq-relay](https://github.com/bisq-network/bisq-relay) service.
 
-## Updating Dependencies
-
-Whenever dependencies are updated/changed, it is necessary to update the following:
-
-- [gradle/verification-metadata.xml](gradle/verification-metadata.xml) - can be updated using the
-  following command:
-
-```shell
-./gradlew --write-verification-metadata sha256 build :app:processDebugResources :app:connectedDebugAndroidTest
-```
-
-- [gradle.lockfile](gradle.lockfile) - can be updated using the following command:
-
-```shell
-./gradlew dependencies --write-locks
-```
-
 ## Architectural Design
 
 For information on the architectural design, refer to the
