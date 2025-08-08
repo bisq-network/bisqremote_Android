@@ -32,7 +32,7 @@ class NotificationRepository(context: Context) {
     init {
         val db = NotificationDatabase.getDatabase(context)
         bisqNotificationDao = db.bisqNotificationDao()
-        allBisqNotifications = bisqNotificationDao.all
+        allBisqNotifications = bisqNotificationDao.allData
     }
 
     suspend fun insert(bisqNotification: BisqNotification) = coroutineScope {

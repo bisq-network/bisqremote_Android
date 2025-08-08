@@ -29,14 +29,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 abstract class Dialog(private val message: String) {
     protected val applicationContext: Context = ApplicationProvider.getApplicationContext()
 
-    fun isDisplayed(): Boolean {
-        return try {
+    fun isDisplayed(): Boolean =
+        try {
             onView(withText(message)).check(
                 matches(withEffectiveVisibility(Visibility.VISIBLE))
             )
             true
-        } catch (e: NoMatchingViewException) {
+        } catch (_: NoMatchingViewException) {
             false
         }
-    }
 }

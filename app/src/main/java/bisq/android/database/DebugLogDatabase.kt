@@ -37,7 +37,8 @@ abstract class DebugLogDatabase : RoomDatabase() {
                     if (instance == null) {
                         instance = Room.databaseBuilder(
                             context.applicationContext,
-                            DebugLogDatabase::class.java, "debug.db"
+                            DebugLogDatabase::class.java,
+                            "debug.db"
                         ).build()
                     }
                 }

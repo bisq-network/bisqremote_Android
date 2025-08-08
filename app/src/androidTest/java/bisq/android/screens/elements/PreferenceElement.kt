@@ -22,7 +22,10 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 
-class PreferenceElement(private val text: String) : ElementByText(text), ClickableElement {
+class PreferenceElement(private val text: String) :
+    ElementByText(text),
+    ClickableElement {
+
     override fun click() {
         Espresso.onView(ViewMatchers.withText(text))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))

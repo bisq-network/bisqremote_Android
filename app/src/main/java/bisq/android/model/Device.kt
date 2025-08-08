@@ -53,12 +53,10 @@ class Device private constructor() {
         val INSTANCE = Device()
     }
 
-    fun pairingToken(): String? {
-        return if (token != null) {
-            DEVICE_MAGIC_ANDROID + DEVICE_SEPARATOR + descriptor + DEVICE_SEPARATOR + key + DEVICE_SEPARATOR + token
-        } else {
-            null
-        }
+    fun pairingToken(): String? = if (token != null) {
+        DEVICE_MAGIC_ANDROID + DEVICE_SEPARATOR + descriptor + DEVICE_SEPARATOR + key + DEVICE_SEPARATOR + token
+    } else {
+        null
     }
 
     fun newToken(token: String) {
@@ -163,7 +161,8 @@ class Device private constructor() {
             "simulator"
         )
         return (
-            Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic") ||
+            Build.BRAND.startsWith("generic") &&
+                Build.DEVICE.startsWith("generic") ||
                 Build.FINGERPRINT.startsWith("generic") ||
                 Build.FINGERPRINT.startsWith("unknown") ||
                 emulatorHardware.contains(Build.HARDWARE) ||
