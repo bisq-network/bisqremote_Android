@@ -17,18 +17,15 @@
 
 package bisq.android.ui.settings
 
-import android.os.Bundle
 import bisq.android.R
 import bisq.android.ui.PairedBaseActivity
 
 class SettingsActivity : PairedBaseActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-    }
+    override fun getRootLayoutId() = R.id.settings_layout
+    override fun getStatusBarScrimId() = R.id.settings_status_bar_background
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_settings)
     }
 }

@@ -20,7 +20,6 @@ package bisq.android.ui.pairing
 import android.Manifest
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import bisq.android.R
@@ -35,12 +34,10 @@ class RequestNotificationPermissionActivity : PairedBaseActivity() {
     private lateinit var requestNotificationPermissionButton: Button
     private lateinit var skipPermissionButton: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-    }
+    override fun getRootLayoutId() = R.id.request_notification_permission_layout
+    override fun getStatusBarScrimId() = R.id.request_notification_permission_status_bar_background
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_request_notification_permission)
 
         requestNotificationPermissionButton = bind(R.id.request_notification_permission_button)

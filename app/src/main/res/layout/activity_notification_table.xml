@@ -6,27 +6,49 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/notification_table_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+    <!-- This scrim will sit under the status bar -->
+    <View
+        android:id="@+id/notification_table_status_bar_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/primary"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/Theme.AppCompat.DayNight.NoActionBar"
-        app:title="@string/notifications"
-        app:titleTextColor="@color/on_primary" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notification_table_recycler_view"
-        android:layout_width="match_parent"
+    <!-- Container for all content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/notification_table_content_container"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notification_table_toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/notification_table_status_bar_background">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/notification_table_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            android:background="@color/primary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            app:title="@string/notifications"
+            app:titleTextColor="@color/on_primary" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notification_table_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_table_toolbar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

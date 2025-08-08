@@ -23,7 +23,7 @@ import bisq.android.model.Device
 import bisq.android.model.DeviceStatus
 import bisq.android.ui.welcome.WelcomeActivity
 
-open class PairedBaseActivity : BaseActivity() {
+abstract class PairedBaseActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
