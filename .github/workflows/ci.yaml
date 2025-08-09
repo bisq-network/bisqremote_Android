@@ -193,7 +193,11 @@ jobs:
                     force-avd-creation: false
                     ram-size: 4096M
                     emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-                    script: ./gradlew connectedCheck && killall -INT crashpad_handler || true
+                    script: |
+                        ./gradlew connectedCheck
+                        RC=$?
+                        killall -INT crashpad_handler || true
+                        exit $RC
 
             -   name: Upload reports
                 uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
