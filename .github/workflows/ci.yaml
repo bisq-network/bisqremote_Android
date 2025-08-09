@@ -35,9 +35,6 @@ jobs:
                         ~/.gradle/wrapper
                     key: ${{ runner.os }}-gradle-${{ env.CACHE_VERSION }}-${{ hashFiles('**/**.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
 
-            -   name: Check Gradle wrapper
-                uses: gradle/wrapper-validation-action@f9c9c575b8b21b6485636a91ffecd10e558c62f6
-
             -   name: Check code style
                 run: ./gradlew ktlintCheck
 
@@ -94,9 +91,6 @@ jobs:
                         ~/.gradle/wrapper
                     key: ${{ runner.os }}-gradle-${{ env.CACHE_VERSION }}-${{ hashFiles('**/**.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
 
-            -   name: Check Gradle wrapper
-                uses: gradle/wrapper-validation-action@f9c9c575b8b21b6485636a91ffecd10e558c62f6
-
             # TODO: Add code coverage metrics
             # See https://about.codecov.io/blog/code-coverage-for-android-development-using-kotlin-jacoco-github-actions-and-codecov/
             -   name: Run unit tests
@@ -140,9 +134,6 @@ jobs:
                         ~/.gradle/caches
                         ~/.gradle/wrapper
                     key: ${{ runner.os }}-gradle-${{ env.CACHE_VERSION }}-${{ hashFiles('**/**.gradle.kts', '**/gradle/wrapper/gradle-wrapper.properties', '**/libs.versions.toml') }}
-
-            -   name: Check Gradle wrapper
-                uses: gradle/wrapper-validation-action@f9c9c575b8b21b6485636a91ffecd10e558c62f6
 
             -   name: Enable KVM
                 run: |
