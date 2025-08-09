@@ -34,9 +34,7 @@ class Application : MultiDexApplication() {
     companion object {
         private var instance: Application? = null
 
-        fun applicationContext(): Context {
-            return instance!!.applicationContext
-        }
+        fun applicationContext(): Context = instance!!.applicationContext
 
         fun getAppVersion(): String {
             val context: Context = applicationContext()

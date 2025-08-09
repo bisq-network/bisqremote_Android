@@ -56,10 +56,11 @@ class WelcomeActivity : UnpairedBaseActivity() {
         private const val TAG = "WelcomeActivity"
     }
 
+    override fun getRootLayoutId() = R.id.welcome_layout
+    override fun getStatusBarScrimId() = R.id.welcome_status_bar_background
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        initView()
 
         if (Device.instance.readFromPreferences(this)) {
             return
@@ -104,7 +105,7 @@ class WelcomeActivity : UnpairedBaseActivity() {
         }
     }
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_welcome)
 
         debugButton = bind(R.id.welcome_debug_button)

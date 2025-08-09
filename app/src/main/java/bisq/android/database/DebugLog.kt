@@ -29,7 +29,5 @@ data class DebugLog(
     var level: DebugLogLevel,
     var text: String
 ) {
-    override fun toString(): String {
-        return "${DateUtil.format(timestamp)} [$level] $text"
-    }
+    override fun toString(): String = "${DateUtil.format(timestamp)} [$level] $text"
 }

@@ -16,11 +16,22 @@ runs:
     steps:
         # Prefer ATD system images available in API 30+ as they are optimized for headless tests.
         # Google Play services is required and is available in the google_atd and google_apis images.
-        # Note, API 27 does not provide a google_apis system image.
+        # Note:
+        #  - API 27 does not provide a google_apis system image.
+        #  - Newer API's may not yet provide an ATD system image.
         -   id: get-avd-target
-            run: echo "target=$(if [ ${{ inputs.api-level }} -eq 27 ]; then echo default; elif [ ${{ inputs.api-level }} -ge 30 ]; then echo google_atd; else echo google_apis; fi)" >> $GITHUB_OUTPUT
             shell: bash
+            run: |
+                set -euo pipefail
+                api="${{ inputs.api-level }}"
+                target="google_apis"
+                if [[ "$api" -eq 27 ]]; then
+                    target="default"
+                elif [[ "$api" -ge 30 ]] && sdkmanager --list | grep -q "system-images;android-$api;google_atd;"; then
+                    target="google_atd"
+                fi
+                echo "target=$target" >> "$GITHUB_OUTPUT"
         # Prefer x86_64 architecture
         -   id: get-avd-arch
-            run: echo "arch=x86_64" >> $GITHUB_OUTPUT
             shell: bash
+            run: echo "arch=x86_64" >> $GITHUB_OUTPUT

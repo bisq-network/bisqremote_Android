@@ -37,7 +37,8 @@ abstract class NotificationDatabase : RoomDatabase() {
                     if (instance == null) {
                         instance = Room.databaseBuilder(
                             context.applicationContext,
-                            NotificationDatabase::class.java, "notifications.db"
+                            NotificationDatabase::class.java,
+                            "notifications.db"
                         ).build()
                     }
                 }

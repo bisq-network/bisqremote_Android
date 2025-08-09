@@ -1,5 +1,6 @@
 .gradle/
 .idea/
+*.iml
 app/build/
 app/release/
 app/google-services.json

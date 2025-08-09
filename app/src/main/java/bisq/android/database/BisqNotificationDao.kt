@@ -26,7 +26,7 @@ import androidx.room.Query
 @Dao
 interface BisqNotificationDao {
     @get:Query("SELECT * FROM BisqNotification ORDER BY sentDate DESC")
-    val all: LiveData<List<BisqNotification>>
+    val allData: LiveData<List<BisqNotification>>
 
     @Query("SELECT * FROM BisqNotification ORDER BY sentDate DESC")
     suspend fun getAll(): List<BisqNotification>

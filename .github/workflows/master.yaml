@@ -10,7 +10,6 @@ on:
 jobs:
     build:
         name: Build
-        if: ${{ github.actor != 'dependabot[bot]' }}
         runs-on: ubuntu-latest
         timeout-minutes: 10
         outputs:
@@ -69,15 +68,15 @@ jobs:
             -   name: Upload unsigned APK
                 uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
                 with:
-                    name: bisq-release.apk
-                    path: app/build/outputs/apk/release/bisq-release.apk
+                    name: bisq-notifications-release.apk
+                    path: app/build/outputs/apk/release/bisq-notifications-release.apk
                     if-no-files-found: error
 
             -   name: Upload unsigned AAB
                 uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
                 with:
-                    name: bisq-release.aab
-                    path: app/build/outputs/bundle/release/bisq-release.aab
+                    name: bisq-notifications-release.aab
+                    path: app/build/outputs/bundle/release/bisq-notifications-release.aab
                     if-no-files-found: error
 
     sign:
@@ -89,13 +88,13 @@ jobs:
             -   name: Download unsigned APK
                 uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
                 with:
-                    name: bisq-release.apk
+                    name: bisq-notifications-release.apk
                     path: app/build/outputs/apk/release
 
             -   name: Download unsigned AAB
                 uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
                 with:
-                    name: bisq-release.aab
+                    name: bisq-notifications-release.aab
                     path: app/build/outputs/bundle/release
 
             -   name: Determine latest build-tools version
@@ -132,17 +131,19 @@ jobs:
             -   name: Upload signed APK
                 uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
                 with:
-                    name: bisq-release-signed.apk
+                    name: bisq-notifications-release-signed.apk
                     path: ${{ steps.sign_apk.outputs.signedReleaseFile }}
 
             -   name: Upload signed AAB
                 uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08
                 with:
-                    name: bisq-release-signed.aab
+                    name: bisq-notifications-release-signed.aab
                     path: ${{ steps.sign_aab.outputs.signedReleaseFile }}
 
     upload_to_firebase:
         name: Upload to Firebase
+        # Is this job necessary? Temporarily disable it for now
+        if: false
         runs-on: ubuntu-latest
         timeout-minutes: 10
         needs: [ build, sign ]
@@ -153,13 +154,13 @@ jobs:
             -   name: Download signed APK
                 uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
                 with:
-                    name: bisq-release-signed.apk
+                    name: bisq-notifications-release-signed.apk
                     path: app/build/outputs/apk/release
 
             -   name: Download signed AAB
                 uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
                 with:
-                    name: bisq-release-signed.aab
+                    name: bisq-notifications-release-signed.aab
                     path: app/build/outputs/bundle/release
 
             -   name: Upload signed APK to Firebase App Distribution
@@ -167,11 +168,11 @@ jobs:
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-                    file: app/build/outputs/apk/release/bisq-release-signed.apk
+                    file: app/build/outputs/apk/release/bisq-notifications-release-signed.apk
 
             -   name: Upload signed AAB to Firebase App Distribution
                 uses: wzieba/Firebase-Distribution-Github-Action@bd494989dd4bec0343f78adee87fe66e48279ad6
                 with:
                     appId: ${{ secrets.FIREBASE_APP_ID }}
                     serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-                    file: app/build/outputs/bundle/release/bisq-release.aab
+                    file: app/build/outputs/bundle/release/bisq-notifications-release.aab
