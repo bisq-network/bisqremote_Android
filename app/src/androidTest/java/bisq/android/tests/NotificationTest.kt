@@ -41,7 +41,6 @@ import bisq.android.screens.NotificationTableScreen
 import bisq.android.services.BisqFirebaseMessagingService
 import bisq.android.util.CryptoUtil
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
@@ -177,9 +176,8 @@ class NotificationTest {
         )
     }
 
-    private fun serializeNotificationPayload(bisqNotification: BisqNotification): String {
-        return Json.encodeToString(bisqNotification)
-    }
+    private fun serializeNotificationPayload(bisqNotification: BisqNotification): String =
+        Json.encodeToString(bisqNotification)
 
     private fun buildRemoteMessage(bisqNotification: BisqNotification): RemoteMessage {
         val initializationVector = (1000000000000000..9999999999999999).random().toString()

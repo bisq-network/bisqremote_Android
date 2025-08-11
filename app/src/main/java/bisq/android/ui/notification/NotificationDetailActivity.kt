@@ -37,12 +37,13 @@ class NotificationDetailActivity : PairedBaseActivity() {
     private lateinit var receivedTime: TextView
     private lateinit var deleteButton: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun getRootLayoutId() = R.id.notification_detail_layout
+    override fun getStatusBarScrimId() = R.id.notification_detail_status_bar_background
 
+    override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[NotificationViewModel::class.java]
 
-        initView()
+        super.onCreate(savedInstanceState)
 
         val notification = getNotification() ?: return
 
@@ -56,7 +57,7 @@ class NotificationDetailActivity : PairedBaseActivity() {
         return viewModel.getFromUid(uid)
     }
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_notification_detail)
         title = bind(R.id.notification_detail_title)
         message = bind(R.id.notification_detail_message)

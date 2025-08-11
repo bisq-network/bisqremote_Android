@@ -24,7 +24,10 @@ import androidx.test.espresso.matcher.RootMatchers.isPlatformPopup
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 
-class MenuItemElement(private val text: String) : ElementByText(text), ClickableElement {
+class MenuItemElement(private val text: String) :
+    ElementByText(text),
+    ClickableElement {
+
     override fun click() {
         Espresso.openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
         Espresso.onView(ViewMatchers.withText(text))

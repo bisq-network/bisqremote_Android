@@ -43,9 +43,7 @@ class NotificationViewModel(application: Application) : AndroidViewModel(applica
         repository.deleteAll()
     }
 
-    fun getFromUid(uid: Int): BisqNotification? {
-        return repository.getFromUid(uid)
-    }
+    fun getFromUid(uid: Int): BisqNotification? = repository.getFromUid(uid)
 
     fun markAllAsRead() = viewModelScope.launch {
         repository.markAllAsRead()

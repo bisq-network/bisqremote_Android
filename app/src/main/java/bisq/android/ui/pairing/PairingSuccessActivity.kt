@@ -21,7 +21,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Bundle
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -36,12 +35,10 @@ class PairingSuccessActivity : PairedBaseActivity() {
 
     private lateinit var pairingCompleteButton: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-    }
+    override fun getRootLayoutId() = R.id.pairing_success_layout
+    override fun getStatusBarScrimId() = R.id.pairing_success_status_bar_background
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_pairing_success)
 
         pairingCompleteButton = bind(R.id.pairing_scan_pairing_complete_button)

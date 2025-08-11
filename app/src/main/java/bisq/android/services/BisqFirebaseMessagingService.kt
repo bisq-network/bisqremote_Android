@@ -57,9 +57,7 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
             return true
         }
 
-        fun isTokenBeingFetched(): Boolean {
-            return tokenBeingFetched
-        }
+        fun isTokenBeingFetched(): Boolean = tokenBeingFetched
 
         fun fetchFcmToken(onComplete: () -> Unit = {}) {
             if (!isFirebaseMessagingInitialized()) {
@@ -189,13 +187,11 @@ class BisqFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    private fun processNotification(encryptedData: String): BisqNotification? {
-        return try {
-            NotificationProcessor.processNotification(encryptedData)
-        } catch (e: ProcessingException) {
-            e.message?.let { Logging().error(TAG, it) }
-            null
-        }
+    private fun processNotification(encryptedData: String): BisqNotification? = try {
+        NotificationProcessor.processNotification(encryptedData)
+    } catch (e: ProcessingException) {
+        e.message?.let { Logging().error(TAG, it) }
+        null
     }
 
     /**

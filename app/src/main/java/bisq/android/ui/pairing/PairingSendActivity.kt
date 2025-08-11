@@ -18,7 +18,6 @@
 package bisq.android.ui.pairing
 
 import android.content.Intent
-import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import bisq.android.R
@@ -30,12 +29,10 @@ class PairingSendActivity : UnpairedBaseActivity() {
     private lateinit var sendPairingTokenInstructions: TextView
     private lateinit var sendPairingTokenButton: Button
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        initView()
-    }
+    override fun getRootLayoutId() = R.id.pairing_send_layout
+    override fun getStatusBarScrimId() = R.id.pairing_send_status_bar_background
 
-    private fun initView() {
+    override fun initView() {
         setContentView(R.layout.activity_pairing_send)
 
         sendPairingTokenInstructions = bind(R.id.pairing_send_pairing_token_instructions)

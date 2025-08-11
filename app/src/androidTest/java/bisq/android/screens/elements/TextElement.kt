@@ -30,13 +30,9 @@ class TextElement(private val id: Int) : ElementById(id) {
     fun getText(): String {
         var text = String()
         Espresso.onView(ViewMatchers.withId(id)).perform(object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
-                return isAssignableFrom(TextView::class.java)
-            }
+            override fun getConstraints(): Matcher<View> = isAssignableFrom(TextView::class.java)
 
-            override fun getDescription(): String {
-                return "Text of the view"
-            }
+            override fun getDescription(): String = "Text of the view"
 
             override fun perform(uiController: UiController, view: View) {
                 val tv = view as TextView

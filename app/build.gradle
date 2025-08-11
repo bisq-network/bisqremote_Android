@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'com.google.gms.google-services'
@@ -35,16 +38,15 @@ def getVersionName = { ->
 
 android {
     namespace 'bisq.android'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.joachimneumann.bisq"
         versionCode getVersionCode()
         versionName getVersionName()
         minSdkVersion 26
-        targetSdkVersion 34
+        targetSdkVersion 36
         multiDexEnabled true
-        setProperty("archivesBaseName", "bisq")
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
@@ -79,104 +81,133 @@ android {
         buildConfig = true
     }
 
-    applicationVariants.configureEach { variant ->
-        variant.outputs.configureEach { output ->
-            output.outputFileName = "bisq-${variant.name}.apk"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+
+    android.applicationVariants.all { variant ->
+        // Rename APK output
+        variant.outputs.all { output ->
+            def flavor = variant.flavorName ? "${variant.flavorName}-" : ""
+            def buildType = variant.buildType.name
+            def versionName = variant.versionName
+
+            if (output.outputFileName != null && output.outputFileName.endsWith('.apk')) {
+                output.outputFileName = "bisq-notifications-${flavor}${buildType}-${versionName}.apk"
+            } else {
+                output.outputFileName = "bisq-notifications-${variant.name}.apk"
+            }
+        }
+
+        // Rename AAB output
+        def bundleTaskName = "bundle${variant.name.capitalize()}"
+        tasks.named(bundleTaskName).configure {
+            doLast {
+                def aabDir = layout.buildDirectory.dir("outputs/bundle/${variant.name}").get().asFile
+                def aabFile = file("${aabDir}/${project.name}-${variant.name}.aab")
+                def newName = file("${aabDir}/bisq-notifications-${variant.name}-${variant.versionName}.aab")
+
+                if (aabFile.exists()) {
+                    aabFile.renameTo(newName)
+                    println "Renamed AAB to: ${newName.name}"
+                } else {
+                    println "Expected AAB not found at: ${aabFile}"
+                }
+            }
         }
 
         // Must disable the GoogleServices task when running unit and instrumented tests in GitHub
         // workflows, since google-services.json is unavailable and will cause it to fail.
         if (!project.file('google-services.json').exists()) {
             tasks.configureEach { Task task ->
-                if (task.name.matches("process${variant.name.capitalize()}GoogleServices")) {
+                if (task.name == "process${variant.name.capitalize()}GoogleServices") {
                     task.enabled = false
                 }
             }
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
+}
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
-    packagingOptions {
-        resources.excludes.add("META-INF/*")
+tasks.withType(KotlinJvmCompile).configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
 
 dependencies {
-    detektPlugins('io.gitlab.arturbosch.detekt:detekt-formatting:1.23.5')
+    detektPlugins('io.gitlab.arturbosch.detekt:detekt-formatting:1.23.8')
 
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
 
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.media:media:1.7.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
     implementation 'com.google.android.material:material:1.12.0'
 
     implementation 'com.google.zxing:core:3.5.3'
 
-    implementation platform('com.google.firebase:firebase-bom:33.7.0')
-    implementation 'com.google.firebase:firebase-analytics-ktx:22.1.2'
-    implementation 'com.google.firebase:firebase-messaging:24.1.0'
+    implementation platform('com.google.firebase:firebase-bom:34.1.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx:22.5.0'
+    implementation 'com.google.firebase:firebase-messaging:25.0.0'
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
 
-    implementation 'androidx.room:room-ktx:2.6.1'
-    implementation 'androidx.room:room-runtime:2.6.1'
-    annotationProcessor 'androidx.room:room-compiler:2.6.1'
-    ksp 'androidx.room:room-compiler:2.6.1'
+    implementation 'androidx.room:room-ktx:2.7.2'
+    implementation 'androidx.room:room-runtime:2.7.2'
+    annotationProcessor 'androidx.room:room-compiler:2.7.2'
+    ksp 'androidx.room:room-compiler:2.7.2'
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.8.7'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.9.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.assertj:assertj-core:3.25.3'
-    testImplementation 'org.hamcrest:hamcrest:2.2'
-    testImplementation 'io.mockk:mockk:1.13.9'
+    testImplementation 'org.assertj:assertj-core:3.27.3'
+    testImplementation 'org.hamcrest:hamcrest:3.0'
+    testImplementation 'io.mockk:mockk:1.14.5'
     testImplementation 'org.powermock:powermock:1.6.6'
     testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
     testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
     testImplementation(project(':testCommon'))
 
     androidTestImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'org.assertj:assertj-core:3.25.3'
-    androidTestImplementation 'androidx.test:core-ktx:1.6.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
-    androidTestImplementation 'androidx.test.ext:junit-ktx:1.2.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.6.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.6.1'
-    androidTestImplementation 'androidx.test:rules:1.6.1'
+    androidTestImplementation 'org.assertj:assertj-core:3.27.3'
+    androidTestImplementation 'androidx.test:core-ktx:1.7.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.7.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.7.0'
+    androidTestImplementation 'androidx.test:rules:1.7.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.3.0'
-    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3'
-    androidTestImplementation 'org.awaitility:awaitility-kotlin:4.2.0'
-    androidTestImplementation 'io.mockk:mockk-android:1.13.9'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
+    androidTestImplementation 'org.awaitility:awaitility-kotlin:4.3.0'
+    androidTestImplementation 'io.mockk:mockk-android:1.14.5'
     androidTestImplementation(project(':testCommon')) {
         // Prevent conflict with mockk-android
         exclude group: 'io.mockk', module: 'mockk'
     }
-    androidTestImplementation 'org.objenesis:objenesis:3.3'
+    androidTestImplementation 'org.objenesis:objenesis:3.4'
 
-    androidTestUtil 'androidx.test:orchestrator:1.5.1'
+    androidTestUtil 'androidx.test:orchestrator:1.6.1'
 }
 
 def androidTestsReportsDirectory() {

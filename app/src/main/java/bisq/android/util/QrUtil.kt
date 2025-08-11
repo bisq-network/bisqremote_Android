@@ -38,9 +38,7 @@ object QrUtil {
     ): BitMatrix {
         val bitMatrix: BitMatrix
         val writer = QRCodeWriter()
-        bitMatrix = writer.encode(
-            contents, BarcodeFormat.QR_CODE, width, height
-        )
+        bitMatrix = writer.encode(contents, BarcodeFormat.QR_CODE, width, height)
         return bitMatrix
     }
 
